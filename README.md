@@ -6,11 +6,11 @@ $$
 \begin{array}{l|l} 
  \text{Integrantes} & \text{Legajos}  \\
  \hline 
- \text{Avila, Julieta} & 14 \\
- \text{Barraquero, Ignacio} & 14 \\
+ \text{Avila, Julieta} & 14099 \\
+ \text{Barraquero, Ignacio} & 14060 \\
  \text{Barrios, Federico} & 14101 \\
- \text{Campo, Camila} & 14 \\
- \text{Patricceli, Nicolas} & 14  
+ \text{Campo, Camila} & 13667 \\
+ \text{Patricceli, Nicolas} & 14090 
 \end{array}
 $$
 
