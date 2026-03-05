@@ -1,9 +1,16 @@
 # Repositorio de Trabajos Prácticos para la Materia "Inteligencia Artificial II".
 
 ## Integrantes:
-- Avila, Julieta            14099
-- Barraquero, Ignacio       14
-- Barrios, Federico         14101
-- , Camila                  1
-- Patricceli, Nicolas       14
+
+$$
+\begin{array}{l|l} 
+ \text{Integrantes} & \text{Legajos}  \\
+ \hline 
+ \text{Avila, Julieta} & 14 \\
+ \text{Barraquero, Ignacio} & 14 \\
+ \text{Barrios, Federico} & 14101 \\
+ \text{Campo, Camila} & 14 \\
+ \text{Patricceli, Nicolas} & 14  
+\end{array}
+$$
 
