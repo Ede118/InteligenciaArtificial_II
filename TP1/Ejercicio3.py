@@ -21,6 +21,7 @@ class TempleSimulado:
         self.ordenes = ordenes
 
     def _parser(self, ruta: pathlib.Path):
+        "Convierte el csv de ordenes a un array de numpy"
         vectores = []
         with open(ruta, 'r') as f:
             lector = csv.reader(f)
@@ -50,7 +51,9 @@ class TempleSimulado:
                       numero_orden: int,
                       Temperatura0: float,
                       coolingRate: float,
-                      minTemperatura: float
+                      minTemperatura: float,
+                      *,
+                      orden_particular: np.ndarray = None
                       ) -> tuple[np.ndarray, float]:
         iteracion = 0
         orden = self.ordenes[numero_orden]
@@ -58,6 +61,10 @@ class TempleSimulado:
         
         costo = self._calcular_costo(orden, agente)
         TActual = Temperatura0
+        
+        if orden_particular is not None:
+            orden = orden_particular
+            costo = self._calcular_costo(orden, agente)
         
         while TActual > minTemperatura:
             new_orden = self._random_swap(orden.copy())
@@ -75,5 +82,26 @@ class TempleSimulado:
 
 if __name__ == "__main__":
     matriz_casilla = csv_to_array('TP1/casillas.csv')
-    temple_simulado = TempleSimulado(matriz_casilla)
-    temple_simulado._parser('TP1/ordenes.csv')
+    temple_simulado = TempleSimulado(
+        matriz_casilla=matriz_casilla,
+        ordenes=[[1, 2, 3], [34, 35, 38]]
+    )
+
+    # Si esta hecho correctamente, debería encontrar las soluciones
+    # particulares como [1, 3, 2] y [34, 38, 35]
+    # Luego, probar con las ordenes del profesor
+    
+    # temple_simulado._parser('TP1/ordenes.csv')
+    
+    orden_optimo, costo_optimo = temple_simulado.busquedaLocal(
+        numero_orden=0,
+        Temperatura0=1000,
+        coolingRate=0.95,
+        minTemperatura=0.001
+    )
+    
+    
+    print(orden_optimo)
+    print(costo_optimo)
+    
+    
