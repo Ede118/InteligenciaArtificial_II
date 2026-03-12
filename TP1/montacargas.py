@@ -16,10 +16,9 @@ import numpy as np
 
 class Montacargas:
     def __init__(self, 
-                 ):
-        self.casilla_inicio = casilla_inicio
-        self.casilla_destino = casilla_destino
+                 matriz_casillas: np.ndarray):
+        self.matriz_casillas = matriz_casillas
 
-    def encontrar_camino(self):
+    def encontrar_camino(self) -> np.ndarray:
         # Implementar el algoritmo A* para encontrar el camino más corto
         pass

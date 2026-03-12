@@ -14,3 +14,8 @@ source .venv/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
+
+Para guardar nuevas dependencias:
+```bash
+pip freeze > requirements.txt
+```
