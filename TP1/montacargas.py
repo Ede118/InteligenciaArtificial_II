@@ -12,10 +12,11 @@ teniendo en cuenta las restricciones del montacargas.
 Se deben desarrollar las restricciones y objetivos.
 """
 
+import numpy as np
+
 class Montacargas:
     def __init__(self, 
-                 casilla_inicio: int, 
-                 casilla_destino: int):
+                 ):
         self.casilla_inicio = casilla_inicio
         self.casilla_destino = casilla_destino
 
