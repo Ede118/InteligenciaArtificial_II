@@ -13,7 +13,6 @@ Se deben desarrollar las restricciones y objetivos.
 """
 
 from unittest import case
-
 import numpy as np
 
 def csv_to_array(ruta: str) -> np.ndarray:
