@@ -56,14 +56,14 @@ class TempleSimulado:
                       orden_particular: np.ndarray = None
                       ) -> tuple[np.ndarray, float]:
         iteracion = 0
-        orden = self.ordenes[numero_orden]
         agente = Montacargas(self.matriz_casillas)
-        
-        costo = self._calcular_costo(orden, agente)
         TActual = Temperatura0
         
         if orden_particular is not None:
             orden = orden_particular
+            costo = self._calcular_costo(orden, agente)
+        else:
+            orden = self.ordenes[numero_orden]
             costo = self._calcular_costo(orden, agente)
         
         while TActual > minTemperatura:
