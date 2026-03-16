@@ -128,6 +128,8 @@ if __name__ == "__main__":
     
     temple_simulado._parser('TP1/utilities/ordenes.csv')
     
+    costo_de_todas_las_ordenes = 0
+    
     for i in range(len(temple_simulado.ordenes)):
         orden_optimo, costo_optimo = temple_simulado.busquedaLocal(
             numero_orden=i,
@@ -135,17 +137,22 @@ if __name__ == "__main__":
             coolingRate=0.85,
             minTemperatura=0.001
         )
-        print("\n════════════════════════════════════════════n")
+        
+        costo_de_todas_las_ordenes += costo_optimo
+        
+        print("\n════════════════════════════════════════════\n")
         print(orden_optimo)
         print(costo_optimo)
         print("\n════════════════════════════════════════════\n")
-        
+    
+    print(costo_de_todas_las_ordenes)
+    
     orden_optimo, costo_optimo = temple_simulado.busquedaLocal(
             numero_orden=random.randint(0,49),
             Temperatura0=100,
             coolingRate=0.85,
             minTemperatura=0.001
-        )
+    )
     
     for i in range(len(orden_optimo)):
         simulacion = E1.Simulacion(entorno_estatico)
@@ -155,4 +162,5 @@ if __name__ == "__main__":
         else:        
             simulacion.calcular_camino(orden_optimo[i], casilla0=(5,0))
             simulacion.run()
+    
     
