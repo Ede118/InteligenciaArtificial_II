@@ -1,34 +1,37 @@
-import TP1.draw_new_entorno as Sim
-import TP1.MultiAgente as MA
-
 import copy
-import Astar_OO as Astar
-
 import pygame
-import draw_entorno as Draw
+import numpy as np
+import Ejercicio1 as E1
 
-
-
-class Montacargas:
-
-    def __init__(self, id_robot, inicio, grid, estante):
+class MontacargasInteligente:
+    def __init__(
+        self, 
+        id_robot: int, 
+        grid: np.ndarray, 
+        estante0: int,
+        inicio: tuple[int, int] = (0,5)
+        ):
 
         self.id = id_robot
         self.inicio = inicio
         self.grid = grid
-        self.estante = estante
+        self.estante_objetivo = estante0
 
         self.camino = None
 
 
     def planificar(self):
-
-        entorno = Astar.Entorno(self.grid, self.estante)
-
-        astar = Astar.Astar(entorno)
-
-
-        self.camino = astar.execute(self.inicio)
+        """ 
+        @param None
+        @return self.camino: Lista de nodos (tuple[int, int]) los cuales son el camino desde la casilla de inicio hasta el estante objetivo.
+        """
+        entorno = E1.Almacen(
+            grid=self.grid, 
+            estante_objetivo=self.estante_objetivo, 
+            casilla_inicial=self.inicio)
+        
+        astar = E1.Montacargas(grilla=entorno)
+        self.camino, _= astar.execute()
 
         return self.camino
 
@@ -38,14 +41,15 @@ class Montacargas:
         grid_temp = copy.deepcopy(self.grid)
 
         for row, col in celdas_bloqueadas:
-            grid_temp[row][col] = Astar.Entorno.ESTANTE
+            grid_temp[row][col] = E1.Almacen.ESTANTE
 
-        entorno = Astar.Entorno(grid_temp, self.estante)
-
-        astar = Astar.Astar(entorno)
-
-
-        self.camino = astar.execute(self.inicio)
+        entorno = E1.Almacen(
+            grid=self.grid, 
+            estante_objetivo=self.estante_objetivo, 
+            casilla_inicial=self.inicio)
+        
+        astar = E1.Montacargas(entorno)
+        self.camino, _= astar.execute()
 
         return self.camino
 
@@ -91,7 +95,7 @@ class Coordinador:
 
         return camino1, camino2
 
-class SimulacionMulti(Draw.Simulacion):
+class SimulacionMulti(E1.Simulacion):
 
     def __init__(self, grid):
 
@@ -129,29 +133,30 @@ class SimulacionMulti(Draw.Simulacion):
 
 if __name__ == "__main__":
 
-    entorno_estatico = [[0,0,0,0,0,0,0,0,0,0,0,0,0], 
-                        [0,0,1,1,0,0,1,1,0,0,1,1,0], 
-                        [0,0,1,1,0,0,1,1,0,0,1,1,0], 
-                        [0,0,1,1,0,0,1,1,0,0,1,1,0], 
-                        [0,0,1,1,0,0,1,1,0,0,1,1,0], 
-                        [2,0,0,0,0,0,0,0,0,0,0,0,2], 
-                        [0,0,1,1,0,0,1,1,0,0,1,1,0], 
-                        [0,0,1,1,0,0,1,1,0,0,1,1,0], 
-                        [0,0,1,1,0,0,1,1,0,0,1,1,0], 
-                        [0,0,1,1,0,0,1,1,0,0,1,1,0], 
-                        [0,0,0,0,0,0,0,0,0,0,0,0,0]]
-
+    entorno_estatico = E1.csv_to_array("TP1/utilities/casillas.csv")
     estante1 = int(input("Estante robot 1: "))
     estante2 = int(input("Estante robot 2: "))
 
-    robot1 = MA.Montacargas(1,(5,0),entorno_estatico,estante1)
-    robot2 = MA.Montacargas(2,(5,12),entorno_estatico,estante2)
+    robot1 = MontacargasInteligente(
+        id_robot=1,
+        grid=entorno_estatico,
+        estante0=estante1,
+        inicio=(5,0)
+    )
+    
+    robot2 = MontacargasInteligente(
+        id_robot=2,
+        grid=entorno_estatico,
+        estante0=estante2,
+        inicio=(5,12)
+    )
+    
 
-    coord = MA.Coordinador(entorno_estatico,[robot1,robot2])
+    coord = Coordinador(entorno_estatico,[robot1,robot2])
 
     camino1, camino2 = coord.planificar_rutas()
 
-    sim = Sim.SimulacionMulti(entorno_estatico)
+    sim = SimulacionMulti(entorno_estatico)
 
     sim.set_caminos(camino1,camino2)
 

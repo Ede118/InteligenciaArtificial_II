@@ -27,15 +27,19 @@ def csv_to_array(ruta: str) -> np.ndarray:
 def casilla_a_coordenadas(
     casilla: int,
     matriz_casillas: np.ndarray
-    ) -> tuple:
+    ) -> tuple[int, int]:
     "Devuelve entre 0-size[0] (iterador en python)"
     x, y = np.where(matriz_casillas == casilla)
     if x.size == 0:
         raise ValueError(f"La casilla {casilla} no se encuentra en la matriz.")
-    return (x[0], y[0])  # Convertir a coordenadas 1-indexadas
+    x0: int = x[0]
+    y0: int = y[0]
+    return (x0, y0)  # Convertir a coordenadas 1-indexadas
 
 class Almacen:
-
+    """ 
+    Define la "grilla"/"almacen" donde se encuentran los estantes, caminos y posición de inicio de la carga.
+    """
     SUELO = 0
     ESTANTE = 1
     CARGA = 2
@@ -43,11 +47,13 @@ class Almacen:
     def __init__(
         self, 
         grid,
-        estante_objetivo: int,
-        casilla_inicial: tuple[int, int]
+        estante_objetivo: int
         ):
+        """ 
+        @param grid: Matriz de 0/1 con posiciones de estantes
+        @param estante_objetivo: número de estante objetivo
+        """
         self.grid = grid        
-
         self.ROWS = len(grid)
         self.COLS = len(grid[0]) if self.ROWS > 0 else 0
 
@@ -57,11 +63,9 @@ class Almacen:
                 estante_objetivo = 1
             if estante_objetivo > 48:
                 estante_objetivo = 48
-
-        
+                
         #Numero de estante
-        self.estante_objetivo = estante_objetivo
-        self.casilla_inicial = casilla_inicial 
+        self.estante_objetivo = estante_objetivo 
         #Posicion del estante objetivo
         self.pos_estante = None
         #Contador de estantes para encontrar la posición del estante objetivo
@@ -78,15 +82,15 @@ class Almacen:
             if self.pos_estante is not None:
                 break
 
-        self.objetivo = None
+        self.casilla_objetivo: tuple[int, int] | None
 
         #Entorno debe saber que si seleccionamos una estanteria, solo se puede estar 
         #del lado derecho o del lado izquierdo, dependiendo de la posicion del estante_objetivo
         #Si a la derecha es estante, entonces asignamos la casilla izquierda
         if self.grid[self.pos_estante[0]][self.pos_estante[1] + 1] == self.ESTANTE:
-            self.objetivo = (self.pos_estante[0], self.pos_estante[1] - 1)
+            self.casilla_objetivo = (self.pos_estante[0], self.pos_estante[1] - 1)
         else:
-            self.objetivo = (self.pos_estante[0], self.pos_estante[1] + 1)
+            self.casilla_objetivo = (self.pos_estante[0], self.pos_estante[1] + 1)
 
     def vecinos(self, nodo):
         row, col = nodo
@@ -101,23 +105,25 @@ class Almacen:
         return vecinos_validos
 
 class Montacargas:
+    """
+    Agente que realiza el algoritmo de busqueda global.
+    """
     def __init__(
         self, 
-        grilla: Almacen
+        grilla: Almacen,
+        casilla_inicial: tuple[int, int]
         ):
+        
         self.grilla = grilla
-
-        self.inicio = grilla.casilla_inicial # posicion inicial
-        self.objetivo = grilla.objetivo
-
+        self.casilla_inicial = casilla_inicial # posicion inicial
         self.OPEN = []
-        heapq.heappush(self.OPEN, (0, self.inicio))
+        heapq.heappush(self.OPEN, (0, self.casilla_inicial))
         self.CLOSED = set()
-        self.g = {self.inicio: 0}
+        self.g = {self.casilla_inicial: 0}
         self.padres = {}
 
     def heuristica(self, nodo):
-        return abs(nodo[0] - self.objetivo[0]) + abs(nodo[1] - self.objetivo[1])
+        return abs(nodo[0] - self.grilla.casilla_objetivo[0]) + abs(nodo[1] - self.grilla.casilla_objetivo[1])
     
     def reconstruir_camino(self, nodo: tuple[int, int]) -> list[tuple[int, int]]:
         """
@@ -147,7 +153,7 @@ class Montacargas:
                 continue
 
 
-            if nodo_actual == self.objetivo:
+            if nodo_actual == self.grilla.casilla_objetivo:
                 nodos_solucion = self.reconstruir_camino(nodo_actual)
                 h_manhattan = len(nodos_solucion) - 1
                 if print_costo:
@@ -223,10 +229,12 @@ class Simulacion:
         entorno = Almacen(
             self.grid, 
             estante_objetivo=estante,
-            casilla_inicial=casilla0
         )
         
-        agente = Montacargas(entorno)
+        agente = Montacargas(
+            grilla=entorno,
+            casilla_inicial=casilla0
+        )
 
         self.camino, self.costo = agente.execute(print_costo=True)
 
@@ -302,8 +310,12 @@ if __name__ == "__main__":
     casilla_inicial = tuple(int(x) for x in input("Ingrese la casilla inicial (fila,columna): ").split(","))
     estante = int(input("Ingrese el número del estante objetivo (1-48): "))
     
-    agente = Montacargas(Almacen(entorno_estatico, estante_objetivo=estante, casilla_inicial=casilla_inicial))
-    camino, costo = agente.execute(print_costo=True)
+    agente = Montacargas(
+        grilla=Almacen(entorno_estatico, estante_objetivo=estante),
+        casilla_inicial=casilla_inicial
+    )
+    
+    camino, costo = agente.execute(print_costo=False)
     
     simulacion = Simulacion(entorno_estatico)
     simulacion.calcular_camino(estante, casilla0=casilla_inicial)

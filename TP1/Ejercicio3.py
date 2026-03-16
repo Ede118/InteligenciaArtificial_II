@@ -9,16 +9,17 @@ import numpy as np
 import pandas as pd
 import csv
 import pathlib
-from Ejercicio1 import Montacargas, csv_to_array
+import random
+import Ejercicio1 as E1
 
 class TempleSimulado:
     
     def __init__(self, 
-                 matriz_casillas: np.ndarray,
+                 grilla,
                  *,
                  ordenes: np.ndarray = None):
-        self.matriz_casillas = matriz_casillas
         self.ordenes = ordenes
+        self.grilla = grilla
 
     def _parser(self, ruta: pathlib.Path):
         "Convierte el csv de ordenes a un array de numpy"
@@ -35,17 +36,34 @@ class TempleSimulado:
         secuencia[idx1], secuencia[idx2] = secuencia[idx2], secuencia[idx1]
         return secuencia
 
-    def _calcular_costo(self,
-                        orden: np.ndarray,
-                        agente: Montacargas
-                        ) -> float:
-        costo = 0
-        for i in range(len(orden)-1):
-            agente.iniciar = orden[i]
-            agente.destino = orden[i+1]
-            _, camino = agente.encontrar_camino()
-            costo += camino
-        return costo
+    def _calcular_costo(
+        self, 
+        orden: list[int]
+        ) -> int:
+        
+        costo_total = 0
+        posicion_actual = (5, 0) 
+
+        for estante_id in orden:
+            
+            entorno = E1.Almacen(
+                self.grilla, 
+                estante_objetivo=estante_id
+            )
+            
+            agente = E1.Montacargas(
+                grilla=entorno,
+                casilla_inicial=posicion_actual
+            )
+            
+            try:
+                camino, costo_tramo = agente.execute()
+                costo_total += costo_tramo
+                posicion_actual = camino[-1]
+            except ValueError:
+                return 100 # Penalización alta si el camino es imposible
+                
+        return costo_total
     
     def busquedaLocal(self,
                       numero_orden: int,
@@ -56,19 +74,19 @@ class TempleSimulado:
                       orden_particular: np.ndarray = None
                       ) -> tuple[np.ndarray, float]:
         iteracion = 0
-        agente = Montacargas(self.matriz_casillas)
         TActual = Temperatura0
+        costo = 100
         
         if orden_particular is not None:
             orden = orden_particular
-            costo = self._calcular_costo(orden, agente)
+            costo = self._calcular_costo(orden)
         else:
             orden = self.ordenes[numero_orden]
-            costo = self._calcular_costo(orden, agente)
+            costo = self._calcular_costo(orden)
         
         while TActual > minTemperatura:
             new_orden = self._random_swap(orden.copy())
-            new_costo = self._calcular_costo(new_orden, agente)
+            new_costo = self._calcular_costo(new_orden)
             if new_costo < costo:
                 orden = new_orden
                 costo = new_costo
@@ -76,32 +94,65 @@ class TempleSimulado:
                 delta = new_costo - costo
                 if np.exp(-delta/TActual) > np.random.rand():
                     orden = new_orden
+                    costo = new_costo
             TActual *= coolingRate
         
         return orden, costo
 
+
+
 if __name__ == "__main__":
-    matriz_casilla = csv_to_array('TP1/casillas.csv')
+    entorno_estatico = E1.csv_to_array("TP1/utilities/casillas.csv")
+    matriz_estantes = E1.csv_to_array("TP1/utilities/enumeracion.csv")
+    
+    
     temple_simulado = TempleSimulado(
-        matriz_casilla=matriz_casilla,
-        ordenes=[[1, 2, 3], [34, 35, 38]]
+        grilla=entorno_estatico
     )
 
+        # ordenes=[[1, 7, 19, 13], [25, 31, 37]]
     # Si esta hecho correctamente, debería encontrar las soluciones
     # particulares como [1, 3, 2] y [34, 38, 35]
     # Luego, probar con las ordenes del profesor
+    # for i in range(20):
+    #     orden_optimo, costo_optimo = temple_simulado.busquedaLocal(
+    #         numero_orden=0,
+    #         Temperatura0=100,
+    #         coolingRate=0.85,
+    #         minTemperatura=0.001
+    #     )
+    #     print("\n===================================\n")
+    #     print(orden_optimo)
+    #     print(costo_optimo)
+    #     print("\n===================================\n")
     
-    # temple_simulado._parser('TP1/ordenes.csv')
+    temple_simulado._parser('TP1/utilities/ordenes.csv')
     
+    for i in range(len(temple_simulado.ordenes)):
+        orden_optimo, costo_optimo = temple_simulado.busquedaLocal(
+            numero_orden=i,
+            Temperatura0=100,
+            coolingRate=0.85,
+            minTemperatura=0.001
+        )
+        print("\n════════════════════════════════════════════n")
+        print(orden_optimo)
+        print(costo_optimo)
+        print("\n════════════════════════════════════════════\n")
+        
     orden_optimo, costo_optimo = temple_simulado.busquedaLocal(
-        numero_orden=0,
-        Temperatura0=1000,
-        coolingRate=0.95,
-        minTemperatura=0.001
-    )
+            numero_orden=random.randint(0,49),
+            Temperatura0=100,
+            coolingRate=0.85,
+            minTemperatura=0.001
+        )
     
-    
-    print(orden_optimo)
-    print(costo_optimo)
-    
+    for i in range(len(orden_optimo)):
+        simulacion = E1.Simulacion(entorno_estatico)
+        if i == 0:
+            simulacion.calcular_camino(orden_optimo[i], casilla0=(5,0))
+            simulacion.run()
+        else:        
+            simulacion.calcular_camino(orden_optimo[i], casilla0=(5,0))
+            simulacion.run()
     
