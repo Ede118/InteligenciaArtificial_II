@@ -47,7 +47,10 @@ class Almacen:
     def __init__(
         self, 
         grid,
-        estante_objetivo: int
+        estante_objetivo: int,
+        *,
+        flag_almacen: bool = False,
+        lista_modificada: np.ndarray
         ):
         """ 
         @param grid: Matriz de 0/1 con posiciones de estantes
@@ -76,7 +79,11 @@ class Almacen:
             for j in range(self.COLS):
                 if self.grid[i][j] == self.ESTANTE:
                     self.idx_estante += 1
-                    if self.idx_estante == self.estante_objetivo:
+                    
+                    if flag_almacen:
+                        almacen_numero = lista_modificada[self.idx_estante-1]
+                    
+                    if almacen_numero == self.estante_objetivo:
                         self.pos_estante = (i, j)
                         break
             if self.pos_estante is not None:
