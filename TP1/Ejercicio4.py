@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from Plantilla import plantilla
 from Ejercicio3 import TempleSimulado
+from Ejercicio1 import csv_to_array
 
 class AlgoritmoGenetico:
 
@@ -227,7 +227,7 @@ if __name__ == "__main__":
     ag = AlgoritmoGenetico()
 
     resultados = ag.algoritmo(
-        plantilla=plantilla,
+        plantilla=csv_to_array("TP1/casillas.csv"),
         max_generaciones=2000,
         prob_cruce=0.5,
         prob_mutacion=0.05

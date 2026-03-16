@@ -47,7 +47,7 @@ class MontacargasInteligente:
             grid_temp[row][col] = E1.Almacen.ESTANTE
 
         entorno = E1.Almacen(
-            grid=self.grid, 
+            grid=grid_temp, 
             estante_objetivo=self.estante_objetivo
         )
         
