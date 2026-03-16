@@ -116,9 +116,9 @@ class Montacargas:
         
         self.grilla = grilla
         self.casilla_inicial = casilla_inicial # posicion inicial
-        self.OPEN = []
+        self.OPEN = [] #por explorar 
         heapq.heappush(self.OPEN, (0, self.casilla_inicial))
-        self.CLOSED = set()
+        self.CLOSED = set() #explorados
         self.g = {self.casilla_inicial: 0}
         self.padres = {}
 
