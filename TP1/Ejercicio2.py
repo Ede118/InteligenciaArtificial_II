@@ -27,10 +27,13 @@ class MontacargasInteligente:
         """
         entorno = E1.Almacen(
             grid=self.grid, 
-            estante_objetivo=self.estante_objetivo, 
-            casilla_inicial=self.inicio)
+            estante_objetivo=self.estante_objetivo
+        )
         
-        astar = E1.Montacargas(grilla=entorno)
+        astar = E1.Montacargas(
+            grilla=entorno,
+            casilla_inicial=self.inicio
+        )
         self.camino, _= astar.execute()
 
         return self.camino
@@ -45,10 +48,14 @@ class MontacargasInteligente:
 
         entorno = E1.Almacen(
             grid=self.grid, 
-            estante_objetivo=self.estante_objetivo, 
-            casilla_inicial=self.inicio)
+            estante_objetivo=self.estante_objetivo
+        )
         
-        astar = E1.Montacargas(entorno)
+        astar = E1.Montacargas(
+            grilla=entorno,
+            casilla_inicial=self.inicio
+        )
+        
         self.camino, _= astar.execute()
 
         return self.camino
