@@ -27,7 +27,9 @@ class MontacargasInteligente:
         """
         entorno = E1.Almacen(
             grid=self.grid, 
-            estante_objetivo=self.estante_objetivo
+            estante_objetivo=self.estante_objetivo,
+            flag_almacen=False,
+            lista_modificada=None
         )
         
         astar = E1.Montacargas(

@@ -336,7 +336,9 @@ if __name__ == "__main__":
     agente = Montacargas(
         grilla=Almacen(
             entorno_estatico, 
-            estante_objetivo=estante
+            estante_objetivo=estante,
+            flag_almacen=False,
+            lista_modificada= None
         ),
         casilla_inicial=casilla_inicial
     )
@@ -346,7 +348,9 @@ if __name__ == "__main__":
     simulacion = Simulacion(entorno_estatico)
     simulacion.calcular_camino(
         estante, 
-        casilla0=casilla_inicial
+        casilla0=casilla_inicial,
+        flag=False,
+        orden=None
     )
     simulacion.run()
     

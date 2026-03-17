@@ -10,6 +10,8 @@ import pandas as pd
 import csv
 import pathlib
 import random
+import os
+import pygame
 import Ejercicio1 as E1
 
 class TempleSimulado:
@@ -48,7 +50,9 @@ class TempleSimulado:
             
             entorno = E1.Almacen(
                 self.grilla, 
-                estante_objetivo=estante_id
+                estante_objetivo=estante_id,
+                flag_almacen=False,
+                lista_modificada=None
             )
             
             agente = E1.Montacargas(
@@ -99,21 +103,111 @@ class TempleSimulado:
         
         return orden, costo
 
+class SimulacionInteractiva(E1.Simulacion):
+    def __init__(self, grid):
+        super().__init__(grid)
+        self.tramos_acumulados = [] # Lista de (camino, color)
+        self.indice_visible = 0      # Cuántos tramos mostramos actualmente
+        self.palette = [
+            (0, 255, 0, 180), (0, 0, 255, 180), (255, 165, 0, 180),
+            (255, 0, 255, 180), (0, 255, 255, 180), (255, 255, 0, 180)
+        ]
+
+    def agregar_tramo(self, camino):
+        if not camino: return
+        color = self.palette[len(self.tramos_acumulados) % len(self.palette)]
+        self.tramos_acumulados.append((camino, color))
+
+    def draw_entorno(self, _):
+        # Dibujamos el mapa base
+        super().draw_entorno(None) 
+        
+        # Dibujamos solo hasta el índice visible actual
+        for i in range(min(self.indice_visible, len(self.tramos_acumulados))):
+            camino, color = self.tramos_acumulados[i]
+            overlay = pygame.Surface((self.TAM_CELL, self.TAM_CELL), pygame.SRCALPHA)
+            overlay.fill(color)
+            for row, col in camino:
+                self.pantalla.blit(overlay, (col * self.TAM_CELL, row * self.TAM_CELL))
+
+    def run(self):
+        print("\n[CONTROL] Presiona ESPACIO para mostrar el siguiente tramo.")
+        print("[CONTROL] Presiona R para reiniciar o ESC para salir.")
+        
+        clock = pygame.time.Clock()
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit(); sys.exit()
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        if self.indice_visible < len(self.tramos_acumulados):
+                            self.indice_visible += 1
+                            print(f"-> Mostrando tramo {self.indice_visible}/{len(self.tramos_acumulados)}")
+                    
+                    if event.key == pygame.K_r: # Reset por si quieres volver a ver la secuencia
+                        self.indice_visible = 0
+                    
+                    if event.key == pygame.K_ESCAPE:
+                        pygame.quit(); return
+
+            self.pantalla.fill((0, 0, 0))
+            self.draw_entorno(None)
+            pygame.display.flip()
+            clock.tick(60)
+
 
 
 if __name__ == "__main__":
+    os.system('clear')
     entorno_estatico = E1.csv_to_array("TP1/utilities/casillas.csv")
-    matriz_estantes = E1.csv_to_array("TP1/utilities/enumeracion.csv")
-    
-    
-    temple_simulado = TempleSimulado(
-        grilla=entorno_estatico
-    )
+    temple_simulado = TempleSimulado(grilla=entorno_estatico)
+    temple_simulado._parser('TP1/utilities/ordenes.csv')
 
-        # ordenes=[[1, 7, 19, 13], [25, 31, 37]]
-    # Si esta hecho correctamente, debería encontrar las soluciones
-    # particulares como [1, 3, 2] y [34, 38, 35]
-    # Luego, probar con las ordenes del profesor
+    # Obtener la secuencia optimizada (ejemplo para la primera orden)
+    orden_optimo, costo = temple_simulado.busquedaLocal(
+        numero_orden=random.randint(0,49), 
+        Temperatura0=100,
+        coolingRate=0.85,
+        minTemperatura=0.001
+    )
+    print(f"Secuencia Optimizada: {orden_optimo} | Costo: {costo}")
+
+    sim = SimulacionInteractiva(entorno_estatico)
+    posicion_actual = (5, 0)
+    
+    # Pre-calculamos todos los tramos del camino óptimo
+    for estante_id in orden_optimo:
+        entorno_temp = E1.Almacen(
+            entorno_estatico, 
+            estante_objetivo=estante_id,
+            flag_almacen=False,
+            lista_modificada=None
+        )
+        agente = E1.Montacargas(grilla=entorno_temp, casilla_inicial=posicion_actual)
+        try:
+            camino, _ = agente.execute()
+            sim.agregar_tramo(camino)
+            posicion_actual = camino[-1] 
+        except ValueError:
+            pass
+
+    # Iniciamos el bucle interactivo
+    sim.run()
+    
+#       Pruebas de código:
+#
+#    
+#     temple_simulado = TempleSimulado(
+#         grilla=entorno_estatico,
+#         ordenes=[[1, 7, 19, 13], [25, 31, 37]]
+#     )
+
+#     # Si esta hecho correctamente, debería encontrar las soluciones
+#     # particulares como [1, 7, 13, 19] y [25, 31, 37]
+#     # Luego, probar con las ordenes del profesor
+
     # for i in range(20):
     #     orden_optimo, costo_optimo = temple_simulado.busquedaLocal(
     #         numero_orden=0,
@@ -126,41 +220,21 @@ if __name__ == "__main__":
     #     print(costo_optimo)
     #     print("\n===================================\n")
     
-    temple_simulado._parser('TP1/utilities/ordenes.csv')
+#     # costo_de_todas_las_ordenes = 0
     
-    costo_de_todas_las_ordenes = 0
-    
-    for i in range(len(temple_simulado.ordenes)):
-        orden_optimo, costo_optimo = temple_simulado.busquedaLocal(
-            numero_orden=i,
-            Temperatura0=100,
-            coolingRate=0.85,
-            minTemperatura=0.001
-        )
+#     # for i in range(len(temple_simulado.ordenes)):
+#     #     orden_optimo, costo_optimo = temple_simulado.busquedaLocal(
+#     #         numero_orden=i,
+#     #         Temperatura0=100,
+#     #         coolingRate=0.85,
+#     #         minTemperatura=0.001
+#     #     )
         
-        costo_de_todas_las_ordenes += costo_optimo
+#     #     costo_de_todas_las_ordenes += costo_optimo
         
-        print("\n════════════════════════════════════════════\n")
-        print(orden_optimo)
-        print(costo_optimo)
-        print("\n════════════════════════════════════════════\n")
+#     #     print("\n════════════════════════════════════════════\n")
+#     #     print(orden_optimo)
+#     #     print(costo_optimo)
+#     #     print("\n════════════════════════════════════════════\n")
     
-    print(costo_de_todas_las_ordenes)
-    
-    orden_optimo, costo_optimo = temple_simulado.busquedaLocal(
-            numero_orden=random.randint(0,49),
-            Temperatura0=100,
-            coolingRate=0.85,
-            minTemperatura=0.001
-    )
-    
-    for i in range(len(orden_optimo)):
-        simulacion = E1.Simulacion(entorno_estatico)
-        if i == 0:
-            simulacion.calcular_camino(orden_optimo[i], casilla0=(5,0))
-            simulacion.run()
-        else:        
-            simulacion.calcular_camino(orden_optimo[i], casilla0=(5,0))
-            simulacion.run()
-    
-    
+#     # print(costo_de_todas_las_ordenes)
