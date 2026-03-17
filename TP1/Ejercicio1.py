@@ -99,7 +99,8 @@ class Almacen:
 
         for vecino in posibles_vecinos:
             if 0 <= vecino[0] < self.ROWS and 0 <= vecino[1] < self.COLS:
-                if self.grid[vecino[0]][vecino[1]] != self.ESTANTE:
+                valor_celda=self.grid[vecino[0]][vecino[1]]
+                if valor_celda != self.ESTANTE and valor_celda !=99:
                     vecinos_validos.append(vecino)
 
         return vecinos_validos
