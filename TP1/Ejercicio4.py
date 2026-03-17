@@ -207,12 +207,7 @@ if __name__ == "__main__":
     ag = AlgoritmoGenetico()
 
     resultados = ag.algoritmo(
-<<<<<<< HEAD
-        grilla=csv_to_array("TP1/casillas.csv"),
-        ordenes=csv_to_array("TP1/ordenes.csv"),
-=======
         grilla=csv_to_array("TP1/utilities/casillas.csv"),
->>>>>>> 5f0e472e3ee8401de194bd3d5c69bd9ee6f550d1
         max_generaciones=2000,
         prob_cruce=0.5,
         prob_mutacion=0.05
