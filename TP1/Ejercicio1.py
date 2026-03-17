@@ -49,7 +49,7 @@ class Almacen:
         grid,
         estante_objetivo: int,
         *,
-        lista_modificada: any | None,
+        lista_modificada0,
         flag_almacen: bool = False
         ):
         """ 
@@ -246,7 +246,7 @@ class Simulacion:
             self.grid, 
             estante_objetivo=estante,
             flag_almacen=flag,
-            lista_modificada=orden
+            lista_modificada0=orden
         )
         
         agente = Montacargas(
@@ -338,7 +338,7 @@ if __name__ == "__main__":
             entorno_estatico, 
             estante_objetivo=estante,
             flag_almacen=False,
-            lista_modificada= None
+            lista_modificada0= None
         ),
         casilla_inicial=casilla_inicial
     )

@@ -153,6 +153,7 @@ class AlgoritmoGenetico:
 
     def algoritmo(self,
                 grilla: np.ndarray,
+                ordenes: np.ndarray,
                 max_generaciones: int = 2000,
                 prob_cruce: float = 0.5,
                 prob_mutacion: float = 0.05):
@@ -208,6 +209,7 @@ if __name__ == "__main__":
 
     resultados = ag.algoritmo(
         grilla=csv_to_array("TP1/casillas.csv"),
+        ordenes=csv_to_array("TP1/ordenes.csv"),
         max_generaciones=2000,
         prob_cruce=0.5,
         prob_mutacion=0.05

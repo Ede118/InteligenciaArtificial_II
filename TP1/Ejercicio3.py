@@ -53,7 +53,7 @@ class TempleSimulado:
                 self.grilla, 
                 estante_objetivo=estante_id,
                 flag_almacen=False,
-                lista_modificada=None
+                lista_modificada0=None
             )
             
             agente = E1.Montacargas(
@@ -184,7 +184,7 @@ if __name__ == "__main__":
             entorno_estatico, 
             estante_objetivo=estante_id,
             flag_almacen=False,
-            lista_modificada=None
+            lista_modificada0=None
         )
         agente = E1.Montacargas(grilla=entorno_temp, casilla_inicial=posicion_actual)
         try:
