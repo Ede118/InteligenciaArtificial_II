@@ -47,7 +47,10 @@ class Almacen:
     def __init__(
         self, 
         grid,
-        estante_objetivo: int
+        estante_objetivo: int,
+        *,
+        lista_modificada0,
+        flag_almacen: bool = False
         ):
         """ 
         @param grid: Matriz de 0/1 con posiciones de estantes
@@ -70,13 +73,23 @@ class Almacen:
         self.pos_estante = None
         #Contador de estantes para encontrar la posición del estante objetivo
         self.idx_estante = 0
+        
+        if flag_almacen is None:
+            flag_almacen = False
+            lista_modificada = None
 
         #cuando 
         for i in range(self.ROWS):
             for j in range(self.COLS):
                 if self.grid[i][j] == self.ESTANTE:
                     self.idx_estante += 1
-                    if self.idx_estante == self.estante_objetivo:
+                    
+                    if flag_almacen:
+                        almacen_numero = lista_modificada[self.idx_estante-1]
+                    else:
+                        almacen_numero = self.idx_estante
+                    
+                    if almacen_numero == self.estante_objetivo:
                         self.pos_estante = (i, j)
                         break
             if self.pos_estante is not None:
@@ -224,12 +237,17 @@ class Simulacion:
     def calcular_camino(
         self,
         estante: int,
-        casilla0: tuple[int, int] = (5, 0)
+        casilla0: tuple[int, int] = (5, 0),
+        *,
+        flag: bool = False,
+        orden: np.ndarray | list
         ):
 
         entorno = Almacen(
             self.grid, 
             estante_objetivo=estante,
+            flag_almacen=flag,
+            lista_modificada0=orden
         )
         
         agente = Montacargas(
@@ -311,13 +329,30 @@ if __name__ == "__main__":
     casilla_inicial = tuple(int(x) for x in input("Ingrese la casilla inicial (fila,columna): ").split(","))
     estante = int(input("Ingrese el número del estante objetivo (1-48): "))
     
+    mod_list = [x+1 for x in range(48)]
+    
+    mod_list[0] = 2
+    mod_list[1] = 1
+    
     agente = Montacargas(
-        grilla=Almacen(entorno_estatico, estante_objetivo=estante),
+        grilla=Almacen(
+            entorno_estatico, 
+            estante_objetivo=estante,
+            flag_almacen=False,
+            lista_modificada0= None
+        ),
         casilla_inicial=casilla_inicial
     )
     
     camino, costo = agente.execute(print_costo=False)
     
     simulacion = Simulacion(entorno_estatico)
-    simulacion.calcular_camino(estante, casilla0=casilla_inicial)
+    simulacion.calcular_camino(
+        estante, 
+        casilla0=casilla_inicial,
+        flag=False,
+        orden=None
+    )
     simulacion.run()
+    
+    print("Lo que sea")
