@@ -6,8 +6,7 @@ from Ejercicio1 import csv_to_array
 class AlgoritmoGenetico:
 
     def __init__(self):
-        grilla = csv_to_array("TP1/casillas.csv")
-        ordenes = csv_to_array("TP1/ordenes.csv")
+        grilla = csv_to_array("TP1/utilities/casillas.csv")
         self.N_poblacion = 100
         self.long_individuo = 48
         self.generaciones = 2000
@@ -18,7 +17,7 @@ class AlgoritmoGenetico:
 
         
     def evaluar_individuo(self, individuo: np.ndarray) -> float:
-        simulacion = TempleSimulado(self.grilla, self.ordenes)
+        simulacion = TempleSimulado(self.grilla)
         costo_total = simulacion.busquedaLocal(numero_orden=0, Temperatura0=1000, coolingRate=0.95, minTemperatura=1, orden_particular=individuo)
         return costo_total[1]  # Retorna el costo total de la simulación
     
@@ -208,8 +207,12 @@ if __name__ == "__main__":
     ag = AlgoritmoGenetico()
 
     resultados = ag.algoritmo(
+<<<<<<< HEAD
         grilla=csv_to_array("TP1/casillas.csv"),
         ordenes=csv_to_array("TP1/ordenes.csv"),
+=======
+        grilla=csv_to_array("TP1/utilities/casillas.csv"),
+>>>>>>> 5f0e472e3ee8401de194bd3d5c69bd9ee6f550d1
         max_generaciones=2000,
         prob_cruce=0.5,
         prob_mutacion=0.05
