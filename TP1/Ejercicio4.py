@@ -4,10 +4,6 @@ from Ejercicio3 import TempleSimulado
 from Ejercicio1 import csv_to_array
 import Ejercicio1 as E1
 
-class AlmacenMod(E1.Almacen):
-    
-    pass
-
 class AlgoritmoGenetico:
 
     def __init__(self):
@@ -19,21 +15,12 @@ class AlgoritmoGenetico:
     def inicializar_poblacion(self):
         return np.array([np.random.permutation(self.long_individuo) + 1 for _ in range(self.N_poblacion)])
 
-    def construir_matriz_individuo(self, individuo: np.ndarray, plantilla: np.ndarray) -> np.ndarray:
-        matriz = plantilla.copy()
         
-        posiciones = np.argwhere(matriz == 1)  # coordenadas de casillas válidas
-        
-        for i, (fila, col) in enumerate(posiciones):
-            matriz[fila, col] = individuo[i]
-        
-        return matriz #devuleve una matriz donde cada casilla tiene el numero de producto
-    
-    # def fitness(self, individuo: np.ndarray, plantilla: np.ndarray) -> float:
-    #     matriz_individuo = self.construir_matriz_individuo(individuo, plantilla)
-    #     simulacion = TempleSimulado(matriz_individuo)
-    #     costo_total = simulacion.busquedaLocal(numero_orden=0, Temperatura0=1000, coolingRate=0.95, minTemperatura=1)
-    #     return costo_total[1]  # Retorna el costo total de la simulación
+    def fitness(self, individuo: np.ndarray, plantilla: np.ndarray) -> float:
+        matriz_individuo = self.construir_matriz_individuo(individuo, plantilla)
+        simulacion = TempleSimulado(matriz_individuo)
+        costo_total = simulacion.busquedaLocal(numero_orden=0, Temperatura0=1000, coolingRate=0.95, minTemperatura=1)
+        return costo_total[1]  # Retorna el costo total de la simulación
         
     def evaluar_individuo(self, individuo: np.ndarray, plantilla: np.ndarray) -> float:
     
