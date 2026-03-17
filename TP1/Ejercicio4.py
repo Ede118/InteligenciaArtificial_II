@@ -2,11 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from Ejercicio3 import TempleSimulado
 from Ejercicio1 import csv_to_array
-import Ejercicio1 as E1
 
 class AlgoritmoGenetico:
 
     def __init__(self):
+        grilla = csv_to_array("TP1/casillas.csv")
+        ordenes = csv_to_array("TP1/ordenes.csv")
         self.N_poblacion = 100
         self.long_individuo = 48
         self.generaciones = 2000
@@ -16,29 +17,16 @@ class AlgoritmoGenetico:
         return np.array([np.random.permutation(self.long_individuo) + 1 for _ in range(self.N_poblacion)])
 
         
-    def fitness(self, individuo: np.ndarray, plantilla: np.ndarray) -> float:
-        matriz_individuo = self.construir_matriz_individuo(individuo, plantilla)
-        simulacion = TempleSimulado(matriz_individuo)
-        costo_total = simulacion.busquedaLocal(numero_orden=0, Temperatura0=1000, coolingRate=0.95, minTemperatura=1)
+    def evaluar_individuo(self, individuo: np.ndarray) -> float:
+        simulacion = TempleSimulado(self.grilla, self.ordenes)
+        costo_total = simulacion.busquedaLocal(numero_orden=0, Temperatura0=1000, coolingRate=0.95, minTemperatura=1, orden_particular=individuo)
         return costo_total[1]  # Retorna el costo total de la simulación
-        
-    def evaluar_individuo(self, individuo: np.ndarray, plantilla: np.ndarray) -> float:
-    
-        matriz = self.construir_matriz_individuo(individuo, plantilla)
-        posiciones = np.argwhere(matriz != 0)
-        puntaje = 0
-        
-        for fila, col in posiciones:
-            producto = matriz[fila, col]
-            puntaje += producto * np.sqrt(fila**2 + col**2)
-        return puntaje  #puntaje ficticio
     
     def evaluar_poblacion(self, poblacion: np.ndarray, plantilla: np.ndarray):
     
         puntajes = []
-        
         for individuo in poblacion:
-            puntaje = self.evaluar_individuo(individuo, plantilla)
+            puntaje = self.evaluar_individuo(individuo)
             puntajes.append(puntaje)
         
         return np.array(puntajes)
@@ -164,7 +152,7 @@ class AlgoritmoGenetico:
         return np.array(hijos)
 
     def algoritmo(self,
-                plantilla: np.ndarray,
+                grilla: np.ndarray,
                 max_generaciones: int = 2000,
                 prob_cruce: float = 0.5,
                 prob_mutacion: float = 0.05):
@@ -181,7 +169,7 @@ class AlgoritmoGenetico:
 
         for gen in range(max_generaciones):
             # Evaluar población
-            puntajes = self.evaluar_poblacion(poblacion, plantilla)
+            puntajes = self.evaluar_poblacion(poblacion, grilla)
             fitness = self.calcular_fitness(puntajes)
             probabilidades = fitness / np.sum(fitness)
 
@@ -219,7 +207,7 @@ if __name__ == "__main__":
     ag = AlgoritmoGenetico()
 
     resultados = ag.algoritmo(
-        plantilla=csv_to_array("TP1/casillas.csv"),
+        grilla=csv_to_array("TP1/casillas.csv"),
         max_generaciones=2000,
         prob_cruce=0.5,
         prob_mutacion=0.05

@@ -5,6 +5,7 @@ es minimizar el costo total de las rutas del montacargas al seguir una secuencia
 de órdenes dada, utilizando el algoritmo A*.
 """
 
+import sys
 import numpy as np
 import pandas as pd
 import csv
