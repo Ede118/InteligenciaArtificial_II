@@ -166,7 +166,7 @@ class TempleSimulado:
         if minTemperatura <= 0:
             raise ValueError("minTemperatura debe ser mayor que 0.")
 
-        # 🔹 CASO 1: orden pasada directamente (USADO POR EL AG)
+        # 🔹 CASO 1: orden pasada directamente 
         if orden_particular is not None:
             orden = np.array(orden_particular, dtype=int).copy()
 
@@ -179,9 +179,6 @@ class TempleSimulado:
                 raise IndexError("numero_orden fuera de rango.")
 
             orden = np.array(self.ordenes[numero_orden], dtype=int).copy()
-
-            # ⚠️ IMPORTANTE: si el CSV tiene PRODUCTOS, esto está MAL
-            # Por eso conviene NO usar este modo en el AG
 
         # 🔹 Inicialización
         TActual = float(Temperatura0)
