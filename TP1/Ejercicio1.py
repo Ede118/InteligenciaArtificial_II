@@ -47,9 +47,10 @@ class Almacen:
     def __init__(
         self, 
         grid,
-        estante_objetivo: int,
+        estante_objetivo: int = None,
+        posicion_final: tuple[int, int] = None,
         *,
-        lista_modificada0,
+        lista_modificada: any | None = None,
         flag_almacen: bool = False
         ):
         """ 
@@ -60,50 +61,55 @@ class Almacen:
         self.ROWS = len(grid)
         self.COLS = len(grid[0]) if self.ROWS > 0 else 0
 
-        if not 1 <= estante_objetivo <= 48 :
-            print("[WARNING]El estante objetivo debe estar entre 1 y 48.")
-            if estante_objetivo < 1:
-                estante_objetivo = 1
-            if estante_objetivo > 48:
-                estante_objetivo = 48
-                
-        #Numero de estante
-        self.estante_objetivo = estante_objetivo 
-        #Posicion del estante objetivo
-        self.pos_estante = None
-        #Contador de estantes para encontrar la posición del estante objetivo
-        self.idx_estante = 0
+        if estante_objetivo is not None and posicion_final is None:
+            if not 1 <= estante_objetivo <= 48 :
+                print("[WARNING]El estante objetivo debe estar entre 1 y 48.")
+                if estante_objetivo < 1:
+                    estante_objetivo = 1
+                if estante_objetivo > 48:
+                    estante_objetivo = 48
+                    
+            #Numero de estante
+            self.estante_objetivo = estante_objetivo 
+            #Posicion del estante objetivo
+            self.pos_estante = None
+            #Contador de estantes para encontrar la posición del estante objetivo
+            self.idx_estante = 0
+            
+            if flag_almacen is None:
+                flag_almacen = False
+                lista_modificada = None
+
+            #cuando 
+            for i in range(self.ROWS):
+                for j in range(self.COLS):
+                    if self.grid[i][j] == self.ESTANTE:
+                        self.idx_estante += 1
+                        
+                        if flag_almacen:
+                            almacen_numero = lista_modificada[self.idx_estante-1]
+                        else:
+                            almacen_numero = self.idx_estante
+                        
+                        if almacen_numero == self.estante_objetivo:
+                            self.pos_estante = (i, j)
+                            break
+                if self.pos_estante is not None:
+                    break
+
+            self.casilla_objetivo: tuple[int, int] | None
+
+            #Entorno debe saber que si seleccionamos una estanteria, solo se puede estar 
+            #del lado derecho o del lado izquierdo, dependiendo de la posicion del estante_objetivo
+            #Si a la derecha es estante, entonces asignamos la casilla izquierda
+            if self.grid[self.pos_estante[0]][self.pos_estante[1] + 1] == self.ESTANTE:
+                self.casilla_objetivo = (self.pos_estante[0], self.pos_estante[1] - 1)
+            else:
+                self.casilla_objetivo = (self.pos_estante[0], self.pos_estante[1] + 1)
         
-        if flag_almacen is None:
-            flag_almacen = False
-            lista_modificada = None
-
-        #cuando 
-        for i in range(self.ROWS):
-            for j in range(self.COLS):
-                if self.grid[i][j] == self.ESTANTE:
-                    self.idx_estante += 1
-                    
-                    if flag_almacen:
-                        almacen_numero = lista_modificada[self.idx_estante-1]
-                    else:
-                        almacen_numero = self.idx_estante
-                    
-                    if almacen_numero == self.estante_objetivo:
-                        self.pos_estante = (i, j)
-                        break
-            if self.pos_estante is not None:
-                break
-
-        self.casilla_objetivo: tuple[int, int] | None
-
-        #Entorno debe saber que si seleccionamos una estanteria, solo se puede estar 
-        #del lado derecho o del lado izquierdo, dependiendo de la posicion del estante_objetivo
-        #Si a la derecha es estante, entonces asignamos la casilla izquierda
-        if self.grid[self.pos_estante[0]][self.pos_estante[1] + 1] == self.ESTANTE:
-            self.casilla_objetivo = (self.pos_estante[0], self.pos_estante[1] - 1)
-        else:
-            self.casilla_objetivo = (self.pos_estante[0], self.pos_estante[1] + 1)
+        if posicion_final is not None:
+            self.casilla_objetivo = posicion_final
+            
 
     def vecinos(self, nodo):
         row, col = nodo
@@ -236,8 +242,9 @@ class Simulacion:
 
     def calcular_camino(
         self,
-        estante: int,
+        estante: int = None,
         casilla0: tuple[int, int] = (5, 0),
+        posicion_final: tuple[int, int] = None,
         *,
         flag: bool = False,
         orden: np.ndarray | list
@@ -246,6 +253,7 @@ class Simulacion:
         entorno = Almacen(
             self.grid, 
             estante_objetivo=estante,
+            posicion_final=posicion_final,
             flag_almacen=flag,
             lista_modificada0=orden
         )
@@ -328,6 +336,7 @@ if __name__ == "__main__":
     print("La casilla de carga \"C\" es (5,0).")
     casilla_inicial = tuple(int(x) for x in input("Ingrese la casilla inicial (fila,columna): ").split(","))
     estante = int(input("Ingrese el número del estante objetivo (1-48): "))
+    casilla_final = tuple(int(x) for x in input("Ingrese la casilla final (fila,columna): ").split(","))
     
     mod_list = [x+1 for x in range(48)]
     
@@ -337,7 +346,8 @@ if __name__ == "__main__":
     agente = Montacargas(
         grilla=Almacen(
             entorno_estatico, 
-            estante_objetivo=estante,
+            estante_objetivo=None,
+            posicion_final=casilla_final,
             flag_almacen=False,
             lista_modificada0= None
         ),
@@ -348,11 +358,11 @@ if __name__ == "__main__":
     
     simulacion = Simulacion(entorno_estatico)
     simulacion.calcular_camino(
-        estante, 
+        posicion_final=casilla_final, 
         casilla0=casilla_inicial,
         flag=False,
         orden=None
     )
     simulacion.run()
     
-    print("Lo que sea")
+    print("Lo que sea", )

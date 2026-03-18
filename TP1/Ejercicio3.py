@@ -44,20 +44,25 @@ class TempleSimulado:
         nueva[idx1], nueva[idx2] = nueva[idx2], nueva[idx1]
         return nueva
 
-    def _calcular_costo(self, orden: list[int] | np.ndarray) -> int:   
+    def _calcular_costo(self, orden: list[int] | np.ndarray) -> int:
         """
-        Calcula el costo de recorrer una secuencia de estantes/posiciones fisicas 
-        (no oden de productos).
+        Calcula el costo total de un pedido expresado como secuencia de
+        posiciones físicas (estantes), incluyendo:
+
+        C -> e1 -> e2 -> ... -> en -> C
         """
         costo_total = 0
-        posicion_actual = (5, 0)
+        posicion_carga = (5, 0)
+        posicion_actual = posicion_carga
 
-        for estante_id in orden: 
+        # Ir desde C al primer estante y luego entre estantes
+        for estante_id in orden:
             entorno = E1.Almacen(
                 self.grilla,
                 estante_objetivo=int(estante_id),
+                posicion_final=None,
                 flag_almacen=False,
-                lista_modificada0=None
+                lista_modificada=None
             )
 
             agente = E1.Montacargas(
@@ -69,6 +74,27 @@ class TempleSimulado:
                 camino, costo_tramo = agente.execute()
                 costo_total += costo_tramo
                 posicion_actual = camino[-1]
+            except ValueError:
+                return 10_000
+
+        # Volver a la estación de carga al terminar el pedido
+        if posicion_actual != posicion_carga:
+            entorno_regreso = E1.Almacen(
+                self.grilla,
+                estante_objetivo=None,
+                posicion_final=posicion_carga,
+                flag_almacen=False,
+                lista_modificada=None
+            )
+
+            agente_regreso = E1.Montacargas(
+                grilla=entorno_regreso,
+                casilla_inicial=posicion_actual
+            )
+
+            try:
+                camino_regreso, costo_regreso = agente_regreso.execute()
+                costo_total += costo_regreso
             except ValueError:
                 return 10_000
 
@@ -106,7 +132,7 @@ class TempleSimulado:
                 pedido=pedido,
                 layout_individuo=layout_individuo
             )
-            costo_total += self._calcular_costo_secuencia_posiciones(secuencia_posiciones)
+            costo_total += self._calcular_costo(secuencia_posiciones)
 
         return float(costo_total)
 
@@ -122,11 +148,12 @@ class TempleSimulado:
         max_iter: int | None = None
     ) -> tuple[np.ndarray, float]:
         """
-        Ejecuta temple simulado sobre una orden.
+        Temple simulado sobre una secuencia de POSICIONES FÍSICAS.
 
-        Si se pasa orden_particular, optimiza esa secuencia.
-        Si no, optimiza self.ordenes[numero_orden].
+        - Si se pasa orden_particular → se asume que ya son posiciones físicas
+        - Si NO se pasa → usa orden del CSV (solo válido si ya están en posiciones físicas)
         """
+
         if seed is not None:
             np.random.seed(seed)
 
@@ -139,21 +166,29 @@ class TempleSimulado:
         if minTemperatura <= 0:
             raise ValueError("minTemperatura debe ser mayor que 0.")
 
+        # 🔹 CASO 1: orden pasada directamente 
         if orden_particular is not None:
             orden = np.array(orden_particular, dtype=int).copy()
+
+        # 🔹 CASO 2: orden desde CSV (solo si ya está en posiciones)
         else:
             if not self.ordenes:
-                raise ValueError("No hay órdenes cargadas. Usa cargar_ordenes() antes de llamar a busquedaLocal().")
+                raise ValueError("No hay órdenes cargadas.")
+
             if not (0 <= numero_orden < len(self.ordenes)):
                 raise IndexError("numero_orden fuera de rango.")
+
             orden = np.array(self.ordenes[numero_orden], dtype=int).copy()
 
+        # 🔹 Inicialización
         TActual = float(Temperatura0)
         costo = self._calcular_costo(orden)
 
         iteracion = 0
 
+        # 🔹 Loop de temple
         while TActual > minTemperatura:
+
             if max_iter is not None and iteracion >= max_iter:
                 break
 
@@ -270,7 +305,7 @@ if __name__ == "__main__":
             entorno_estatico,
             estante_objetivo=int(estante_id),
             flag_almacen=False,
-            lista_modificada0=None
+            lista_modificada=None
         )
 
         agente = E1.Montacargas(
