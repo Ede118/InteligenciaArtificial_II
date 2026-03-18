@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from Ejercicio1 import csv_to_array
 from Ejercicio3 import TempleSimulado
-# Asegúrate de que estas rutas sean correctas según tu carpeta utilities
 from utilities.Graficador import Layout, Graficador, LectorFrecuenciasPedidos
 
 class AlgoritmoGenetico:
@@ -27,7 +26,6 @@ class AlgoritmoGenetico:
 
     def seleccionar_torneo(self, poblacion: np.ndarray, puntajes: np.ndarray, k: int = 4):
         parejas = []
-        # Calculamos cuántos hijos necesitamos para completar la población sacando la elite
         cantidad_hijos = self.N_poblacion - self.n_elite
         n_parejas = int(np.ceil(cantidad_hijos / 2))
         
@@ -113,7 +111,6 @@ class AlgoritmoGenetico:
                 hijos.append(self.mutacion_scramble(h1, prob_mut))
                 hijos.append(self.mutacion_scramble(h2, prob_mut))
 
-            # Ajustar tamaño si sobra un hijo por ser impar
             hijos = hijos[:(self.N_poblacion - self.n_elite)]
             poblacion = np.vstack((elite, np.array(hijos)))
 
@@ -125,19 +122,16 @@ class AlgoritmoGenetico:
             "historial_mejor_global": historial_best
         }
 
-# --- BLOQUE DE EJECUCIÓN ---
 if __name__ == "__main__":
     np.random.seed(42)
     ag = AlgoritmoGenetico()
 
-    # Ejecutar el algoritmo
     resultados = ag.algoritmo(max_generaciones=200)
 
     print("\n--- RESULTADOS FINALES ---")
     print(f"Mejor Puntaje: {resultados['mejor_puntaje']}")
     print(f"Mejor Individuo: {resultados['mejor_individuo']}")
 
-    # Gráfico de evolución
     plt.figure(figsize=(10, 6))
     plt.plot(resultados["historial_puntaje_min"], label="Mejor de la generación")
     plt.plot(resultados["historial_puntaje_prom"], label="Promedio")
@@ -149,7 +143,6 @@ if __name__ == "__main__":
     plt.grid(True)
     plt.show()
     
-    # Graficador final (Pygame)
     try:
         layout = Layout()
         graf = Graficador(layout)
