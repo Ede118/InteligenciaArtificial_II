@@ -12,7 +12,7 @@ class AlgoritmoGenetico:
         self.N_poblacion = 50
         self.long_individuo = 48
         self.generaciones = 1000
-        self.n_elite = 4
+        self.n_elite = 2
 
         # Cargamos todas las órdenes del CSV
         self.simulacion = TempleSimulado(self.grilla)
@@ -26,12 +26,26 @@ class AlgoritmoGenetico:
         ])
 
     def evaluar_individuo(self, individuo: np.ndarray) -> float:
-        """
-        El costo del individuo es la suma de recorrer TODOS los pedidos del CSV,
-        usando la disposición representada por el individuo.
-        """
-        return self.simulacion.calcular_costo_total_todos_los_pedidos(individuo)
+        costo_total = 0.0
 
+        for pedido in self.simulacion.ordenes:
+            secuencia_posiciones = self.simulacion.convertir_pedido_a_posiciones(
+                pedido=pedido,
+                layout_individuo=individuo
+            )
+
+            _, mejor_costo = self.simulacion.busquedaLocal(
+                numero_orden=0,
+                Temperatura0=800,
+                coolingRate=0.83,
+                minTemperatura=1,
+                orden_particular=secuencia_posiciones
+            )
+
+            costo_total += mejor_costo
+
+        return float(costo_total)
+    
     def evaluar_poblacion(self, poblacion: np.ndarray) -> np.ndarray:
         return np.array([self.evaluar_individuo(individuo) for individuo in poblacion], dtype=float)
 
@@ -221,7 +235,7 @@ if __name__ == "__main__":
     ag = AlgoritmoGenetico()
 
     resultados = ag.algoritmo(
-        max_generaciones=50,
+        max_generaciones=20,
         prob_cruce=0.8,
         prob_mutacion=0.05
     )

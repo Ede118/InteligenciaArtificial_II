@@ -148,11 +148,12 @@ class TempleSimulado:
         max_iter: int | None = None
     ) -> tuple[np.ndarray, float]:
         """
-        Ejecuta temple simulado sobre una orden.
+        Temple simulado sobre una secuencia de POSICIONES FÍSICAS.
 
-        Si se pasa orden_particular, optimiza esa secuencia.
-        Si no, optimiza self.ordenes[numero_orden].
+        - Si se pasa orden_particular → se asume que ya son posiciones físicas
+        - Si NO se pasa → usa orden del CSV (solo válido si ya están en posiciones físicas)
         """
+
         if seed is not None:
             np.random.seed(seed)
 
@@ -165,21 +166,32 @@ class TempleSimulado:
         if minTemperatura <= 0:
             raise ValueError("minTemperatura debe ser mayor que 0.")
 
+        # 🔹 CASO 1: orden pasada directamente (USADO POR EL AG)
         if orden_particular is not None:
             orden = np.array(orden_particular, dtype=int).copy()
+
+        # 🔹 CASO 2: orden desde CSV (solo si ya está en posiciones)
         else:
             if not self.ordenes:
-                raise ValueError("No hay órdenes cargadas. Usa cargar_ordenes() antes de llamar a busquedaLocal().")
+                raise ValueError("No hay órdenes cargadas.")
+
             if not (0 <= numero_orden < len(self.ordenes)):
                 raise IndexError("numero_orden fuera de rango.")
+
             orden = np.array(self.ordenes[numero_orden], dtype=int).copy()
 
+            # ⚠️ IMPORTANTE: si el CSV tiene PRODUCTOS, esto está MAL
+            # Por eso conviene NO usar este modo en el AG
+
+        # 🔹 Inicialización
         TActual = float(Temperatura0)
         costo = self._calcular_costo(orden)
 
         iteracion = 0
 
+        # 🔹 Loop de temple
         while TActual > minTemperatura:
+
             if max_iter is not None and iteracion >= max_iter:
                 break
 
