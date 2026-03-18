@@ -11,7 +11,7 @@ teniendo en cuenta las restricciones del montacargas.
 
 Se deben desarrollar las restricciones y objetivos.
 """
-#hola hola
+
 import heapq
 import pygame
 import sys
