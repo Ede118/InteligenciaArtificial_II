@@ -49,7 +49,7 @@ class Almacen:
         grid,
         estante_objetivo: int,
         *,
-        lista_modificada: any | None,
+        lista_modificada: any | None = None,
         flag_almacen: bool = False
         ):
         """ 
