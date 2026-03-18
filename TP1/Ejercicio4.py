@@ -9,7 +9,7 @@ class AlgoritmoGenetico:
 
     def __init__(self):
         self.grilla = csv_to_array("TP1/utilities/casillas.csv")
-        self.N_poblacion = 500
+        self.N_poblacion = 50
         self.long_individuo = 48
         self.generaciones = 1000
         self.n_elite = 4
@@ -221,7 +221,7 @@ if __name__ == "__main__":
     ag = AlgoritmoGenetico()
 
     resultados = ag.algoritmo(
-        max_generaciones=1000,
+        max_generaciones=50,
         prob_cruce=0.8,
         prob_mutacion=0.05
     )
