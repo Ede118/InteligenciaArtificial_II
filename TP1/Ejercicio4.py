@@ -1,95 +1,120 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from Ejercicio3 import TempleSimulado
 from Ejercicio1 import csv_to_array
+from Ejercicio3 import TempleSimulado
+from utilities.Graficador import Layout, Graficador, LectorFrecuenciasPedidos
+
 
 class AlgoritmoGenetico:
 
     def __init__(self):
-        grilla = csv_to_array("TP1/utilities/casillas.csv")
+        self.grilla = csv_to_array("TP1/utilities/casillas.csv")
         self.N_poblacion = 100
         self.long_individuo = 48
-        self.generaciones = 2000
+        self.generaciones = 1000
+        self.n_elite = 2
+
+        # Cargamos todas las órdenes del CSV
+        self.simulacion = TempleSimulado(self.grilla)
+        self.simulacion.cargar_ordenes("TP1/utilities/ordenes.csv")
 
     # Inicializar población
-    def inicializar_poblacion(self):
-        return np.array([np.random.permutation(self.long_individuo) + 1 for _ in range(self.N_poblacion)])
+    def inicializar_poblacion(self) -> np.ndarray:
+        return np.array([
+            np.random.permutation(self.long_individuo) + 1
+            for _ in range(self.N_poblacion)
+        ])
 
-        
     def evaluar_individuo(self, individuo: np.ndarray) -> float:
-        simulacion = TempleSimulado(self.grilla)
-        costo_total = simulacion.busquedaLocal(numero_orden=0, Temperatura0=1000, coolingRate=0.95, minTemperatura=1, orden_particular=individuo)
-        return costo_total[1]  # Retorna el costo total de la simulación
+        costo_total = 0.0
+
+        for pedido in self.simulacion.ordenes:
+            secuencia_posiciones = self.simulacion.convertir_pedido_a_posiciones(
+                pedido=pedido,
+                layout_individuo=individuo
+            )
+
+            _, mejor_costo = self.simulacion.busquedaLocal(
+                numero_orden=0,
+                Temperatura0=800,
+                coolingRate=0.83,
+                minTemperatura=1,
+                orden_particular=secuencia_posiciones,
+                seed=42
+            )
+
+            costo_total += mejor_costo
+
+        return float(costo_total)
     
-    def evaluar_poblacion(self, poblacion: np.ndarray, plantilla: np.ndarray):
-    
-        puntajes = []
-        for individuo in poblacion:
-            puntaje = self.evaluar_individuo(individuo)
-            puntajes.append(puntaje)
-        
-        return np.array(puntajes)
-    
+    def evaluar_poblacion(self, poblacion: np.ndarray) -> np.ndarray:
+        return np.array([self.evaluar_individuo(individuo) for individuo in poblacion], dtype=float)
+
     def calcular_fitness(self, puntajes: np.ndarray) -> np.ndarray:
-    
-        total = np.sum(puntajes)
-        fitness = (total - puntajes) / total
-        return fitness
-    
+        return 1.0 / (puntajes + 1e-12)
+
     def calcular_probabilidades(self, fitness: np.ndarray) -> np.ndarray:
-        return fitness / np.sum(fitness)
-    
-    def seleccionar_parejas_ruleta(self,
-                                poblacion: np.ndarray,
-                                probabilidades: np.ndarray) -> list[tuple[np.ndarray, np.ndarray]]:
-        
+        suma = np.sum(fitness)
+        if suma <= 0:
+            return np.ones_like(fitness) / len(fitness)
+        return fitness / suma
+
+    def seleccionar_parejas_ruleta(
+        self,
+        poblacion: np.ndarray,
+        probabilidades: np.ndarray,
+        cantidad_parejas: int
+    ) -> list[tuple[np.ndarray, np.ndarray]]:
+
         parejas = []
         indices = np.arange(len(poblacion))
 
-        for _ in range(self.N_poblacion // 2):
-            # seleccionar primer padre
+        for _ in range(cantidad_parejas):
             idx1 = np.random.choice(indices, p=probabilidades)
-            padre1 = poblacion[idx1]
+            padre1 = poblacion[idx1].copy()
 
-            # quitar temporalmente ese índice
             mascara = indices != idx1
             indices_restantes = indices[mascara]
             probabilidades_restantes = probabilidades[mascara]
-            probabilidades_restantes = probabilidades_restantes / np.sum(probabilidades_restantes)
 
-            # seleccionar segundo padre
+            suma_restante = np.sum(probabilidades_restantes)
+            if suma_restante <= 0:
+                probabilidades_restantes = np.ones_like(probabilidades_restantes) / len(probabilidades_restantes)
+            else:
+                probabilidades_restantes = probabilidades_restantes / suma_restante
+
             idx2 = np.random.choice(indices_restantes, p=probabilidades_restantes)
-            padre2 = poblacion[idx2]
+            padre2 = poblacion[idx2].copy()
 
             parejas.append((padre1, padre2))
 
         return parejas
-        
+
+    def obtener_elite(self, poblacion: np.ndarray, puntajes: np.ndarray) -> np.ndarray:
+        indices_ordenados = np.argsort(puntajes)   # menor puntaje = mejor
+        elite = [poblacion[i].copy() for i in indices_ordenados[:self.n_elite]]
+        return np.array(elite)
+
     def cruce_ciclos(self, padre1: np.ndarray, padre2: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         n = len(padre1)
-
-        hijo1 = np.full(n, -1, dtype=int) # inicializa con -1 para identificar posiciones no asignadas
+        hijo1 = np.full(n, -1, dtype=int)
         hijo2 = np.full(n, -1, dtype=int)
 
-        visitado = np.zeros(n, dtype=bool) # para marcar índices ya visitados en el ciclo
+        visitado = np.zeros(n, dtype=bool)
+        pos_en_padre1 = {valor: i for i, valor in enumerate(padre1)}
+
         ciclo = 0
-
         while not np.all(visitado):
-            # buscar primer índice no visitado
-            inicio = np.where(~visitado)[0][0]  
-            idx = inicio  # índice actual en el ciclo
-            indices_ciclo = []  # para almacenar los índices del ciclo actual
+            inicio = np.where(~visitado)[0][0]
+            idx = inicio
+            indices_ciclo = []
 
-            # construir ciclo
-            while not visitado[idx]:  # mientras no se haya visitado este índice
-                indices_ciclo.append(idx)  # agregar índice al ciclo
+            while not visitado[idx]:
+                indices_ciclo.append(idx)
                 visitado[idx] = True
+                valor = padre2[idx]
+                idx = pos_en_padre1[valor]
 
-                valor = padre2[idx]  # valor correspondiente en el otro padre
-                idx = np.where(padre1 == valor)[0][0] # encontrar índice del valor en el padre1 para continuar el ciclo
-
-            # ciclos pares: hijo1 hereda de padre1, hijo2 de padre2
-            # ciclos impares: al revés
             if ciclo % 2 == 0:
                 for i in indices_ciclo:
                     hijo1[i] = padre1[i]
@@ -103,41 +128,30 @@ class AlgoritmoGenetico:
 
         return hijo1, hijo2
 
-    #Aca defino dos tipos de mutaciones para luego decidir cual usar
-
     def mutacion_swap(self, individuo: np.ndarray, prob_mutacion: float = 0.1) -> np.ndarray:
         nuevo = individuo.copy()
 
-        if np.random.rand() < prob_mutacion:  # con cierta probabilidad, realizar la mutación
-            i, j = np.random.choice(len(nuevo), size=2, replace=False) # seleccionar dos índices aleatorios para intercambiar
+        if np.random.rand() < prob_mutacion:
+            i, j = np.random.choice(len(nuevo), size=2, replace=False)
             nuevo[i], nuevo[j] = nuevo[j], nuevo[i]
 
         return nuevo
 
-    def mutacion_insercion(self, individuo: np.ndarray, prob_mutacion: float = 0.1) -> np.ndarray:
+    def generar_hijos(
+        self,
+        parejas: list[tuple[np.ndarray, np.ndarray]],
+        cantidad_hijos: int,
+        prob_cruce: float = 0.5,
+        prob_mutacion: float = 0.05
+    ) -> np.ndarray:
 
-        nuevo = individuo.copy()
-
-        if np.random.rand() < prob_mutacion:
-
-            i, j = np.random.choice(len(nuevo), size=2, replace=False)
-
-            valor = nuevo[i]
-
-            nuevo = np.delete(nuevo, i)
-            nuevo = np.insert(nuevo, j, valor)
-
-        return nuevo
-
-    def generar_hijos(self,
-                        parejas: list[tuple[np.ndarray, np.ndarray]],
-                        prob_cruce: float = 0.5,
-                        prob_mutacion: float = 0.05) -> np.ndarray:
-        
         hijos = []
 
         for padre1, padre2 in parejas:
-            if np.random.rand() < prob_cruce: 
+            if len(hijos) >= cantidad_hijos:
+                break
+
+            if np.random.rand() < prob_cruce:
                 hijo1, hijo2 = self.cruce_ciclos(padre1, padre2)
             else:
                 hijo1, hijo2 = padre1.copy(), padre2.copy()
@@ -146,83 +160,106 @@ class AlgoritmoGenetico:
             hijo2 = self.mutacion_swap(hijo2, prob_mutacion)
 
             hijos.append(hijo1)
-            hijos.append(hijo2)
+            if len(hijos) < cantidad_hijos:
+                hijos.append(hijo2)
 
-        return np.array(hijos)
+        return np.array(hijos, dtype=int)
 
-    def algoritmo(self,
-                grilla: np.ndarray,
-                max_generaciones: int = 2000,
-                prob_cruce: float = 0.5,
-                prob_mutacion: float = 0.05):
-        
+    def algoritmo(
+        self,
+        max_generaciones: int = 100,
+        prob_cruce: float = 0.5,
+        prob_mutacion: float = 0.05
+    ):
+
         poblacion = self.inicializar_poblacion()
+        print("Población inicializada")
+        print(f"Ejemplo de individuo inicial: {poblacion[0]}")
 
-        historial_fitness_max = []
-        historial_fitness_prom = []
         historial_puntaje_min = []
         historial_puntaje_prom = []
+        historial_mejor_global = []
 
         mejor_individuo = None
         mejor_puntaje = np.inf
 
         for gen in range(max_generaciones):
-            # Evaluar población
-            puntajes = self.evaluar_poblacion(poblacion, grilla)
+            puntajes = self.evaluar_poblacion(poblacion)
             fitness = self.calcular_fitness(puntajes)
-            probabilidades = fitness / np.sum(fitness)
+            probabilidades = self.calcular_probabilidades(fitness)
 
-            # Guardar evolución
-            historial_fitness_max.append(np.max(fitness))
-            historial_fitness_prom.append(np.mean(fitness))
-            historial_puntaje_min.append(np.min(puntajes))
-            historial_puntaje_prom.append(np.mean(puntajes))
-
-            # Guardar mejor individuo global
             idx_mejor = np.argmin(puntajes)
+
+            print(f"Generación {gen}: mejor = {puntajes[idx_mejor]}, promedio = {np.mean(puntajes)}")
+
             if puntajes[idx_mejor] < mejor_puntaje:
                 mejor_puntaje = puntajes[idx_mejor]
                 mejor_individuo = poblacion[idx_mejor].copy()
 
-            # Selección y reproducción
-            parejas = self.seleccionar_parejas_ruleta(poblacion, probabilidades)
-            poblacion = self.generar_hijos(
+            historial_puntaje_min.append(float(np.min(puntajes)))
+            historial_puntaje_prom.append(float(np.mean(puntajes)))
+            historial_mejor_global.append(float(mejor_puntaje))
+
+            elite = self.obtener_elite(poblacion, puntajes)
+
+            cantidad_hijos = self.N_poblacion - self.n_elite
+            cantidad_parejas = int(np.ceil(cantidad_hijos / 2))
+
+            parejas = self.seleccionar_parejas_ruleta(
+                poblacion,
+                probabilidades,
+                cantidad_parejas
+            )
+
+            hijos = self.generar_hijos(
                 parejas,
+                cantidad_hijos=cantidad_hijos,
                 prob_cruce=prob_cruce,
                 prob_mutacion=prob_mutacion
             )
+
+            poblacion = np.vstack((elite, hijos))
 
         return {
             "poblacion_final": poblacion,
             "mejor_individuo": mejor_individuo,
             "mejor_puntaje": mejor_puntaje,
-            "historial_fitness_max": historial_fitness_max,
-            "historial_fitness_prom": historial_fitness_prom,
             "historial_puntaje_min": historial_puntaje_min,
-            "historial_puntaje_prom": historial_puntaje_prom
+            "historial_puntaje_prom": historial_puntaje_prom,
+            "historial_mejor_global": historial_mejor_global
         }
-    
+
+
 if __name__ == "__main__":
+    np.random.seed(42)
+
     ag = AlgoritmoGenetico()
 
     resultados = ag.algoritmo(
-        grilla=csv_to_array("TP1/utilities/casillas.csv"),
-        max_generaciones=2000,
-        prob_cruce=0.5,
+        max_generaciones=100,
+        prob_cruce=0.8,
         prob_mutacion=0.05
     )
 
-    print("Mejor individuo:")
+    print("\nMejor individuo:")
     print(resultados["mejor_individuo"])
 
     print("\nMejor puntaje:")
     print(resultados["mejor_puntaje"])
 
-    plt.plot(resultados["historial_puntaje_min"], label="Puntaje mínimo")
-    plt.plot(resultados["historial_puntaje_prom"], label="Puntaje promedio")
+    plt.plot(resultados["historial_puntaje_min"], label="Mejor de la generación")
+    plt.plot(resultados["historial_puntaje_prom"], label="Promedio")
+    plt.plot(resultados["historial_mejor_global"], label="Mejor global")
     plt.xlabel("Generación")
-    plt.ylabel("Puntaje")
-    plt.title("Evolución del puntaje")
+    plt.ylabel("Costo total")
+    plt.title("Evolución del algoritmo genético")
     plt.legend()
     plt.grid(True)
     plt.show()
+    
+    layout = Layout()
+    graf = Graficador(layout)
+    lector = LectorFrecuenciasPedidos("TP1/utilities/ordenes.csv")
+    frecuencias = lector.calcular_frecuencias()
+        
+    graf.graficar(resultados["mejor_individuo"], frecuencias)
