@@ -31,7 +31,7 @@ class MontacargasInteligente:
             grid=self.grid, 
             estante_objetivo=self.estante_objetivo,
             flag_almacen=False,
-            lista_modificada=None
+            lista_modificada0=None
         )
         
         astar = E1.Montacargas(
@@ -71,7 +71,7 @@ class MontacargasInteligente:
                 grid_temp[pos_conflicto[0]][pos_conflicto[1]] = 99
             
                 # Recalculamos desde la base (inicio) con el nuevo mapa
-                entorno_nuevo = E1.Almacen(grid=grid_temp, estante_objetivo=self.estante_objetivo)
+                entorno_nuevo = E1.Almacen(grid=grid_temp, estante_objetivo=self.estante_objetivo, lista_modificada0=[])
                 astar = E1.Montacargas(grilla=entorno_nuevo, casilla_inicial=self.inicio)
             
                 camino_ida, _ = astar.execute()
