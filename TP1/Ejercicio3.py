@@ -1,4 +1,22 @@
 """
+Init:
+    @param grilla:      [class Almacen]: matriz de almacen [0s, 1s y 2].
+    @param ordenes:     [list[np.ndarray]] lista de órdenes de pedidos.
+
+Args `busquedaLocal`:
+    @param numero_orden:        [list[np.ndarray]] Array de ordenes particulares que se desea manejar
+    @param Temperatura0:        [float] Temperatura inicial del Templado Simulado
+    @param coolingRate:         [float] Número 0<float<1 con el que disminuye la temperatura
+    @param minTemperatura:      [float] Temperatura mínima (restringe número de iteraciones)
+    @param orden_particular:    [np.ndarray] Lista de ordenes particulares (que no vienen del `ordenes.csv`)
+    @param seed:                [int] 
+    @param max_iter:            [int]
+
+Return:
+    @param camino_optimo:       [np.ndarray] Lista de ordenes de manera "ordenada" con el costo optimo en mente
+    @param costo_optimo:        [int] Costo optimo (medido en distancia manhattan)
+
+
 Búsqueda Local con Temple Simulado para optimizar la secuencia de órdenes de un
 montacargas en un almacén representado por una matriz de casillas.
 
