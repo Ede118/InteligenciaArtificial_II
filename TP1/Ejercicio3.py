@@ -8,7 +8,7 @@ Args `busquedaLocal`:
     @param Temperatura0:        [float] Temperatura inicial del Templado Simulado
     @param coolingRate:         [float] Número 0<float<1 con el que disminuye la temperatura
     @param minTemperatura:      [float] Temperatura mínima (restringe número de iteraciones)
-    @param orden_particular:    [np.ndarray] Lista de ordenes particulares (que no vienen del `ordenes.csv`)
+    @param orden_particular:    [np.ndarray] Lista de ordenes particulares 
     @param seed:                [int] 
     @param max_iter:            [int]
 
