@@ -252,10 +252,10 @@ class Simulacion:
 
         entorno = Almacen(
             self.grid, 
-            estante_objetivo=estante,
-            posicion_final=posicion_final,
-            flag_almacen=flag,
-            lista_modificada0=orden
+            estante_objetivo= estante,
+            posicion_final= posicion_final,
+            flag_almacen= flag,
+            lista_modificada= orden
         )
         
         agente = Montacargas(
@@ -346,10 +346,10 @@ if __name__ == "__main__":
     agente = Montacargas(
         grilla=Almacen(
             entorno_estatico, 
-            estante_objetivo=None,
-            posicion_final=casilla_final,
-            flag_almacen=False,
-            lista_modificada0= None
+            estante_objetivo= None,
+            posicion_final= casilla_final,
+            flag_almacen= False,
+            lista_modificada= None
         ),
         casilla_inicial=casilla_inicial
     )
