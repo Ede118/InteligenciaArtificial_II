@@ -19,11 +19,11 @@ class AlgoritmoGenetico:
         self.simulacion.cargar_ordenes("TP1/utilities/ordenes.csv")
 
     # Inicializar población
-    def inicializar_poblacion(self) -> np.ndarray:
-        return np.array([
+    def inicializar_poblacion(self) -> np.ndarray: 
+        return np.array([ 
             np.random.permutation(self.long_individuo) + 1
             for _ in range(self.N_poblacion)
-        ])
+        ]) 
 
     def evaluar_individuo(self, individuo: np.ndarray) -> float:
         costo_total = 0.0

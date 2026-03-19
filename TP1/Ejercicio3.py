@@ -169,7 +169,7 @@ class TempleSimulado:
         Temple simulado sobre una secuencia de POSICIONES FÍSICAS.
 
         - Si se pasa orden_particular → se asume que ya son posiciones físicas
-        - Si NO se pasa → usa orden del CSV (solo válido si ya están en posiciones físicas)
+        - Si NO se pasa → usa orden del CSV 
         """
 
         if seed is not None:
@@ -184,11 +184,11 @@ class TempleSimulado:
         if minTemperatura <= 0:
             raise ValueError("minTemperatura debe ser mayor que 0.")
 
-        # 🔹 CASO 1: orden pasada directamente 
+        # orden pasada directamente 
         if orden_particular is not None:
             orden = np.array(orden_particular, dtype=int).copy()
 
-        # 🔹 CASO 2: orden desde CSV (solo si ya está en posiciones)
+        # Si no se pasa usamos el número de orden para obtener la orden del CSV
         else:
             if not self.ordenes:
                 raise ValueError("No hay órdenes cargadas.")
@@ -198,13 +198,13 @@ class TempleSimulado:
 
             orden = np.array(self.ordenes[numero_orden], dtype=int).copy()
 
-        # 🔹 Inicialización
+        # Inicialización
         TActual = float(Temperatura0)
         costo = self._calcular_costo(orden)
 
         iteracion = 0
 
-        # 🔹 Loop de temple
+        # Loop de temple
         while TActual > minTemperatura:
 
             if max_iter is not None and iteracion >= max_iter:
