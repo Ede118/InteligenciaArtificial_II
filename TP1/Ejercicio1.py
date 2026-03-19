@@ -50,7 +50,7 @@ class Almacen:
         estante_objetivo: int = None,
         posicion_final: tuple[int, int] = None,
         *,
-        lista_modificada: any | None = None,
+        lista_modificada: any  = None,
         flag_almacen: bool = False
         ):
         """ 
