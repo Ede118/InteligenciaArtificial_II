@@ -336,7 +336,6 @@ if __name__ == "__main__":
     print("La casilla de carga \"C\" es (5,0).")
     casilla_inicial = tuple(int(x) for x in input("Ingrese la casilla inicial (fila,columna): ").split(","))
     estante = int(input("Ingrese el número del estante objetivo (1-48): "))
-    casilla_final = tuple(int(x) for x in input("Ingrese la casilla final (fila,columna): ").split(","))
     
     mod_list = [x+1 for x in range(48)]
     
@@ -346,8 +345,8 @@ if __name__ == "__main__":
     agente = Montacargas(
         grilla=Almacen(
             entorno_estatico, 
-            estante_objetivo= None,
-            posicion_final= casilla_final,
+            estante_objetivo= estante,
+            posicion_final= None,
             flag_almacen= False,
             lista_modificada= None
         ),
@@ -358,11 +357,12 @@ if __name__ == "__main__":
     
     simulacion = Simulacion(entorno_estatico)
     simulacion.calcular_camino(
-        posicion_final=casilla_final, 
+        posicion_final=None,
+        estante=estante,
         casilla0=casilla_inicial,
         flag=False,
         orden=None
     )
     simulacion.run()
     
-    print("Lo que sea", )
+    print("Lo que sea")
