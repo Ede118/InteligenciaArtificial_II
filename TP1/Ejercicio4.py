@@ -9,9 +9,9 @@ class AlgoritmoGenetico:
 
     def __init__(self):
         self.grilla = csv_to_array("TP1/utilities/casillas.csv")
-        self.N_poblacion = 100
+        self.N_poblacion = 50
         self.long_individuo = 48
-        self.generaciones = 1000
+        self.generaciones = 100
         self.n_elite = 2
 
         # Cargamos todas las órdenes del CSV
@@ -19,11 +19,11 @@ class AlgoritmoGenetico:
         self.simulacion.cargar_ordenes("TP1/utilities/ordenes.csv")
 
     # Inicializar población
-    def inicializar_poblacion(self) -> np.ndarray:
-        return np.array([
+    def inicializar_poblacion(self) -> np.ndarray: 
+        return np.array([ 
             np.random.permutation(self.long_individuo) + 1
             for _ in range(self.N_poblacion)
-        ])
+        ]) 
 
     def evaluar_individuo(self, individuo: np.ndarray) -> float:
         costo_total = 0.0
@@ -236,9 +236,9 @@ if __name__ == "__main__":
     ag = AlgoritmoGenetico()
 
     resultados = ag.algoritmo(
-        max_generaciones=100,
+        max_generaciones=520,
         prob_cruce=0.8,
-        prob_mutacion=0.05
+        prob_mutacion=0.09
     )
 
     print("\nMejor individuo:")

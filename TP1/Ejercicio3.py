@@ -8,7 +8,7 @@ Args `busquedaLocal`:
     @param Temperatura0:        [float] Temperatura inicial del Templado Simulado
     @param coolingRate:         [float] Número 0<float<1 con el que disminuye la temperatura
     @param minTemperatura:      [float] Temperatura mínima (restringe número de iteraciones)
-    @param orden_particular:    [np.ndarray] Lista de ordenes particulares (que no vienen del `ordenes.csv`)
+    @param orden_particular:    [np.ndarray] Lista de ordenes particulares 
     @param seed:                [int] 
     @param max_iter:            [int]
 
@@ -169,7 +169,7 @@ class TempleSimulado:
         Temple simulado sobre una secuencia de POSICIONES FÍSICAS.
 
         - Si se pasa orden_particular → se asume que ya son posiciones físicas
-        - Si NO se pasa → usa orden del CSV (solo válido si ya están en posiciones físicas)
+        - Si NO se pasa → usa orden del CSV 
         """
 
         if seed is not None:
@@ -184,11 +184,11 @@ class TempleSimulado:
         if minTemperatura <= 0:
             raise ValueError("minTemperatura debe ser mayor que 0.")
 
-        # 🔹 CASO 1: orden pasada directamente 
+        # orden pasada directamente 
         if orden_particular is not None:
             orden = np.array(orden_particular, dtype=int).copy()
 
-        # 🔹 CASO 2: orden desde CSV (solo si ya está en posiciones)
+        # Si no se pasa usamos el número de orden para obtener la orden del CSV
         else:
             if not self.ordenes:
                 raise ValueError("No hay órdenes cargadas.")
@@ -198,13 +198,13 @@ class TempleSimulado:
 
             orden = np.array(self.ordenes[numero_orden], dtype=int).copy()
 
-        # 🔹 Inicialización
+        # Inicialización
         TActual = float(Temperatura0)
         costo = self._calcular_costo(orden)
 
         iteracion = 0
 
-        # 🔹 Loop de temple
+        # Loop de temple
         while TActual > minTemperatura:
 
             if max_iter is not None and iteracion >= max_iter:
@@ -301,6 +301,8 @@ if __name__ == "__main__":
     temple_simulado.cargar_ordenes("TP1/utilities/ordenes.csv")
 
     numero_orden = random.randint(0, len(temple_simulado.ordenes) - 1)
+    numero_orden = 36
+    orden_original = temple_simulado.ordenes[numero_orden]
 
     orden_optimo, costo = temple_simulado.busquedaLocal(
         numero_orden=numero_orden,
@@ -311,34 +313,96 @@ if __name__ == "__main__":
         max_iter=None
     )
 
-    print(f"Orden elegida: {numero_orden}")
+    char = input("¿Mostrar original? [y/n]:")
+    if char is 'y':
+        show_original = True
+    else:
+        show_original = False
+    
+    print(f"Orden N°: {numero_orden}")
+    print(f"Orden original: {temple_simulado.ordenes[numero_orden]}")
+    print("\n\n")
+    
     print(f"Secuencia optimizada: {orden_optimo}")
     print(f"Costo: {costo}")
+    print("\n\n")
+    
+    sim = SimulacionInteractiva(entorno_estatico) # O el nombre de tu clase de simulación
+    posicion_actual = (5, 0) 
 
-    sim = SimulacionInteractiva(entorno_estatico)
-    posicion_actual = (5, 0)
 
     for estante_id in orden_optimo:
-        entorno_temp = E1.Almacen(
-            entorno_estatico,
-            estante_objetivo=int(estante_id),
-            flag_almacen=False,
-            lista_modificada=None
-        )
-
-        agente = E1.Montacargas(
-            grilla=entorno_temp,
-            casilla_inicial=posicion_actual
-        )
-
+        entorno_temp = E1.Almacen(entorno_estatico, estante_objetivo=estante_id)
+        agente = E1.Montacargas(grilla=entorno_temp, casilla_inicial=posicion_actual)
+        
         try:
             camino, _ = agente.execute()
             sim.agregar_tramo(camino)
-            posicion_actual = camino[-1]
+            posicion_actual = camino[-1] # El fin de este tramo es el inicio del siguiente
         except ValueError:
-            pass
+            print(f"Error: Estante {estante_id} inalcanzable.")
+
+    punto_carga = (5, 0)
+    # Creamos un entorno genérico para el regreso
+    entorno_retorno = E1.Almacen(entorno_estatico, estante_objetivo=1) 
+
+    # Forzamos el objetivo a la zona de carga
+    # La clase Almacen calcula casilla_objetivo en el __init__ basándose en estantes,
+    # pero el Montacargas usa el atributo casilla_objetivo para su búsqueda.
+    entorno_retorno.casilla_objetivo = punto_carga 
+
+    agente_retorno = E1.Montacargas(grilla=entorno_retorno, casilla_inicial=posicion_actual)
+
+    try:
+        camino_vuelta, _ = agente_retorno.execute()
+        sim.agregar_tramo(camino_vuelta)
+        print("-> Trayecto de retorno al origen calculado.")
+    except ValueError:
+        print("Error: No se encontró camino de regreso al punto de carga.")
 
     sim.run()
+    
+    # ====================================================================================
+    #   SIMULACIÓN DEL ORDEN ORIGINAL
+    # ====================================================================================
+    if show_original:
+        sim = SimulacionInteractiva(entorno_estatico) # O el nombre de tu clase de simulación
+        posicion_actual = (5, 0) 
+
+
+        for estante_id in orden_original:
+            entorno_temp = E1.Almacen(entorno_estatico, estante_objetivo=estante_id)
+            agente = E1.Montacargas(grilla=entorno_temp, casilla_inicial=posicion_actual)
+            
+            try:
+                camino, _ = agente.execute()
+                sim.agregar_tramo(camino)
+                posicion_actual = camino[-1] # El fin de este tramo es el inicio del siguiente
+            except ValueError:
+                print(f"Error: Estante {estante_id} inalcanzable.")
+
+        punto_carga = (5, 0)
+        # Creamos un entorno genérico para el regreso
+        entorno_retorno = E1.Almacen(entorno_estatico, estante_objetivo=1) 
+
+        # Forzamos el objetivo a la zona de carga
+        # La clase Almacen calcula casilla_objetivo en el __init__ basándose en estantes,
+        # pero el Montacargas usa el atributo casilla_objetivo para su búsqueda.
+        entorno_retorno.casilla_objetivo = punto_carga 
+
+        agente_retorno = E1.Montacargas(grilla=entorno_retorno, casilla_inicial=posicion_actual)
+
+        try:
+            camino_vuelta, _ = agente_retorno.execute()
+            sim.agregar_tramo(camino_vuelta)
+            print("-> Trayecto de retorno al origen calculado.")
+        except ValueError:
+            print("Error: No se encontró camino de regreso al punto de carga.")
+
+        sim.run()
+    
+
+
 #       Pruebas de código:
 #
 #    
