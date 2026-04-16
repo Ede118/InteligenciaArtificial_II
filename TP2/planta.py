@@ -96,9 +96,10 @@ class Simulador:
         self.ax.set_xlim(x - 4, x + 4)
         return self.linea, self.carro
 
-# --- LANZAMIENTO ---
-planta_fisica = PenduloPlanta(M=2, m=0.1, l=0.5, g=9.81, dt=0.015, b=0.05, d=0.05)
-sim = Simulador(planta_fisica)
-ani = FuncAnimation(sim.fig, sim.loop, interval=15, blit=False)
-plt.title("Planta de Péndulo Invertido - Modo Manual")
-plt.show()
+
+if __name__ == "__main__":
+    planta_fisica = PenduloPlanta(M=2, m=0.1, l=0.5, g=9.81, dt=0.015, b=0.05, d=0.05)
+    sim = Simulador(planta_fisica)
+    ani = FuncAnimation(sim.fig, sim.loop, interval=15, blit=False)
+    plt.title("Planta de Péndulo Invertido - Modo Manual")
+    plt.show()
