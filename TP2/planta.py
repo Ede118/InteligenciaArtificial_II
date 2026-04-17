@@ -9,7 +9,7 @@ class PenduloPlanta:
     def __init__(self, M=1.0, m=0.3, l=0.5, g=9.81, dt=0.015, b=0.05, d=0.05):
         self.M, self.m, self.l, self.g, self.dt = M, m, l, g, dt
         self.b, self.d = b, d
-        self.estado = np.array([0.0, 0.0, 0.0, 0.0])
+        self.estado = np.array([0.0, 0.0, 0.0, 0.0])  #[x, x_p, theta, theta_p]
         self.f_imp = 0.0
         self.d_imp = 0
 
@@ -71,7 +71,7 @@ class Simulador:
 
     def agarrar_pendulo(self, val):
         self.agarrado = True
-        self.planta.estado[2] = np.deg2rad(val)
+        self.planta.estado[2] = np.deg2rad(-val)
         self.planta.estado[3] = 0
         self.planta.estado[1] = 0
 
