@@ -23,4 +23,6 @@ beta = 2*zeta_p*omega_p*(lambda-mu^2/alpha);
 b = 2*zeta_c*omega_p*alpha;
 
 % Fuerza de equilibrio para caso mas desventajoso
-F_equilibrium = alpha*g*tand(75);
+F_equilibrium = 1.5*alpha*g*tand(80);
+
+x_ref = 0;
