@@ -105,6 +105,47 @@ class FuzzyController:
         fig.tight_layout(rect=[0, 0, 1, 0.96])
         return fig, axes
 
+    def graficar_mapa_decisiones(self):
+        valores = np.array(
+            [
+                [self.output_centers[decision] for decision in fila]
+                for fila in self.rule_matrix
+            ],
+            dtype=float,
+        )
+
+        fig, ax = plt.subplots(figsize=(8.5, 7))
+        im = ax.imshow(
+            valores,
+            cmap="coolwarm",
+            vmin=self.force_range[0],
+            vmax=self.force_range[1],
+        )
+
+        ax.set_title("Mapa de calor de decisiones del controlador fuzzy")
+        ax.set_xlabel("Posicion angular theta")
+        ax.set_ylabel("Velocidad angular theta_p")
+        ax.set_xticks(np.arange(len(self.labels)), labels=self.labels)
+        ax.set_yticks(np.arange(len(self.labels)), labels=self.labels)
+
+        for i, fila in enumerate(self.rule_matrix):
+            for j, decision in enumerate(fila):
+                color_texto = "white" if abs(valores[i, j]) > 120.0 else "black"
+                ax.text(
+                    j,
+                    i,
+                    f"{decision}\n{valores[i, j]:.0f} N",
+                    ha="center",
+                    va="center",
+                    color=color_texto,
+                    fontsize=9,
+                )
+
+        cbar = fig.colorbar(im, ax=ax)
+        cbar.set_label("Fuerza de control [N]")
+        fig.tight_layout()
+        return fig, ax
+
     # --------------------------------------------------
     # PERTENENCI TRIANGULAR
     # --------------------------------------------------

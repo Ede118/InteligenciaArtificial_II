@@ -61,8 +61,12 @@ class AdaptadorControladorPlanta:
         return float(self.fuerza_max * np.tanh(fuerza / self.fuerza_max)) # Limita la fuerza de control a un rango máximo para evitar acciones excesivas en la planta
 
     def actualizar_planta(self, planta):
-        fuerza = self.calcular_fuerza(planta.estado)
+        fuerza_control = self.calcular_fuerza(planta.estado)
+        fuerza_impulso = planta.f_imp if planta.d_imp > 0 else 0.0
+        fuerza = fuerza_control + fuerza_impulso
         planta.f_actual = fuerza
+        if planta.d_imp > 0:
+            planta.d_imp -= 1
 
         x_pp, theta_pp = planta.calcular_fisica(fuerza)
         planta.estado[1] += x_pp * planta.dt
@@ -93,13 +97,28 @@ class SimulacionControlada:
         self.hist_theta_p = []
         self.hist_fuerza = []
 
-        self.fig, (self.ax_pendulo, self.ax_estados) = plt.subplots(
+        self.fig = plt.figure(figsize=(15, 7.5))
+        grilla = self.fig.add_gridspec(
+            5,
             2,
-            1,
-            figsize=(11, 8),
-            gridspec_kw={"height_ratios": [2, 1]},
+            width_ratios=[1.0, 1.35],
+            hspace=0.55,
+            wspace=0.28,
         )
-        plt.subplots_adjust(hspace=0.35, bottom=0.26)
+        self.ax_pendulo = self.fig.add_subplot(grilla[:, 0])
+        self.ax_x = self.fig.add_subplot(grilla[0, 1])
+        self.ax_x_p = self.fig.add_subplot(grilla[1, 1], sharex=self.ax_x)
+        self.ax_theta = self.fig.add_subplot(grilla[2, 1], sharex=self.ax_x)
+        self.ax_theta_p = self.fig.add_subplot(grilla[3, 1], sharex=self.ax_x)
+        self.ax_fuerza = self.fig.add_subplot(grilla[4, 1], sharex=self.ax_x)
+        self.axes_estados = [
+            self.ax_x,
+            self.ax_x_p,
+            self.ax_theta,
+            self.ax_theta_p,
+            self.ax_fuerza,
+        ]
+        plt.subplots_adjust(left=0.06, right=0.98, top=0.92, bottom=0.25)
 
         self.ax_pendulo.set_title("Pendulo invertido con controlador fuzzy")
         self.ax_pendulo.set_aspect("equal")
@@ -121,18 +140,29 @@ class SimulacionControlada:
             bbox=dict(boxstyle="round,pad=0.35", fc="white", ec="#7f8c8d", alpha=0.9),
         )
 
-        self.ax_estados.set_title("Estado de las variables")
-        self.ax_estados.set_xlabel("Tiempo [s]")
-        self.ax_estados.grid(True, alpha=0.2, linestyle="--")
-        self.ax_estados.set_xlim(0, self.duracion)
-        self.ax_estados.set_ylim(-180.0, 180.0)
+        self.ax_x.set_title("Posicion lineal")
+        self.ax_x_p.set_title("Velocidad lineal")
+        self.ax_theta.set_title("Posicion angular")
+        self.ax_theta_p.set_title("Velocidad angular")
+        self.ax_fuerza.set_title("Fuerza")
+        for ax in self.axes_estados:
+            ax.grid(True, alpha=0.2, linestyle="--")
+            ax.set_xlim(0, self.duracion)
+        for ax in self.axes_estados[:-1]:
+            ax.tick_params(labelbottom=False)
+        self.ax_fuerza.set_xlabel("Tiempo [s]")
 
-        self.linea_x, = self.ax_estados.plot([], [], label="x [m]")
-        self.linea_x_p, = self.ax_estados.plot([], [], label="x_p [m/s]")
-        self.linea_theta, = self.ax_estados.plot([], [], label="theta [deg]")
-        self.linea_theta_p, = self.ax_estados.plot([], [], label="theta_p [deg/s]")
-        self.linea_fuerza, = self.ax_estados.plot([], [], label="F/10 [N]")
-        self.ax_estados.legend(loc="upper right", ncols=3, fontsize=9)
+        self.ax_x.set_ylabel("x [m]")
+        self.ax_x_p.set_ylabel("x_p [m/s]")
+        self.ax_theta.set_ylabel("theta [deg]")
+        self.ax_theta_p.set_ylabel("theta_p [deg/s]")
+        self.ax_fuerza.set_ylabel("F [N]")
+
+        self.linea_x, = self.ax_x.plot([], [], color="#1f77b4")
+        self.linea_x_p, = self.ax_x_p.plot([], [], color="#ff7f0e")
+        self.linea_theta, = self.ax_theta.plot([], [], color="#2ca02c")
+        self.linea_theta_p, = self.ax_theta_p.plot([], [], color="#d62728")
+        self.linea_fuerza, = self.ax_fuerza.plot([], [], color="#9467bd")
 
         self.crear_controles()
         self.reiniciar_estado()
@@ -160,17 +190,26 @@ class SimulacionControlada:
         )
         self.slider_theta.on_changed(self.actualizar_estado_inicial)
 
-        ax_iniciar = plt.axes([0.15, 0.03, 0.18, 0.045])
+        ax_iniciar = plt.axes([0.08, 0.03, 0.16, 0.045])
         self.boton_iniciar = Button(ax_iniciar, "Iniciar", color="#dfe6e9", hovercolor="#b2bec3")
         self.boton_iniciar.on_clicked(self.iniciar)
 
-        ax_pausa = plt.axes([0.41, 0.03, 0.18, 0.045])
+        ax_pausa = plt.axes([0.29, 0.03, 0.16, 0.045])
         self.boton_pausa = Button(ax_pausa, "Pausa", color="#dfe6e9", hovercolor="#b2bec3")
         self.boton_pausa.on_clicked(self.alternar_pausa)
 
-        ax_reset = plt.axes([0.67, 0.03, 0.18, 0.045])
+        ax_reset = plt.axes([0.50, 0.03, 0.16, 0.045])
         self.boton_reset = Button(ax_reset, "Reset", color="#dfe6e9", hovercolor="#b2bec3")
         self.boton_reset.on_clicked(self.resetear)
+
+        ax_desestabilizar = plt.axes([0.71, 0.03, 0.21, 0.045])
+        self.boton_desestabilizar = Button(
+            ax_desestabilizar,
+            "Desestabilizar",
+            color="#ffeaa7",
+            hovercolor="#fdcb6e",
+        )
+        self.boton_desestabilizar.on_clicked(self.desestabilizar)
 
     def estado_desde_controles(self):
         return np.array(
@@ -195,6 +234,8 @@ class SimulacionControlada:
     def reiniciar_estado(self):
         self.planta.estado = self.estado_desde_controles()
         self.planta.f_actual = 0.0
+        self.planta.f_imp = 0.0
+        self.planta.d_imp = 0
         self.adaptador.configurar_modo_inicial(self.planta.estado)
         self.limpiar_historial()
         self.guardar_estado(self.planta.f_actual)
@@ -216,6 +257,9 @@ class SimulacionControlada:
     def resetear(self, event):
         self.corriendo = False
         self.reiniciar_estado()
+
+    def desestabilizar(self, event):
+        self.planta.aplicar_patada(180.0)
 
     def guardar_estado(self, fuerza):
         x, x_p, theta, theta_p = self.planta.estado
@@ -252,8 +296,9 @@ class SimulacionControlada:
         self.linea_theta.set_data(self.hist_t, self.hist_theta)
         self.linea_theta_p.set_data(self.hist_t, self.hist_theta_p)
         self.linea_fuerza.set_data(self.hist_t, self.hist_fuerza)
-        self.ax_estados.relim()
-        self.ax_estados.autoscale_view(scalex=False, scaley=False)
+        for ax in self.axes_estados:
+            ax.relim()
+            ax.autoscale_view(scalex=False, scaley=True)
 
     def loop(self, frame):
         if self.corriendo and self.t <= self.duracion:
@@ -276,7 +321,7 @@ class SimulacionControlada:
 
 def main():
     args = parsear_argumentos()
-    planta = PenduloPlanta(M=2.0, m=0.1, l=0.5, g=9.81, dt=0.015, b=0.05, d=0.05)
+    planta = PenduloPlanta(M=2.0, m=0.1, l=0.5, g=9.81, dt=0.01, b=0.05, d=0.05)
     planta.estado = np.array(
         [
             args.x,
@@ -289,6 +334,7 @@ def main():
 
     controlador = FuzzyController()
     controlador.graficar_funciones_pertenencia()
+    controlador.graficar_mapa_decisiones()
     adaptador = AdaptadorControladorPlanta(controlador, fuerza_max=args.fuerza_max)
     simulacion = SimulacionControlada(planta, adaptador, duracion=args.duracion)
 
