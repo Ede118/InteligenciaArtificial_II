@@ -23,7 +23,7 @@ class FuzzyController:
             ["PM", "NP", "NP", "NG", "PP", "PP", "NM"],  # theta_p = NG
             ["PG", "NM", "NM", "NM", "PM", "PM", "NG"],  # theta_p = NM
             ["PG", "NG", "NM", "NP", "PM", "PG", "NG"],  # theta_p = NP
-            ["PG", "NM", "NP", "Z",  "PP", "PM", "PG"],  # theta_p = Z
+            ["PG", "NM", "NP", "Z",  "PP", "PM", "NG"],  # theta_p = Z
             ["PG", "NG", "NM", "PP", "PM", "PG", "NG"],  # theta_p = PP
             ["PG", "NM", "NM", "PM", "PM", "PM", "NG"],  # theta_p = PM
             ["PM", "NP", "NP", "PG", "PP", "PP", "NM"]   # theta_p = PG
@@ -105,46 +105,46 @@ class FuzzyController:
         fig.tight_layout(rect=[0, 0, 1, 0.96])
         return fig, axes
 
-    def graficar_mapa_decisiones(self):
-        valores = np.array(
-            [
-                [self.output_centers[decision] for decision in fila]
-                for fila in self.rule_matrix
-            ],
-            dtype=float,
+    def calcular_mapa_decisiones(self, cantidad_theta=90, cantidad_theta_dot=90):
+        theta_valores = np.linspace(self.theta_range[0], self.theta_range[1], cantidad_theta)
+        theta_dot_valores = np.linspace(self.theta_dot_range[0], self.theta_dot_range[1], cantidad_theta_dot)
+        fuerzas = np.zeros((cantidad_theta_dot, cantidad_theta))
+
+        for i, theta_dot in enumerate(theta_dot_valores):
+            for j, theta in enumerate(theta_valores):
+                fuerzas[i, j] = self.compute_control(theta, theta_dot)
+
+        return theta_valores, theta_dot_valores, fuerzas
+
+    def graficar_mapa_decisiones(self, cantidad_theta=90, cantidad_theta_dot=90):
+        theta_valores, theta_dot_valores, fuerzas = self.calcular_mapa_decisiones(
+            cantidad_theta=cantidad_theta,
+            cantidad_theta_dot=cantidad_theta_dot,
         )
 
         fig, ax = plt.subplots(figsize=(8.5, 7))
         im = ax.imshow(
-            valores,
+            fuerzas,
             cmap="coolwarm",
             vmin=self.force_range[0],
             vmax=self.force_range[1],
+            origin="lower",
+            aspect="auto",
+            extent=[
+                theta_valores[0],
+                theta_valores[-1],
+                theta_dot_valores[0],
+                theta_dot_valores[-1],
+            ],
         )
 
-        ax.set_title("Mapa de calor de decisiones del controlador fuzzy")
-        ax.set_xlabel("Posicion angular theta")
-        ax.set_ylabel("Velocidad angular theta_p")
-        ax.set_xticks(np.arange(len(self.labels)), labels=self.labels)
-        ax.set_yticks(np.arange(len(self.labels)), labels=self.labels)
-
-        for i, fila in enumerate(self.rule_matrix):
-            for j, decision in enumerate(fila):
-                color_texto = "white" if abs(valores[i, j]) > 120.0 else "black"
-                ax.text(
-                    j,
-                    i,
-                    f"{decision}\n{valores[i, j]:.0f} N",
-                    ha="center",
-                    va="center",
-                    color=color_texto,
-                    fontsize=9,
-                )
-
+        ax.set_title("Mapa de calor de salida del controlador fuzzy")
+        ax.set_xlabel("Posicion angular theta [deg]")
+        ax.set_ylabel("Velocidad angular theta_p [deg/s]")
         cbar = fig.colorbar(im, ax=ax)
-        cbar.set_label("Fuerza de control [N]")
+        cbar.set_label("Fuerza calculada [N]")
         fig.tight_layout()
-        return fig, ax
+        return fig, ax, theta_valores, theta_dot_valores, fuerzas
 
     # --------------------------------------------------
     # PERTENENCI TRIANGULAR
