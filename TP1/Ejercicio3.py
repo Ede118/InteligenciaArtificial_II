@@ -1,22 +1,4 @@
 """
-Init:
-    @param grilla:      [class Almacen]: matriz de almacen [0s, 1s y 2].
-    @param ordenes:     [list[np.ndarray]] lista de órdenes de pedidos.
-
-Args `busquedaLocal`:
-    @param numero_orden:        [list[np.ndarray]] Array de ordenes particulares que se desea manejar
-    @param Temperatura0:        [float] Temperatura inicial del Templado Simulado
-    @param coolingRate:         [float] Número 0<float<1 con el que disminuye la temperatura
-    @param minTemperatura:      [float] Temperatura mínima (restringe número de iteraciones)
-    @param orden_particular:    [np.ndarray] Lista de ordenes particulares 
-    @param seed:                [int] 
-    @param max_iter:            [int]
-
-Return:
-    @param camino_optimo:       [np.ndarray] Lista de ordenes de manera "ordenada" con el costo optimo en mente
-    @param costo_optimo:        [int] Costo optimo (medido en distancia manhattan)
-
-
 Búsqueda Local con Temple Simulado para optimizar la secuencia de órdenes de un
 montacargas en un almacén representado por una matriz de casillas.
 
@@ -62,25 +44,20 @@ class TempleSimulado:
         nueva[idx1], nueva[idx2] = nueva[idx2], nueva[idx1]
         return nueva
 
-    def _calcular_costo(self, orden: list[int] | np.ndarray) -> int:
+    def _calcular_costo(self, orden: list[int] | np.ndarray) -> int:   
         """
-        Calcula el costo total de un pedido expresado como secuencia de
-        posiciones físicas (estantes), incluyendo:
-
-        C -> e1 -> e2 -> ... -> en -> C
+        Calcula el costo de recorrer una secuencia de estantes/posiciones fisicas 
+        (no oden de productos).
         """
         costo_total = 0
-        posicion_carga = (5, 0)
-        posicion_actual = posicion_carga
+        posicion_actual = (5, 0)
 
-        # Ir desde C al primer estante y luego entre estantes
-        for estante_id in orden:
+        for estante_id in orden: 
             entorno = E1.Almacen(
                 self.grilla,
                 estante_objetivo=int(estante_id),
-                posicion_final=None,
                 flag_almacen=False,
-                lista_modificada=None
+                lista_modificada0=None
             )
 
             agente = E1.Montacargas(
@@ -92,27 +69,6 @@ class TempleSimulado:
                 camino, costo_tramo = agente.execute()
                 costo_total += costo_tramo
                 posicion_actual = camino[-1]
-            except ValueError:
-                return 10_000
-
-        # Volver a la estación de carga al terminar el pedido
-        if posicion_actual != posicion_carga:
-            entorno_regreso = E1.Almacen(
-                self.grilla,
-                estante_objetivo=None,
-                posicion_final=posicion_carga,
-                flag_almacen=False,
-                lista_modificada=None
-            )
-
-            agente_regreso = E1.Montacargas(
-                grilla=entorno_regreso,
-                casilla_inicial=posicion_actual
-            )
-
-            try:
-                camino_regreso, costo_regreso = agente_regreso.execute()
-                costo_total += costo_regreso
             except ValueError:
                 return 10_000
 
@@ -150,7 +106,7 @@ class TempleSimulado:
                 pedido=pedido,
                 layout_individuo=layout_individuo
             )
-            costo_total += self._calcular_costo(secuencia_posiciones)
+            costo_total += self._calcular_costo_secuencia_posiciones(secuencia_posiciones)
 
         return float(costo_total)
 
@@ -166,12 +122,11 @@ class TempleSimulado:
         max_iter: int | None = None
     ) -> tuple[np.ndarray, float]:
         """
-        Temple simulado sobre una secuencia de POSICIONES FÍSICAS.
+        Ejecuta temple simulado sobre una orden.
 
-        - Si se pasa orden_particular → se asume que ya son posiciones físicas
-        - Si NO se pasa → usa orden del CSV 
+        Si se pasa orden_particular, optimiza esa secuencia.
+        Si no, optimiza self.ordenes[numero_orden].
         """
-
         if seed is not None:
             np.random.seed(seed)
 
@@ -184,29 +139,21 @@ class TempleSimulado:
         if minTemperatura <= 0:
             raise ValueError("minTemperatura debe ser mayor que 0.")
 
-        # orden pasada directamente 
         if orden_particular is not None:
             orden = np.array(orden_particular, dtype=int).copy()
-
-        # Si no se pasa usamos el número de orden para obtener la orden del CSV
         else:
             if not self.ordenes:
-                raise ValueError("No hay órdenes cargadas.")
-
+                raise ValueError("No hay órdenes cargadas. Usa cargar_ordenes() antes de llamar a busquedaLocal().")
             if not (0 <= numero_orden < len(self.ordenes)):
                 raise IndexError("numero_orden fuera de rango.")
-
             orden = np.array(self.ordenes[numero_orden], dtype=int).copy()
 
-        # Inicialización
         TActual = float(Temperatura0)
         costo = self._calcular_costo(orden)
 
         iteracion = 0
 
-        # Loop de temple
         while TActual > minTemperatura:
-
             if max_iter is not None and iteracion >= max_iter:
                 break
 
@@ -301,8 +248,6 @@ if __name__ == "__main__":
     temple_simulado.cargar_ordenes("TP1/utilities/ordenes.csv")
 
     numero_orden = random.randint(0, len(temple_simulado.ordenes) - 1)
-    numero_orden = 36
-    orden_original = temple_simulado.ordenes[numero_orden]
 
     orden_optimo, costo = temple_simulado.busquedaLocal(
         numero_orden=numero_orden,
@@ -313,96 +258,34 @@ if __name__ == "__main__":
         max_iter=None
     )
 
-    char = input("¿Mostrar original? [y/n]:")
-    if char is 'y':
-        show_original = True
-    else:
-        show_original = False
-    
-    print(f"Orden N°: {numero_orden}")
-    print(f"Orden original: {temple_simulado.ordenes[numero_orden]}")
-    print("\n\n")
-    
+    print(f"Orden elegida: {numero_orden}")
     print(f"Secuencia optimizada: {orden_optimo}")
     print(f"Costo: {costo}")
-    print("\n\n")
-    
-    sim = SimulacionInteractiva(entorno_estatico) # O el nombre de tu clase de simulación
-    posicion_actual = (5, 0) 
 
+    sim = SimulacionInteractiva(entorno_estatico)
+    posicion_actual = (5, 0)
 
     for estante_id in orden_optimo:
-        entorno_temp = E1.Almacen(entorno_estatico, estante_objetivo=estante_id)
-        agente = E1.Montacargas(grilla=entorno_temp, casilla_inicial=posicion_actual)
-        
+        entorno_temp = E1.Almacen(
+            entorno_estatico,
+            estante_objetivo=int(estante_id),
+            flag_almacen=False,
+            lista_modificada0=None
+        )
+
+        agente = E1.Montacargas(
+            grilla=entorno_temp,
+            casilla_inicial=posicion_actual
+        )
+
         try:
             camino, _ = agente.execute()
             sim.agregar_tramo(camino)
-            posicion_actual = camino[-1] # El fin de este tramo es el inicio del siguiente
+            posicion_actual = camino[-1]
         except ValueError:
-            print(f"Error: Estante {estante_id} inalcanzable.")
-
-    punto_carga = (5, 0)
-    # Creamos un entorno genérico para el regreso
-    entorno_retorno = E1.Almacen(entorno_estatico, estante_objetivo=1) 
-
-    # Forzamos el objetivo a la zona de carga
-    # La clase Almacen calcula casilla_objetivo en el __init__ basándose en estantes,
-    # pero el Montacargas usa el atributo casilla_objetivo para su búsqueda.
-    entorno_retorno.casilla_objetivo = punto_carga 
-
-    agente_retorno = E1.Montacargas(grilla=entorno_retorno, casilla_inicial=posicion_actual)
-
-    try:
-        camino_vuelta, _ = agente_retorno.execute()
-        sim.agregar_tramo(camino_vuelta)
-        print("-> Trayecto de retorno al origen calculado.")
-    except ValueError:
-        print("Error: No se encontró camino de regreso al punto de carga.")
+            pass
 
     sim.run()
-    
-    # ====================================================================================
-    #   SIMULACIÓN DEL ORDEN ORIGINAL
-    # ====================================================================================
-    if show_original:
-        sim = SimulacionInteractiva(entorno_estatico) # O el nombre de tu clase de simulación
-        posicion_actual = (5, 0) 
-
-
-        for estante_id in orden_original:
-            entorno_temp = E1.Almacen(entorno_estatico, estante_objetivo=estante_id)
-            agente = E1.Montacargas(grilla=entorno_temp, casilla_inicial=posicion_actual)
-            
-            try:
-                camino, _ = agente.execute()
-                sim.agregar_tramo(camino)
-                posicion_actual = camino[-1] # El fin de este tramo es el inicio del siguiente
-            except ValueError:
-                print(f"Error: Estante {estante_id} inalcanzable.")
-
-        punto_carga = (5, 0)
-        # Creamos un entorno genérico para el regreso
-        entorno_retorno = E1.Almacen(entorno_estatico, estante_objetivo=1) 
-
-        # Forzamos el objetivo a la zona de carga
-        # La clase Almacen calcula casilla_objetivo en el __init__ basándose en estantes,
-        # pero el Montacargas usa el atributo casilla_objetivo para su búsqueda.
-        entorno_retorno.casilla_objetivo = punto_carga 
-
-        agente_retorno = E1.Montacargas(grilla=entorno_retorno, casilla_inicial=posicion_actual)
-
-        try:
-            camino_vuelta, _ = agente_retorno.execute()
-            sim.agregar_tramo(camino_vuelta)
-            print("-> Trayecto de retorno al origen calculado.")
-        except ValueError:
-            print("Error: No se encontró camino de regreso al punto de carga.")
-
-        sim.run()
-    
-
-
 #       Pruebas de código:
 #
 #    
