@@ -12,7 +12,7 @@ mu = m_p * l;
 
 % Definicion de Amortiguamientos
 zeta_c = 0.05;              % adim
-zeta_p = 0.10;              % adim
+zeta_p = 0.01;              % adim
 
 % Frecuencia Natural del pendulo
 omega_p = sqrt(mu*g/(lambda-mu^2/alpha));
@@ -26,3 +26,14 @@ b = 2*zeta_c*omega_p*alpha;
 F_equilibrium = 1.5*alpha*g*tand(80);
 
 x_ref = 0;
+
+% Dimensiones del carrito
+
+w_c = 0.05;         % m - Eje X
+b_c = 0.1;          % m - Eje Y
+h_c = 0.05;         % m - Eje Z
+
+% Dimensiones del pendulo
+w_p = 0.025;       % m - Eje X
+b_p = 0.025;       % m - Eje Y
+h_p = l;           % m - Eje Z

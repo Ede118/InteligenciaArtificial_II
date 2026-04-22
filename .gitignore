@@ -8,3 +8,6 @@ ENV/
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Archivos temporales de MATLAB
+TP2/MATLAB/slprj

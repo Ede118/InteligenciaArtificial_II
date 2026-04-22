@@ -1,111 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MF0 version="1.1" packageUris="http://schema.mathworks.com/mf0/slsa_mm_param_graph/R2021b">
-  <slsa.mm.param.graph.VariableRegistry type="slsa.mm.param.graph.VariableRegistry" uuid="bfe2adb6-ba1b-479a-a0de-b6c1c718deca">
-    <blockParameters type="slsa.mm.param.graph.BlockParameter" uuid="8d7bd265-21b9-4678-8c08-48e002f04d48">
-      <blockPath>Model/Fuzzy Controller/ThetaFuzzyController/Output Sample Points</blockPath>
-      <parameterName>Value</parameterName>
-      <expression type="slsa.mm.param.graph.Expression" uuid="59e009a4-ec99-4299-83c3-9f9cbbd030a2"/>
-      <valueAttributes type="slsa.mm.param.graph.ValueAttributes" uuid="40b38e08-8cfc-4fce-b813-c26281c3101d">
-        <className>double</className>
-        <dimensions>1</dimensions>
-        <dimensions>101</dimensions>
-      </valueAttributes>
-    </blockParameters>
-    <blockParameters type="slsa.mm.param.graph.BlockParameter" uuid="f196c277-fbd4-409b-988a-d13a1f483014">
+  <slsa.mm.param.graph.VariableRegistry type="slsa.mm.param.graph.VariableRegistry" uuid="cbdcb951-6f40-4758-89ad-bb1c0caf66a2">
+    <blockParameters type="slsa.mm.param.graph.BlockParameter" uuid="3221285c-961d-4299-9689-762195e339c4">
       <blockPath>Model/Fuzzy Controller/XFuzzyController/Output Sample Points</blockPath>
       <parameterName>Value</parameterName>
-      <expression type="slsa.mm.param.graph.Expression" uuid="d29cbc35-8e21-47c3-a227-8c56932a29cc"/>
-      <valueAttributes type="slsa.mm.param.graph.ValueAttributes" uuid="5d282841-eeb7-41fa-a0d4-af2020fe3358">
+      <expression type="slsa.mm.param.graph.Expression" uuid="5dcf54fe-6969-4e8a-9ced-cf3e2a0c0550"/>
+      <valueAttributes type="slsa.mm.param.graph.ValueAttributes" uuid="4cb60239-4e25-492b-b23c-ffd5a11785a9">
         <className>double</className>
         <dimensions>1</dimensions>
         <dimensions>101</dimensions>
       </valueAttributes>
     </blockParameters>
-    <expressions type="slsa.mm.param.graph.Expression" uuid="7e81277d-7cc2-46d6-b832-4409e400cc6e">
-      <expression>&apos;ThetaFuzzyController.fis&apos;</expression>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="11778725-00b9-497c-a6a8-609f888c908f"/>
-    </expressions>
-    <expressions type="slsa.mm.param.graph.Expression" uuid="70bb5d48-9240-44dd-97f6-409e3a93a070">
+    <blockParameters type="slsa.mm.param.graph.BlockParameter" uuid="faadd67d-9926-46c8-aacb-b1f3e1ba85f6">
+      <blockPath>Model/Fuzzy Controller/ThetaFuzzyController/Output Sample Points</blockPath>
+      <parameterName>Value</parameterName>
+      <expression type="slsa.mm.param.graph.Expression" uuid="5a920a0a-2cc2-4a7b-9b2f-6500fe0601e2"/>
+      <valueAttributes type="slsa.mm.param.graph.ValueAttributes" uuid="946ada94-200b-4554-8df7-a603d76d2a9f">
+        <className>double</className>
+        <dimensions>1</dimensions>
+        <dimensions>101</dimensions>
+      </valueAttributes>
+    </blockParameters>
+    <expressions type="slsa.mm.param.graph.Expression" uuid="1457edeb-c0d0-4a22-9102-6013e7b14360">
       <expression>101</expression>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="4f6d45f3-4993-4491-ad97-6375f7da530f"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="f13a2908-1fa8-467f-8101-030a3fb0cc75"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="2bea2b3c-0e61-4467-8052-23b85076ce9a"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="7268b605-19db-4ca9-bd18-9afa57e61a42"/>
     </expressions>
-    <expressions type="slsa.mm.param.graph.Expression" uuid="7067184d-e1d5-456a-9a0b-77574f7477ee">
-      <expression>2</expression>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="3e42c5c7-899c-46eb-9a16-b7cb4c026154"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="37a0011b-68b9-4907-a550-80170847bea1"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="4a9f3cad-3afa-41d2-86ef-9a92611cbc0a"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="e47f091f-9723-4628-85cb-8fb928861c11"/>
+    <expressions type="slsa.mm.param.graph.Expression" uuid="dc0e0939-57b9-4889-a18e-35a8166c790e">
+      <expression>&apos;ThetaFuzzyController.fis&apos;</expression>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="c09d1e31-cac6-4b3e-adff-35054f4c094b"/>
     </expressions>
-    <expressions type="slsa.mm.param.graph.Expression" uuid="d7b7b53c-6e3c-4962-a311-d832b40e9695">
-      <expression>0</expression>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="8471f0a5-0240-4396-9bdb-6d6d5ef3bac9"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="a30d8c9c-92b1-4c04-89e1-b5a78d1263d5"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="7e3c0404-6de9-46ea-b2c8-c05e23d5b850"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="9a9449ec-4143-4908-acac-7d8c802d1c87"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="8ad9f5f4-7034-4338-a88e-75b872836ced"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="d9d1dfc0-fa34-4491-9c5a-444d88d48022"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="d9b76864-8e7a-49ec-9a7c-d2bd60bd0324"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="d0ecf052-5d80-4d1c-90ec-978f95e2c73e"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="705f6ae9-f84c-4dd3-849c-3d47cf48b184"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="de5300f5-4ad2-44fd-9a1b-657f0e46dd58"/>
-    </expressions>
-    <expressions type="slsa.mm.param.graph.Expression" uuid="59e009a4-ec99-4299-83c3-9f9cbbd030a2">
-      <expression>fis.outputSamplePoints</expression>
-      <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="793b6184-1d18-4a9b-9c4c-e83c0a29b484"/>
-      <users type="slsa.mm.param.graph.BlockParameter" uuid="8d7bd265-21b9-4678-8c08-48e002f04d48"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="4a7db4eb-9eb7-42ae-8934-d2b2358a6d70"/>
-    </expressions>
-    <expressions type="slsa.mm.param.graph.Expression" uuid="29515446-e957-4c53-b4a9-c07762d34604">
-      <expression>1</expression>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="6f07f661-128b-446d-b3da-473346892666"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="82710938-e725-48af-9c0f-cd2d4ad37c0c"/>
-    </expressions>
-    <expressions type="slsa.mm.param.graph.Expression" uuid="81f01ae0-cf98-4e79-88f7-1b3409e5da45">
-      <expression>10</expression>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="d56dd234-d4f9-413f-86b7-44224eb0efe5"/>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="a7caedb0-3296-4127-871a-c453b22f4d07"/>
-    </expressions>
-    <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7">
-      <expression>fuzzy.internal.utility.initializeFLCStates(gcb)
-diagnostics = fuzzy.internal.utility.createDiagnosticLevels(...
-    &apos;SimulinkDiagnostic&apos;,1, ...
-    &apos;Model&apos;,gcs, ...
-    &apos;Block&apos;,gcb, ...
-    &apos;OutOfRangeInputValue&apos;,get_param(gcb,&apos;OutOfRangeInputValueMessage&apos;), ...   
-    &apos;NoRuleFired&apos;,get_param(gcb,&apos;NoRuleFiredMessage&apos;), ...
-    &apos;EmptyOutputFuzzySet&apos;,get_param(gcb,&apos;EmptyOutputFuzzySetMessage&apos;) ...
-    );
-fuzzy.internal.utility.validateBlockNumSamples(gcb,&apos;NumBreakpoints&apos;, ...
-    &apos;Number of input breakpoints (samples)&apos;)
-[fis,tableDim,tableData,breakPoints] = fuzzy.internal.utility.validateInputsAndInitializeData(...
-    FIS,OutputSampleNumber,DataType,&apos;UseLookupTable&apos;,UseLookupTable, ...
-    &apos;NumBreakpoints&apos;,NumBreakpoints); %#ok&lt;ASGLU&gt;
-fm = fuzzy.internal.utility.createFiMathSpecifications(DataType);
-fuzzy.internal.utility.fuzblockmask(gcb,FuzzifiedInputs,RuleFiringStrengths,RuleOutputs,AggregatedOutputs,...
-    struct(&apos;dim&apos;,double([tableDim,fis.numOutputs]),&apos;data&apos;,&apos;tableData&apos;,&apos;brkPts&apos;,&apos;breakPoints&apos;));</expression>
-      <isAssignable>false</isAssignable>
-      <ownerBlockPath>Model/Fuzzy Controller/ThetaFuzzyController</ownerBlockPath>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="1f81e00f-44ce-4013-abcb-90b7630fd489"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="42b85802-3cfb-4393-8352-94df6c06a397"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="32ebe4d6-839e-4c46-bb2f-1c07eca61fb7"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="3b46fd2f-1a3b-41c7-a4c1-29b5553029d8"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="3b7df9d0-2f36-4c2e-b974-09216e54310a"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="33714b02-4e5e-40ef-a77e-55e2e417c948"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="cb686ff7-b263-450d-942d-24ba32988ca0"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="88c35a84-194d-4566-8a40-e80fae969628"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="441ee1f4-3530-4bf3-b273-33d8af8853d1"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="97390e19-476b-4635-9398-f6939f438555"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="bd0f8921-f60a-4741-8407-ff075338b568"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="ca068e9d-87b7-4879-990a-c78426ae7b99"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="4ea2a59a-0345-4071-9f0b-63c75a39399d"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="18094dee-a46f-411d-b878-55c252d438dd"/>
-    </expressions>
-    <expressions type="slsa.mm.param.graph.Expression" uuid="989511aa-b2ec-42b9-bd3b-69b1371ed7c2">
-      <expression>&apos;XFuzzyController.fis&apos;</expression>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="21d0ae3a-2c27-428f-b94d-1b85fb22a4de"/>
-    </expressions>
-    <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e">
+    <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04">
       <expression>fuzzy.internal.utility.initializeFLCStates(gcb)
 diagnostics = fuzzy.internal.utility.createDiagnosticLevels(...
     &apos;SimulinkDiagnostic&apos;,1, ...
@@ -125,401 +50,476 @@ fuzzy.internal.utility.fuzblockmask(gcb,FuzzifiedInputs,RuleFiringStrengths,Rule
     struct(&apos;dim&apos;,double([tableDim,fis.numOutputs]),&apos;data&apos;,&apos;tableData&apos;,&apos;brkPts&apos;,&apos;breakPoints&apos;));</expression>
       <isAssignable>false</isAssignable>
       <ownerBlockPath>Model/Fuzzy Controller/XFuzzyController</ownerBlockPath>
-      <users type="slsa.mm.param.graph.VariableDefinition" uuid="2ab78ddc-67f0-4694-9136-503290df98e6"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="0ad41245-9ddf-4b9c-9ab7-af41532438cd"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="4a55e6c7-194c-4d9a-a730-0bcf8568c0e4"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="536bbfa1-1b52-4c4d-ad06-709ebd01881f"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="cbb74f49-c8e7-4281-a5c3-ef5c164c47a9"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="95308429-c5a2-464a-93b4-7d07923f61a4"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="0067edac-60d1-44e6-b4ca-713b34644a8b"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="781b7486-4cc2-48e1-b328-c4e74529b2f2"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="54f4c02d-453e-44df-964f-29d712a5aa0a"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="6f389f3f-2b93-4a2c-8c91-dde98055e9bc"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="3752fc52-9e43-4800-9839-1744f4c412e9"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="99db018e-1698-4ab4-8ae8-3a0a4e3c512a"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="4cdcb448-adc6-4528-a571-58a119c928aa"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="3d79a1b9-d3f2-4f2e-b8fe-0fcb2f772904"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="51e336b8-e0fe-4118-8995-c88c23abc3ce"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="01c5f28b-44c4-49f1-9cf6-f75ad42a1cc4"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="91c7b913-8715-4115-9f06-19c4690386ce"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="dc433d12-49ce-49e8-a87c-f30a573b550e"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="7d0fb3cf-88a4-4c1f-bee7-20aafc3cbbeb"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="c7e3f0d3-451a-421b-8545-270cce01f95c"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="bb64fb76-bd73-45b4-9fef-9ecf3fdcf181"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="138013ac-406e-43d1-8b93-be9839ee9988"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="ba6626ac-f1a5-4575-8fcd-33cebe54e2c5"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="d23531e0-6aa1-48f4-b497-712125687e8d"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="e34aef35-66e5-48ec-bd0b-46d5e8c48ffb"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="1ac8f22b-d91a-41e9-a820-884d6f86ca83"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="9f20902a-0ac2-48ad-9af1-4cdfefbd08c5"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="8a88637d-a8f5-4a0d-9244-cb5a339aba33"/>
     </expressions>
-    <expressions type="slsa.mm.param.graph.Expression" uuid="d29cbc35-8e21-47c3-a227-8c56932a29cc">
+    <expressions type="slsa.mm.param.graph.Expression" uuid="cf203a76-d4cf-4c54-a7ff-1358e6a434fc">
+      <expression>0</expression>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="ebbd627d-dc2f-4f51-9c2d-fbb777927028"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="e0d55d7c-6a5e-4b7f-bad0-0688b891cd7f"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="d7daf66a-1bac-4779-be9f-c7b09dfb4b11"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="d7053763-619d-4773-9836-5fc0d5b3d431"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="afb3d668-198b-446e-a0cd-4936bb88c8ae"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="dfb7600e-164c-4e56-864a-d3b2f5a86b26"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="2a8e28ad-83fc-40aa-b74d-ea6f8fd64f4c"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="494a8760-219c-44f5-85aa-a7e335d9f44f"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="cc1975c1-a411-4215-9ce5-3b6e9d79ec2f"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="b8bd2e3b-f1a2-4ded-bb89-23f4af7e151b"/>
+    </expressions>
+    <expressions type="slsa.mm.param.graph.Expression" uuid="7da32221-32d2-4cda-b410-1bb3c9562ed5">
+      <expression>10</expression>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="2ba37f21-2024-4c11-8b9d-2f5918b33740"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="a14cfdb7-1eaa-4813-bd26-b4c53365d8d2"/>
+    </expressions>
+    <expressions type="slsa.mm.param.graph.Expression" uuid="8ea2519d-c60d-43dd-9916-ae01e93442d0">
+      <expression>1</expression>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="4eab10d0-4874-4d8b-9d74-5d0bdd33cf52"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="be6b0aea-88ce-43fe-ab53-b23593455f5d"/>
+    </expressions>
+    <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee">
+      <expression>fuzzy.internal.utility.initializeFLCStates(gcb)
+diagnostics = fuzzy.internal.utility.createDiagnosticLevels(...
+    &apos;SimulinkDiagnostic&apos;,1, ...
+    &apos;Model&apos;,gcs, ...
+    &apos;Block&apos;,gcb, ...
+    &apos;OutOfRangeInputValue&apos;,get_param(gcb,&apos;OutOfRangeInputValueMessage&apos;), ...   
+    &apos;NoRuleFired&apos;,get_param(gcb,&apos;NoRuleFiredMessage&apos;), ...
+    &apos;EmptyOutputFuzzySet&apos;,get_param(gcb,&apos;EmptyOutputFuzzySetMessage&apos;) ...
+    );
+fuzzy.internal.utility.validateBlockNumSamples(gcb,&apos;NumBreakpoints&apos;, ...
+    &apos;Number of input breakpoints (samples)&apos;)
+[fis,tableDim,tableData,breakPoints] = fuzzy.internal.utility.validateInputsAndInitializeData(...
+    FIS,OutputSampleNumber,DataType,&apos;UseLookupTable&apos;,UseLookupTable, ...
+    &apos;NumBreakpoints&apos;,NumBreakpoints); %#ok&lt;ASGLU&gt;
+fm = fuzzy.internal.utility.createFiMathSpecifications(DataType);
+fuzzy.internal.utility.fuzblockmask(gcb,FuzzifiedInputs,RuleFiringStrengths,RuleOutputs,AggregatedOutputs,...
+    struct(&apos;dim&apos;,double([tableDim,fis.numOutputs]),&apos;data&apos;,&apos;tableData&apos;,&apos;brkPts&apos;,&apos;breakPoints&apos;));</expression>
+      <isAssignable>false</isAssignable>
+      <ownerBlockPath>Model/Fuzzy Controller/ThetaFuzzyController</ownerBlockPath>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="a71b2782-b345-4510-8002-ea405641bd30"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="2ead0a2b-94b4-47c1-9f71-55d29897c847"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="e1bba4ef-64ba-4964-8a64-e3a1425d18ec"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="00ff0361-57ce-4bb9-8ed2-0cd817a2f378"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="a861a42c-159f-442d-a177-dec4a4416ccd"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="a86bb382-4380-4161-b75c-05c8a95da26b"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="0a3f45bc-9bff-49ee-a570-1911039d6392"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="34746ae5-17c3-4bbf-a40f-d26ad4f22fb9"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="cb1a50a9-ccb1-4ae1-bcfb-ef32e282cb30"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="377e4ba6-039c-44fc-94f4-cb11e8606e3e"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="ba5773d7-b54d-4762-ba9d-4fc5d5e0061e"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="cde903b6-ca2e-4eab-992a-8dc657d71469"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="c2e0bf68-5fa5-4fd3-89be-e4f9985aebbe"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="3f7b7d31-98f0-495a-a405-82293f37635d"/>
+    </expressions>
+    <expressions type="slsa.mm.param.graph.Expression" uuid="d99169b7-219a-4c18-8436-e8e9562a3f61">
+      <expression>2</expression>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="005977f6-02d3-4050-a297-22dba3477848"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="1258ebf5-36e5-4815-9c7a-c7b5abc7c877"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="52e03ecf-2dc7-4a5b-8931-bd0a3cb30242"/>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="f71206f9-aa5b-4691-bae1-ab03ad545723"/>
+    </expressions>
+    <expressions type="slsa.mm.param.graph.Expression" uuid="5a920a0a-2cc2-4a7b-9b2f-6500fe0601e2">
       <expression>fis.outputSamplePoints</expression>
-      <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="02723eee-6c34-4edf-847f-f03010c85112"/>
-      <users type="slsa.mm.param.graph.BlockParameter" uuid="f196c277-fbd4-409b-988a-d13a1f483014"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="7dd9e772-e138-4126-9b0d-af23d13af4dc"/>
+      <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="7b2efdbb-b2a6-4ae1-8bc1-4dd9d1301d59"/>
+      <users type="slsa.mm.param.graph.BlockParameter" uuid="faadd67d-9926-46c8-aacb-b1f3e1ba85f6"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="e1d7b085-828a-43de-b006-df3946208468"/>
     </expressions>
-    <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="793b6184-1d18-4a9b-9c4c-e83c0a29b484">
-      <expressions type="slsa.mm.param.graph.Expression" uuid="59e009a4-ec99-4299-83c3-9f9cbbd030a2"/>
+    <expressions type="slsa.mm.param.graph.Expression" uuid="eb69c9b8-22aa-4439-9cf7-d9453817148e">
+      <expression>&apos;XFuzzyController.fis&apos;</expression>
+      <users type="slsa.mm.param.graph.VariableDefinition" uuid="df574e5b-7176-4731-81dc-3d566057c816"/>
+    </expressions>
+    <expressions type="slsa.mm.param.graph.Expression" uuid="5dcf54fe-6969-4e8a-9ced-cf3e2a0c0550">
+      <expression>fis.outputSamplePoints</expression>
+      <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="1be7d64f-12f5-44fb-ae20-0c85886a5883"/>
+      <users type="slsa.mm.param.graph.BlockParameter" uuid="3221285c-961d-4299-9689-762195e339c4"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="563af079-c77d-49ed-99e9-8d49b06f5634"/>
+    </expressions>
+    <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="1be7d64f-12f5-44fb-ae20-0c85886a5883">
+      <expressions type="slsa.mm.param.graph.Expression" uuid="5dcf54fe-6969-4e8a-9ced-cf3e2a0c0550"/>
       <fieldName>fis.outputSamplePoints</fieldName>
-      <variable type="slsa.mm.param.graph.Variable" uuid="4a7db4eb-9eb7-42ae-8934-d2b2358a6d70"/>
+      <variable type="slsa.mm.param.graph.Variable" uuid="563af079-c77d-49ed-99e9-8d49b06f5634"/>
     </fieldReferences>
-    <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="02723eee-6c34-4edf-847f-f03010c85112">
-      <expressions type="slsa.mm.param.graph.Expression" uuid="d29cbc35-8e21-47c3-a227-8c56932a29cc"/>
+    <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="7b2efdbb-b2a6-4ae1-8bc1-4dd9d1301d59">
+      <expressions type="slsa.mm.param.graph.Expression" uuid="5a920a0a-2cc2-4a7b-9b2f-6500fe0601e2"/>
       <fieldName>fis.outputSamplePoints</fieldName>
-      <variable type="slsa.mm.param.graph.Variable" uuid="7dd9e772-e138-4126-9b0d-af23d13af4dc"/>
+      <variable type="slsa.mm.param.graph.Variable" uuid="e1d7b085-828a-43de-b006-df3946208468"/>
     </fieldReferences>
     <name>Model</name>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="11778725-00b9-497c-a6a8-609f888c908f">
-      <variable type="slsa.mm.param.graph.Variable" uuid="3b7df9d0-2f36-4c2e-b974-09216e54310a"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="7e81277d-7cc2-46d6-b832-4409e400cc6e"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="e0d55d7c-6a5e-4b7f-bad0-0688b891cd7f">
+      <variable type="slsa.mm.param.graph.Variable" uuid="2ead0a2b-94b4-47c1-9f71-55d29897c847"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="cf203a76-d4cf-4c54-a7ff-1358e6a434fc"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="4f6d45f3-4993-4491-ad97-6375f7da530f">
-      <variable type="slsa.mm.param.graph.Variable" uuid="cb686ff7-b263-450d-942d-24ba32988ca0"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="70bb5d48-9240-44dd-97f6-409e3a93a070"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="005977f6-02d3-4050-a297-22dba3477848">
+      <variable type="slsa.mm.param.graph.Variable" uuid="a86bb382-4380-4161-b75c-05c8a95da26b"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="d99169b7-219a-4c18-8436-e8e9562a3f61"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="8471f0a5-0240-4396-9bdb-6d6d5ef3bac9">
-      <variable type="slsa.mm.param.graph.Variable" uuid="ca068e9d-87b7-4879-990a-c78426ae7b99"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="d7b7b53c-6e3c-4962-a311-d832b40e9695"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="c09d1e31-cac6-4b3e-adff-35054f4c094b">
+      <variable type="slsa.mm.param.graph.Variable" uuid="377e4ba6-039c-44fc-94f4-cb11e8606e3e"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="dc0e0939-57b9-4889-a18e-35a8166c790e"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="d56dd234-d4f9-413f-86b7-44224eb0efe5">
-      <variable type="slsa.mm.param.graph.Variable" uuid="33714b02-4e5e-40ef-a77e-55e2e417c948"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="81f01ae0-cf98-4e79-88f7-1b3409e5da45"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="2bea2b3c-0e61-4467-8052-23b85076ce9a">
+      <variable type="slsa.mm.param.graph.Variable" uuid="e1bba4ef-64ba-4964-8a64-e3a1425d18ec"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="1457edeb-c0d0-4a22-9102-6013e7b14360"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="a30d8c9c-92b1-4c04-89e1-b5a78d1263d5">
-      <variable type="slsa.mm.param.graph.Variable" uuid="32ebe4d6-839e-4c46-bb2f-1c07eca61fb7"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="d7b7b53c-6e3c-4962-a311-d832b40e9695"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="ebbd627d-dc2f-4f51-9c2d-fbb777927028">
+      <variable type="slsa.mm.param.graph.Variable" uuid="cde903b6-ca2e-4eab-992a-8dc657d71469"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="cf203a76-d4cf-4c54-a7ff-1358e6a434fc"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="3e42c5c7-899c-46eb-9a16-b7cb4c026154">
-      <variable type="slsa.mm.param.graph.Variable" uuid="42b85802-3cfb-4393-8352-94df6c06a397"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="7067184d-e1d5-456a-9a0b-77574f7477ee"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="2ba37f21-2024-4c11-8b9d-2f5918b33740">
+      <variable type="slsa.mm.param.graph.Variable" uuid="cb1a50a9-ccb1-4ae1-bcfb-ef32e282cb30"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="7da32221-32d2-4cda-b410-1bb3c9562ed5"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="7e3c0404-6de9-46ea-b2c8-c05e23d5b850">
-      <variable type="slsa.mm.param.graph.Variable" uuid="441ee1f4-3530-4bf3-b273-33d8af8853d1"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="d7b7b53c-6e3c-4962-a311-d832b40e9695"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="d7053763-619d-4773-9836-5fc0d5b3d431">
+      <variable type="slsa.mm.param.graph.Variable" uuid="e34aef35-66e5-48ec-bd0b-46d5e8c48ffb"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="cf203a76-d4cf-4c54-a7ff-1358e6a434fc"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="9a9449ec-4143-4908-acac-7d8c802d1c87">
-      <variable type="slsa.mm.param.graph.Variable" uuid="97390e19-476b-4635-9398-f6939f438555"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="d7b7b53c-6e3c-4962-a311-d832b40e9695"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="d7daf66a-1bac-4779-be9f-c7b09dfb4b11">
+      <variable type="slsa.mm.param.graph.Variable" uuid="a861a42c-159f-442d-a177-dec4a4416ccd"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="cf203a76-d4cf-4c54-a7ff-1358e6a434fc"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="4a9f3cad-3afa-41d2-86ef-9a92611cbc0a">
-      <variable type="slsa.mm.param.graph.Variable" uuid="536bbfa1-1b52-4c4d-ad06-709ebd01881f"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="7067184d-e1d5-456a-9a0b-77574f7477ee"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="df574e5b-7176-4731-81dc-3d566057c816">
+      <variable type="slsa.mm.param.graph.Variable" uuid="91c7b913-8715-4115-9f06-19c4690386ce"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="eb69c9b8-22aa-4439-9cf7-d9453817148e"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="8ad9f5f4-7034-4338-a88e-75b872836ced">
-      <variable type="slsa.mm.param.graph.Variable" uuid="bd0f8921-f60a-4741-8407-ff075338b568"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="d7b7b53c-6e3c-4962-a311-d832b40e9695"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="dfb7600e-164c-4e56-864a-d3b2f5a86b26">
+      <variable type="slsa.mm.param.graph.Variable" uuid="34746ae5-17c3-4bbf-a40f-d26ad4f22fb9"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="cf203a76-d4cf-4c54-a7ff-1358e6a434fc"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="6f07f661-128b-446d-b3da-473346892666">
-      <variable type="slsa.mm.param.graph.Variable" uuid="3b46fd2f-1a3b-41c7-a4c1-29b5553029d8"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="29515446-e957-4c53-b4a9-c07762d34604"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="2a8e28ad-83fc-40aa-b74d-ea6f8fd64f4c">
+      <variable type="slsa.mm.param.graph.Variable" uuid="ba5773d7-b54d-4762-ba9d-4fc5d5e0061e"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="cf203a76-d4cf-4c54-a7ff-1358e6a434fc"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="37a0011b-68b9-4907-a550-80170847bea1">
-      <variable type="slsa.mm.param.graph.Variable" uuid="18094dee-a46f-411d-b878-55c252d438dd"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="7067184d-e1d5-456a-9a0b-77574f7477ee"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="be6b0aea-88ce-43fe-ab53-b23593455f5d">
+      <variable type="slsa.mm.param.graph.Variable" uuid="00ff0361-57ce-4bb9-8ed2-0cd817a2f378"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="8ea2519d-c60d-43dd-9916-ae01e93442d0"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="1f81e00f-44ce-4013-abcb-90b7630fd489">
-      <variable type="slsa.mm.param.graph.Variable" uuid="4a7db4eb-9eb7-42ae-8934-d2b2358a6d70"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-    </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="21d0ae3a-2c27-428f-b94d-1b85fb22a4de">
-      <variable type="slsa.mm.param.graph.Variable" uuid="4a55e6c7-194c-4d9a-a730-0bcf8568c0e4"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="989511aa-b2ec-42b9-bd3b-69b1371ed7c2"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="1258ebf5-36e5-4815-9c7a-c7b5abc7c877">
+      <variable type="slsa.mm.param.graph.Variable" uuid="bb64fb76-bd73-45b4-9fef-9ecf3fdcf181"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="d99169b7-219a-4c18-8436-e8e9562a3f61"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="f13a2908-1fa8-467f-8101-030a3fb0cc75">
-      <variable type="slsa.mm.param.graph.Variable" uuid="3752fc52-9e43-4800-9839-1744f4c412e9"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="70bb5d48-9240-44dd-97f6-409e3a93a070"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="52e03ecf-2dc7-4a5b-8931-bd0a3cb30242">
+      <variable type="slsa.mm.param.graph.Variable" uuid="3f7b7d31-98f0-495a-a405-82293f37635d"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="d99169b7-219a-4c18-8436-e8e9562a3f61"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="d9b76864-8e7a-49ec-9a7c-d2bd60bd0324">
-      <variable type="slsa.mm.param.graph.Variable" uuid="0ad41245-9ddf-4b9c-9ab7-af41532438cd"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="d7b7b53c-6e3c-4962-a311-d832b40e9695"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="a71b2782-b345-4510-8002-ea405641bd30">
+      <variable type="slsa.mm.param.graph.Variable" uuid="e1d7b085-828a-43de-b006-df3946208468"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
+    </variableDefinitions>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="7268b605-19db-4ca9-bd18-9afa57e61a42">
+      <variable type="slsa.mm.param.graph.Variable" uuid="d23531e0-6aa1-48f4-b497-712125687e8d"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="1457edeb-c0d0-4a22-9102-6013e7b14360"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="d9d1dfc0-fa34-4491-9c5a-444d88d48022">
-      <variable type="slsa.mm.param.graph.Variable" uuid="99db018e-1698-4ab4-8ae8-3a0a4e3c512a"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="d7b7b53c-6e3c-4962-a311-d832b40e9695"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="afb3d668-198b-446e-a0cd-4936bb88c8ae">
+      <variable type="slsa.mm.param.graph.Variable" uuid="1ac8f22b-d91a-41e9-a820-884d6f86ca83"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="cf203a76-d4cf-4c54-a7ff-1358e6a434fc"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="a7caedb0-3296-4127-871a-c453b22f4d07">
-      <variable type="slsa.mm.param.graph.Variable" uuid="54f4c02d-453e-44df-964f-29d712a5aa0a"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="81f01ae0-cf98-4e79-88f7-1b3409e5da45"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="a14cfdb7-1eaa-4813-bd26-b4c53365d8d2">
+      <variable type="slsa.mm.param.graph.Variable" uuid="c7e3f0d3-451a-421b-8545-270cce01f95c"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="7da32221-32d2-4cda-b410-1bb3c9562ed5"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="d0ecf052-5d80-4d1c-90ec-978f95e2c73e">
-      <variable type="slsa.mm.param.graph.Variable" uuid="3d79a1b9-d3f2-4f2e-b8fe-0fcb2f772904"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="d7b7b53c-6e3c-4962-a311-d832b40e9695"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="494a8760-219c-44f5-85aa-a7e335d9f44f">
+      <variable type="slsa.mm.param.graph.Variable" uuid="8a88637d-a8f5-4a0d-9244-cb5a339aba33"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="cf203a76-d4cf-4c54-a7ff-1358e6a434fc"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="705f6ae9-f84c-4dd3-849c-3d47cf48b184">
-      <variable type="slsa.mm.param.graph.Variable" uuid="cbb74f49-c8e7-4281-a5c3-ef5c164c47a9"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="d7b7b53c-6e3c-4962-a311-d832b40e9695"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="cc1975c1-a411-4215-9ce5-3b6e9d79ec2f">
+      <variable type="slsa.mm.param.graph.Variable" uuid="01c5f28b-44c4-49f1-9cf6-f75ad42a1cc4"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="cf203a76-d4cf-4c54-a7ff-1358e6a434fc"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="de5300f5-4ad2-44fd-9a1b-657f0e46dd58">
-      <variable type="slsa.mm.param.graph.Variable" uuid="0067edac-60d1-44e6-b4ca-713b34644a8b"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="d7b7b53c-6e3c-4962-a311-d832b40e9695"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="b8bd2e3b-f1a2-4ded-bb89-23f4af7e151b">
+      <variable type="slsa.mm.param.graph.Variable" uuid="138013ac-406e-43d1-8b93-be9839ee9988"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="cf203a76-d4cf-4c54-a7ff-1358e6a434fc"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="82710938-e725-48af-9c0f-cd2d4ad37c0c">
-      <variable type="slsa.mm.param.graph.Variable" uuid="4cdcb448-adc6-4528-a571-58a119c928aa"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="29515446-e957-4c53-b4a9-c07762d34604"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="4eab10d0-4874-4d8b-9d74-5d0bdd33cf52">
+      <variable type="slsa.mm.param.graph.Variable" uuid="9f20902a-0ac2-48ad-9af1-4cdfefbd08c5"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="8ea2519d-c60d-43dd-9916-ae01e93442d0"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="e47f091f-9723-4628-85cb-8fb928861c11">
-      <variable type="slsa.mm.param.graph.Variable" uuid="781b7486-4cc2-48e1-b328-c4e74529b2f2"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="7067184d-e1d5-456a-9a0b-77574f7477ee"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="f71206f9-aa5b-4691-bae1-ab03ad545723">
+      <variable type="slsa.mm.param.graph.Variable" uuid="7d0fb3cf-88a4-4c1f-bee7-20aafc3cbbeb"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="d99169b7-219a-4c18-8436-e8e9562a3f61"/>
       <tunabilityType>Nontunable</tunabilityType>
     </variableDefinitions>
-    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="2ab78ddc-67f0-4694-9136-503290df98e6">
-      <variable type="slsa.mm.param.graph.Variable" uuid="7dd9e772-e138-4126-9b0d-af23d13af4dc"/>
-      <expression type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
+    <variableDefinitions type="slsa.mm.param.graph.VariableDefinition" uuid="51e336b8-e0fe-4118-8995-c88c23abc3ce">
+      <variable type="slsa.mm.param.graph.Variable" uuid="563af079-c77d-49ed-99e9-8d49b06f5634"/>
+      <expression type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
     </variableDefinitions>
-    <variables type="slsa.mm.param.graph.Variable" uuid="6f389f3f-2b93-4a2c-8c91-dde98055e9bc">
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
-      <name>DataType</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="6f9219f0-bf09-48b9-907d-eea05c82740a">
+    <variables type="slsa.mm.param.graph.Variable" uuid="b2f829c0-e4bb-4e0f-b95c-e2591f945045">
       <name>F_equilibrium</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="0043f208-c877-475c-b1d2-59de44568f6d"/>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="7a5d79fb-3b70-465f-adf8-107cecede40e"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="253c0230-ec29-44a0-89ae-8bc500a0e0e9">
-      <name>lambda</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="0043f208-c877-475c-b1d2-59de44568f6d"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="35cf509f-0b25-4dac-980e-d0ff09e4189e">
-      <name>alpha</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="0043f208-c877-475c-b1d2-59de44568f6d"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="f6242fe6-9fcf-4fb0-9881-4408c3cf2417">
-      <name>beta</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="0043f208-c877-475c-b1d2-59de44568f6d"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="be4a006f-5f76-45a8-9a88-786b231162f1">
-      <name>b</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="0043f208-c877-475c-b1d2-59de44568f6d"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="11ae9328-14e6-49d3-9f6c-c88d90e996c8">
-      <name>g</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="0043f208-c877-475c-b1d2-59de44568f6d"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="a0d5fb9e-74fb-4446-96a2-f478a3b13135">
-      <name>mu</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="0043f208-c877-475c-b1d2-59de44568f6d"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="0ad41245-9ddf-4b9c-9ab7-af41532438cd">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="d9b76864-8e7a-49ec-9a7c-d2bd60bd0324"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
-      <name>RuleFiringStrengths</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="4a55e6c7-194c-4d9a-a730-0bcf8568c0e4">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="21d0ae3a-2c27-428f-b94d-1b85fb22a4de"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
-      <name>FIS</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="4a7db4eb-9eb7-42ae-8934-d2b2358a6d70">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="1f81e00f-44ce-4013-abcb-90b7630fd489"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="59e009a4-ec99-4299-83c3-9f9cbbd030a2"/>
-      <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="793b6184-1d18-4a9b-9c4c-e83c0a29b484"/>
-      <name>fis</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="ca068e9d-87b7-4879-990a-c78426ae7b99">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="8471f0a5-0240-4396-9bdb-6d6d5ef3bac9"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>UseLookupTable</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="ca6033bc-2915-4478-be81-3815f295c777">
+    <variables type="slsa.mm.param.graph.Variable" uuid="6bac9c34-a4fa-40f8-aa36-6aecf2399efb">
       <name>x_ref</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="0043f208-c877-475c-b1d2-59de44568f6d"/>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="7a5d79fb-3b70-465f-adf8-107cecede40e"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="3b46fd2f-1a3b-41c7-a4c1-29b5553029d8">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="6f07f661-128b-446d-b3da-473346892666"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>SimulateUsing</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
+    <variables type="slsa.mm.param.graph.Variable" uuid="03f359b1-40c8-4302-b645-8335ca047a54">
+      <name>g</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="7a5d79fb-3b70-465f-adf8-107cecede40e"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="3b7df9d0-2f36-4c2e-b974-09216e54310a">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="11778725-00b9-497c-a6a8-609f888c908f"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
+    <variables type="slsa.mm.param.graph.Variable" uuid="cb1a50a9-ccb1-4ae1-bcfb-ef32e282cb30">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="2ba37f21-2024-4c11-8b9d-2f5918b33740"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
+      <name>NumBreakpoints</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="8b4b896b-1f99-4cd2-822d-37004a98e919">
+      <name>alpha</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="7a5d79fb-3b70-465f-adf8-107cecede40e"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="d4c7f9ac-df14-4f2d-8af7-86b579453e73">
+      <name>b</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="7a5d79fb-3b70-465f-adf8-107cecede40e"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="5d8f5da6-0d3a-42f1-b73b-7862bd578afd">
+      <name>mu</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="7a5d79fb-3b70-465f-adf8-107cecede40e"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="75f45605-06f3-4f9c-80ab-3f0e8896448b">
+      <name>beta</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="7a5d79fb-3b70-465f-adf8-107cecede40e"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="3ed4220c-ea7d-464b-8856-f8e08a7aebc9">
+      <name>lambda</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="7a5d79fb-3b70-465f-adf8-107cecede40e"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="377e4ba6-039c-44fc-94f4-cb11e8606e3e">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="c09d1e31-cac6-4b3e-adff-35054f4c094b"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
       <name>FIS</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="cbb74f49-c8e7-4281-a5c3-ef5c164c47a9">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="705f6ae9-f84c-4dd3-849c-3d47cf48b184"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
-      <name>RuleOutputs</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="cb686ff7-b263-450d-942d-24ba32988ca0">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="4f6d45f3-4993-4491-ad97-6375f7da530f"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>OutputSampleNumber</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="88c35a84-194d-4566-8a40-e80fae969628">
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>DataType</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="33714b02-4e5e-40ef-a77e-55e2e417c948">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="d56dd234-d4f9-413f-86b7-44224eb0efe5"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>NumBreakpoints</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="32ebe4d6-839e-4c46-bb2f-1c07eca61fb7">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="a30d8c9c-92b1-4c04-89e1-b5a78d1263d5"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>FuzzifiedInputs</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="441ee1f4-3530-4bf3-b273-33d8af8853d1">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="7e3c0404-6de9-46ea-b2c8-c05e23d5b850"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>RuleFiringStrengths</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="7dd9e772-e138-4126-9b0d-af23d13af4dc">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="2ab78ddc-67f0-4694-9136-503290df98e6"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="d29cbc35-8e21-47c3-a227-8c56932a29cc"/>
-      <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="02723eee-6c34-4edf-847f-f03010c85112"/>
+    <variables type="slsa.mm.param.graph.Variable" uuid="e1d7b085-828a-43de-b006-df3946208468">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="a71b2782-b345-4510-8002-ea405641bd30"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="5a920a0a-2cc2-4a7b-9b2f-6500fe0601e2"/>
+      <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="7b2efdbb-b2a6-4ae1-8bc1-4dd9d1301d59"/>
       <name>fis</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="3d79a1b9-d3f2-4f2e-b8fe-0fcb2f772904">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="d0ecf052-5d80-4d1c-90ec-978f95e2c73e"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
-      <name>FuzzifiedInputs</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="bd0f8921-f60a-4741-8407-ff075338b568">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="8ad9f5f4-7034-4338-a88e-75b872836ced"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>RuleOutputs</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="97390e19-476b-4635-9398-f6939f438555">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="9a9449ec-4143-4908-acac-7d8c802d1c87"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>AggregatedOutputs</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="4ea2a59a-0345-4071-9f0b-63c75a39399d">
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>OutOfRangeInputValueMessage</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="42b85802-3cfb-4393-8352-94df6c06a397">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="3e42c5c7-899c-46eb-9a16-b7cb4c026154"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>NoRuleFiredMessage</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="18094dee-a46f-411d-b878-55c252d438dd">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="37a0011b-68b9-4907-a550-80170847bea1"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="5d0fa3d8-bc66-4fca-b838-4840df255fb7"/>
-      <name>EmptyOutputFuzzySetMessage</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6"/>
-    </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="3752fc52-9e43-4800-9839-1744f4c412e9">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="f13a2908-1fa8-467f-8101-030a3fb0cc75"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
+    <variables type="slsa.mm.param.graph.Variable" uuid="e1bba4ef-64ba-4964-8a64-e3a1425d18ec">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="2bea2b3c-0e61-4467-8052-23b85076ce9a"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
       <name>OutputSampleNumber</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="99db018e-1698-4ab4-8ae8-3a0a4e3c512a">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="d9d1dfc0-fa34-4491-9c5a-444d88d48022"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
+    <variables type="slsa.mm.param.graph.Variable" uuid="8a88637d-a8f5-4a0d-9244-cb5a339aba33">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="494a8760-219c-44f5-85aa-a7e335d9f44f"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>FuzzifiedInputs</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="0a3f45bc-9bff-49ee-a570-1911039d6392">
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
+      <name>DataType</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="cde903b6-ca2e-4eab-992a-8dc657d71469">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="ebbd627d-dc2f-4f51-9c2d-fbb777927028"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
       <name>UseLookupTable</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="54f4c02d-453e-44df-964f-29d712a5aa0a">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="a7caedb0-3296-4127-871a-c453b22f4d07"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
-      <name>NumBreakpoints</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
+    <variables type="slsa.mm.param.graph.Variable" uuid="2ead0a2b-94b4-47c1-9f71-55d29897c847">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="e0d55d7c-6a5e-4b7f-bad0-0688b891cd7f"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
+      <name>FuzzifiedInputs</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="0067edac-60d1-44e6-b4ca-713b34644a8b">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="de5300f5-4ad2-44fd-9a1b-657f0e46dd58"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
-      <name>AggregatedOutputs</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
+    <variables type="slsa.mm.param.graph.Variable" uuid="34746ae5-17c3-4bbf-a40f-d26ad4f22fb9">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="dfb7600e-164c-4e56-864a-d3b2f5a86b26"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
+      <name>RuleFiringStrengths</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="4cdcb448-adc6-4528-a571-58a119c928aa">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="82710938-e725-48af-9c0f-cd2d4ad37c0c"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
-      <name>SimulateUsing</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
+    <variables type="slsa.mm.param.graph.Variable" uuid="ba6626ac-f1a5-4575-8fcd-33cebe54e2c5">
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>DataType</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="95308429-c5a2-464a-93b4-7d07923f61a4">
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
-      <name>OutOfRangeInputValueMessage</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
+    <variables type="slsa.mm.param.graph.Variable" uuid="ba5773d7-b54d-4762-ba9d-4fc5d5e0061e">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="2a8e28ad-83fc-40aa-b74d-ea6f8fd64f4c"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
+      <name>RuleOutputs</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="536bbfa1-1b52-4c4d-ad06-709ebd01881f">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="4a9f3cad-3afa-41d2-86ef-9a92611cbc0a"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
+    <variables type="slsa.mm.param.graph.Variable" uuid="a86bb382-4380-4161-b75c-05c8a95da26b">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="005977f6-02d3-4050-a297-22dba3477848"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
       <name>NoRuleFiredMessage</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
     </variables>
-    <variables type="slsa.mm.param.graph.Variable" uuid="781b7486-4cc2-48e1-b328-c4e74529b2f2">
-      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="e47f091f-9723-4628-85cb-8fb928861c11"/>
-      <expressions type="slsa.mm.param.graph.Expression" uuid="24361340-039e-4ac0-bdda-18adbf0b195e"/>
+    <variables type="slsa.mm.param.graph.Variable" uuid="a861a42c-159f-442d-a177-dec4a4416ccd">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="d7daf66a-1bac-4779-be9f-c7b09dfb4b11"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
+      <name>AggregatedOutputs</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="00ff0361-57ce-4bb9-8ed2-0cd817a2f378">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="be6b0aea-88ce-43fe-ab53-b23593455f5d"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
+      <name>SimulateUsing</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="c2e0bf68-5fa5-4fd3-89be-e4f9985aebbe">
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
+      <name>OutOfRangeInputValueMessage</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="3f7b7d31-98f0-495a-a405-82293f37635d">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="52e03ecf-2dc7-4a5b-8931-bd0a3cb30242"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="61780306-c10a-4068-8718-99f4812b25ee"/>
       <name>EmptyOutputFuzzySetMessage</name>
-      <workspace type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7"/>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a"/>
     </variables>
-    <workspaces type="slsa.mm.param.graph.Workspace" uuid="0043f208-c877-475c-b1d2-59de44568f6d">
-      <name>global-workspace</name>
-      <variables type="slsa.mm.param.graph.Variable" uuid="6f9219f0-bf09-48b9-907d-eea05c82740a"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="253c0230-ec29-44a0-89ae-8bc500a0e0e9"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="35cf509f-0b25-4dac-980e-d0ff09e4189e"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="f6242fe6-9fcf-4fb0-9881-4408c3cf2417"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="be4a006f-5f76-45a8-9a88-786b231162f1"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="11ae9328-14e6-49d3-9f6c-c88d90e996c8"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="a0d5fb9e-74fb-4446-96a2-f478a3b13135"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="ca6033bc-2915-4478-be81-3815f295c777"/>
-    </workspaces>
-    <workspaces type="slsa.mm.param.graph.Workspace" uuid="15617c87-9806-42d3-b944-6814140db9e6">
-      <name>Model/Fuzzy Controller/ThetaFuzzyController</name>
-      <type>MASK</type>
-      <variables type="slsa.mm.param.graph.Variable" uuid="33714b02-4e5e-40ef-a77e-55e2e417c948"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="cb686ff7-b263-450d-942d-24ba32988ca0"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="3b46fd2f-1a3b-41c7-a4c1-29b5553029d8"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="3b7df9d0-2f36-4c2e-b974-09216e54310a"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="88c35a84-194d-4566-8a40-e80fae969628"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="32ebe4d6-839e-4c46-bb2f-1c07eca61fb7"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="4a7db4eb-9eb7-42ae-8934-d2b2358a6d70"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="ca068e9d-87b7-4879-990a-c78426ae7b99"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="441ee1f4-3530-4bf3-b273-33d8af8853d1"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="bd0f8921-f60a-4741-8407-ff075338b568"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="97390e19-476b-4635-9398-f6939f438555"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="4ea2a59a-0345-4071-9f0b-63c75a39399d"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="42b85802-3cfb-4393-8352-94df6c06a397"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="18094dee-a46f-411d-b878-55c252d438dd"/>
-    </workspaces>
-    <workspaces type="slsa.mm.param.graph.Workspace" uuid="513fad36-55d1-4370-83d5-1df7d0d6d9e7">
+    <variables type="slsa.mm.param.graph.Variable" uuid="91c7b913-8715-4115-9f06-19c4690386ce">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="df574e5b-7176-4731-81dc-3d566057c816"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>FIS</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="d23531e0-6aa1-48f4-b497-712125687e8d">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="7268b605-19db-4ca9-bd18-9afa57e61a42"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>OutputSampleNumber</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="1ac8f22b-d91a-41e9-a820-884d6f86ca83">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="afb3d668-198b-446e-a0cd-4936bb88c8ae"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>UseLookupTable</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="c7e3f0d3-451a-421b-8545-270cce01f95c">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="a14cfdb7-1eaa-4813-bd26-b4c53365d8d2"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>NumBreakpoints</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="e34aef35-66e5-48ec-bd0b-46d5e8c48ffb">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="d7053763-619d-4773-9836-5fc0d5b3d431"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>RuleFiringStrengths</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="01c5f28b-44c4-49f1-9cf6-f75ad42a1cc4">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="cc1975c1-a411-4215-9ce5-3b6e9d79ec2f"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>RuleOutputs</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="138013ac-406e-43d1-8b93-be9839ee9988">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="b8bd2e3b-f1a2-4ded-bb89-23f4af7e151b"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>AggregatedOutputs</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="9f20902a-0ac2-48ad-9af1-4cdfefbd08c5">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="4eab10d0-4874-4d8b-9d74-5d0bdd33cf52"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>SimulateUsing</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="dc433d12-49ce-49e8-a87c-f30a573b550e">
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>OutOfRangeInputValueMessage</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="bb64fb76-bd73-45b4-9fef-9ecf3fdcf181">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="1258ebf5-36e5-4815-9c7a-c7b5abc7c877"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>NoRuleFiredMessage</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="7d0fb3cf-88a4-4c1f-bee7-20aafc3cbbeb">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="f71206f9-aa5b-4691-bae1-ab03ad545723"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="4f857b14-8d97-41c7-ae84-c277b6fdbc04"/>
+      <name>EmptyOutputFuzzySetMessage</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <variables type="slsa.mm.param.graph.Variable" uuid="563af079-c77d-49ed-99e9-8d49b06f5634">
+      <definition type="slsa.mm.param.graph.VariableDefinition" uuid="51e336b8-e0fe-4118-8995-c88c23abc3ce"/>
+      <expressions type="slsa.mm.param.graph.Expression" uuid="5dcf54fe-6969-4e8a-9ced-cf3e2a0c0550"/>
+      <fieldReferences type="slsa.mm.param.graph.FieldReference" uuid="1be7d64f-12f5-44fb-ae20-0c85886a5883"/>
+      <name>fis</name>
+      <workspace type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5"/>
+    </variables>
+    <workspaces type="slsa.mm.param.graph.Workspace" uuid="c24620f8-5bef-4487-b1a1-74aaf7e5b7b5">
       <name>Model/Fuzzy Controller/XFuzzyController</name>
       <type>MASK</type>
-      <variables type="slsa.mm.param.graph.Variable" uuid="4a55e6c7-194c-4d9a-a730-0bcf8568c0e4"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="0ad41245-9ddf-4b9c-9ab7-af41532438cd"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="6f389f3f-2b93-4a2c-8c91-dde98055e9bc"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="3752fc52-9e43-4800-9839-1744f4c412e9"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="99db018e-1698-4ab4-8ae8-3a0a4e3c512a"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="54f4c02d-453e-44df-964f-29d712a5aa0a"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="7dd9e772-e138-4126-9b0d-af23d13af4dc"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="3d79a1b9-d3f2-4f2e-b8fe-0fcb2f772904"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="cbb74f49-c8e7-4281-a5c3-ef5c164c47a9"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="0067edac-60d1-44e6-b4ca-713b34644a8b"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="4cdcb448-adc6-4528-a571-58a119c928aa"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="95308429-c5a2-464a-93b4-7d07923f61a4"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="536bbfa1-1b52-4c4d-ad06-709ebd01881f"/>
-      <variables type="slsa.mm.param.graph.Variable" uuid="781b7486-4cc2-48e1-b328-c4e74529b2f2"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="01c5f28b-44c4-49f1-9cf6-f75ad42a1cc4"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="91c7b913-8715-4115-9f06-19c4690386ce"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="8a88637d-a8f5-4a0d-9244-cb5a339aba33"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="1ac8f22b-d91a-41e9-a820-884d6f86ca83"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="ba6626ac-f1a5-4575-8fcd-33cebe54e2c5"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="d23531e0-6aa1-48f4-b497-712125687e8d"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="c7e3f0d3-451a-421b-8545-270cce01f95c"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="e34aef35-66e5-48ec-bd0b-46d5e8c48ffb"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="138013ac-406e-43d1-8b93-be9839ee9988"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="9f20902a-0ac2-48ad-9af1-4cdfefbd08c5"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="dc433d12-49ce-49e8-a87c-f30a573b550e"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="bb64fb76-bd73-45b4-9fef-9ecf3fdcf181"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="7d0fb3cf-88a4-4c1f-bee7-20aafc3cbbeb"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="563af079-c77d-49ed-99e9-8d49b06f5634"/>
     </workspaces>
-    <contextManager type="slsa.mm.param.graph.ContextManager" uuid="c3a0a920-86df-4de5-ac05-62a0548990f6"/>
+    <workspaces type="slsa.mm.param.graph.Workspace" uuid="7a5d79fb-3b70-465f-adf8-107cecede40e">
+      <name>global-workspace</name>
+      <variables type="slsa.mm.param.graph.Variable" uuid="b2f829c0-e4bb-4e0f-b95c-e2591f945045"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="6bac9c34-a4fa-40f8-aa36-6aecf2399efb"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="03f359b1-40c8-4302-b645-8335ca047a54"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="8b4b896b-1f99-4cd2-822d-37004a98e919"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="d4c7f9ac-df14-4f2d-8af7-86b579453e73"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="5d8f5da6-0d3a-42f1-b73b-7862bd578afd"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="75f45605-06f3-4f9c-80ab-3f0e8896448b"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="3ed4220c-ea7d-464b-8856-f8e08a7aebc9"/>
+    </workspaces>
+    <workspaces type="slsa.mm.param.graph.Workspace" uuid="db51199e-a7cd-42e5-aef3-219e9fdeee9a">
+      <name>Model/Fuzzy Controller/ThetaFuzzyController</name>
+      <type>MASK</type>
+      <variables type="slsa.mm.param.graph.Variable" uuid="377e4ba6-039c-44fc-94f4-cb11e8606e3e"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="e1d7b085-828a-43de-b006-df3946208468"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="e1bba4ef-64ba-4964-8a64-e3a1425d18ec"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="ba5773d7-b54d-4762-ba9d-4fc5d5e0061e"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="0a3f45bc-9bff-49ee-a570-1911039d6392"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="cde903b6-ca2e-4eab-992a-8dc657d71469"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="cb1a50a9-ccb1-4ae1-bcfb-ef32e282cb30"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="2ead0a2b-94b4-47c1-9f71-55d29897c847"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="34746ae5-17c3-4bbf-a40f-d26ad4f22fb9"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="a86bb382-4380-4161-b75c-05c8a95da26b"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="a861a42c-159f-442d-a177-dec4a4416ccd"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="00ff0361-57ce-4bb9-8ed2-0cd817a2f378"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="c2e0bf68-5fa5-4fd3-89be-e4f9985aebbe"/>
+      <variables type="slsa.mm.param.graph.Variable" uuid="3f7b7d31-98f0-495a-a405-82293f37635d"/>
+    </workspaces>
+    <contextManager type="slsa.mm.param.graph.ContextManager" uuid="93b65327-c780-48ce-b5c5-c4cbdbb5da63"/>
   </slsa.mm.param.graph.VariableRegistry>
 </MF0>
