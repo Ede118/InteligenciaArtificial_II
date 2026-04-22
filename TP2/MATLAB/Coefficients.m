@@ -1,9 +1,9 @@
 % Physical Coefficients
 
-m_c =  10;             % kg
-m_p =  1;              % kg
-l =  0.1;              % m
-g = 9.80665;           % m/s2
+m_c = 2;              % kg
+m_p = 0.1;            % kg
+l =  0.5;             % m
+g = 9.80665;          % m/s2
 
 % Reemplazos introducidos
 alpha = m_p + m_c;
@@ -12,7 +12,7 @@ mu = m_p * l;
 
 % Definicion de Amortiguamientos
 zeta_c = 0.05;              % adim
-zeta_p = 0.01;              % adim
+zeta_p = 0.05;              % adim
 
 % Frecuencia Natural del pendulo
 omega_p = sqrt(mu*g/(lambda-mu^2/alpha));
