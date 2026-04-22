@@ -13,7 +13,7 @@ DefuzzMethod='centroid'
 
 [Input1]
 Name='theta'
-Range=[-1 1]
+Range=[-4 4]
 NumMFs=7
 MF1='NG':'trapmf',[-1 -1 -0.833333 -0.5]
 MF2='NM':'trimf',[-0.833333 -0.5 -0.166667]
