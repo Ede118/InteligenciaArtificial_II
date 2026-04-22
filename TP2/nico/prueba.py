@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 # --- IMPORTACIÓN DE TUS CLASES ---
-from TP2.nico.controlador_nico import ControladorDifuso
-from TP2.nico.planta import PenduloPlanta, Simulador
+from controlador_nico import ControladorDifuso
+from planta import PenduloPlanta, Simulador
 
 class SimuladorControlado(Simulador):
     def __init__(self, planta, controlador):

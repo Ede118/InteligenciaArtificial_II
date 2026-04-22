@@ -45,7 +45,7 @@ class ControladorDifuso:
 
         # --- 2. CONFIGURACIÓN DEL SWING-UP (ENERGÍA) ---
         self.umbral_captura = np.deg2rad(70)  # A los 70° el difuso toma el control
-        self.k_swing = -4                  # Ganancia de inyección de energía
+        self.k_swing = -6                  # Ganancia de inyección de energía
         self.k_centrado = 2                # Resorte virtual para el carro
         self.k_amortiguacion = 1.5           # Amortiguador virtual para el carro
 
