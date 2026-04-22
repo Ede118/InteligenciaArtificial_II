@@ -37,3 +37,4 @@ h_c = 0.05;         % m - Eje Z
 w_p = 0.025;       % m - Eje X
 b_p = 0.025;       % m - Eje Y
 h_p = l;           % m - Eje Z
+
