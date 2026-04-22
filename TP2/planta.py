@@ -15,7 +15,7 @@ class PenduloPlanta:
 
     def aplicar_patada(self, mag):
         self.f_imp = mag
-        self.d_imp = 5 
+        self.d_imp = 5
 
     def calcular_fisica(self, F_ext):
         x, x_p, theta, theta_p = self.estado
