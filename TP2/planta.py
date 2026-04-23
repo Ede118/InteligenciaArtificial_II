@@ -64,10 +64,10 @@ class Simulador:
         self.btn_soltar.on_clicked(self.soltar_pendulo)
         ax_izq = plt.axes([0.2, 0.07, 0.25, 0.08])
         self.btn_izq = Button(ax_izq, '<<< PUSH IZQ', color='#e74c3c', hovercolor='#c0392b')
-        self.btn_izq.on_clicked(lambda x: self.dar_patada(-25))
+        self.btn_izq.on_clicked(lambda x: self.dar_patada(-210))
         ax_der = plt.axes([0.55, 0.07, 0.25, 0.08])
         self.btn_der = Button(ax_der, 'PUSH DER >>>', color='#2ecc71', hovercolor='#27ae60')
-        self.btn_der.on_clicked(lambda x: self.dar_patada(25))
+        self.btn_der.on_clicked(lambda x: self.dar_patada(210))
 
     def agarrar_pendulo(self, val):
         self.agarrado = True

@@ -72,7 +72,7 @@ class FuzzyController:
             "NP": ( -110.0, -60.0,  -10.0),
             "Z":  ( -15.0,   0.0,  15.0),
             "PP": (   10.0,  60.0,  110.0),
-            "PM": ( 90.0,  145.0,  200.0),
+            "PM": ( 90.0,  145.0,  210.0),
             "PG": (  190.0,  245.0,  300.0),
         }
 
@@ -145,6 +145,27 @@ class FuzzyController:
         cbar.set_label("Fuerza calculada [N]")
         fig.tight_layout()
         return fig, ax, theta_valores, theta_dot_valores, fuerzas
+
+        for etiqueta in self.labels:
+            a, b, c = self.theta_mf[etiqueta]
+            pertenencias = np.array([self.triangular(theta, a, b, c) for theta in theta_valores])
+            linea, = ax.plot(theta_rad, pertenencias, lw=2.0, label=etiqueta)
+            ax.fill_between(theta_rad, 0.0, pertenencias, color=linea.get_color(), alpha=0.12)
+            ax.text(
+                np.deg2rad(b),
+                1.08,
+                etiqueta,
+                ha="center",
+                va="center",
+                color=linea.get_color(),
+                fontweight="bold",
+            )
+
+        ax.plot([0.0, 0.0], [0.0, 1.0], color="black", lw=1.2, alpha=0.7)
+        ax.text(0.0, 1.18, "0°", ha="center", va="center", fontweight="bold")
+        ax.legend(loc="upper right", bbox_to_anchor=(1.22, 1.10))
+        fig.tight_layout()
+        return fig, ax
 
     # --------------------------------------------------
     # PERTENENCI TRIANGULAR
