@@ -9,13 +9,13 @@ class PenduloPlanta:
     def __init__(self, M=1.0, m=0.3, l=0.5, g=9.81, dt=0.015, b=0.05, d=0.05):
         self.M, self.m, self.l, self.g, self.dt = M, m, l, g, dt
         self.b, self.d = b, d
-        self.estado = np.array([0.0, 0.0, 0.0, 0.0])
+        self.estado = np.array([0.0, 0.0, 0.0, 0.0])  #[x, x_p, theta, theta_p]
         self.f_imp = 0.0
         self.d_imp = 0
 
     def aplicar_patada(self, mag):
         self.f_imp = mag
-        self.d_imp = 5 
+        self.d_imp = 5
 
     def calcular_fisica(self, F_ext):
         x, x_p, theta, theta_p = self.estado
@@ -64,14 +64,14 @@ class Simulador:
         self.btn_soltar.on_clicked(self.soltar_pendulo)
         ax_izq = plt.axes([0.2, 0.07, 0.25, 0.08])
         self.btn_izq = Button(ax_izq, '<<< PUSH IZQ', color='#e74c3c', hovercolor='#c0392b')
-        self.btn_izq.on_clicked(lambda x: self.dar_patada(-25))
+        self.btn_izq.on_clicked(lambda x: self.dar_patada(-210))
         ax_der = plt.axes([0.55, 0.07, 0.25, 0.08])
         self.btn_der = Button(ax_der, 'PUSH DER >>>', color='#2ecc71', hovercolor='#27ae60')
-        self.btn_der.on_clicked(lambda x: self.dar_patada(25))
+        self.btn_der.on_clicked(lambda x: self.dar_patada(210))
 
     def agarrar_pendulo(self, val):
         self.agarrado = True
-        self.planta.estado[2] = np.deg2rad(val)
+        self.planta.estado[2] = np.deg2rad(-val)
         self.planta.estado[3] = 0
         self.planta.estado[1] = 0
 
