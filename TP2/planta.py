@@ -30,7 +30,7 @@ class PenduloPlanta:
 
     def actualizar(self):
         F = self.f_imp if self.d_imp > 0 else 0.0
-        if self.d_imp > 0: self.d_imp -= 1
+        if self.d_imp > 0: self.d_imp -= 1 
         x_pp, theta_pp = self.calcular_fisica(F)
         self.estado[1] += x_pp * self.dt
         self.estado[0] += self.estado[1] * self.dt
