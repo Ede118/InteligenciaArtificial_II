@@ -28,7 +28,7 @@ for i = 1:length(archivos)
     % nombreLimpio = strrep(archivos(i).name, '.mat', '');
     % nombreLimpio = strrep(nombreLimpio, 'Sim_Angulo_', 'Init: ');
     % nombreLimpio = erase(archivos(i).name, ["Sim_Angulo_", ".mat"]); % Extrae el número
-    legendaTexto = sprintf('G_{x}=%d', i);
+    legendaTexto = sprintf('G_{\\omega}=%d', i);
     
     plot(vTime{i}, vTheta{i}, 'LineWidth', 1.5, 'DisplayName', legendaTexto);
 end
@@ -38,7 +38,7 @@ t = title(lgd, '$\theta_0=80^\circ$');
 set(t, 'Interpreter', 'latex');
 
 xlabel('Tiempo $t$ [s]', 'Interpreter', 'latex', 'FontSize', 13);
-ylabel('Posicion $x(t)$ [deg]', 'Interpreter', 'latex', 'FontSize', 13);
+ylabel('Angulo $\theta(t)$ [deg]', 'Interpreter', 'latex', 'FontSize', 13);
 title('Barrido de la Ganancia $G_\omega$', ...
       'Interpreter', 'latex', 'FontSize', 15);
 
@@ -67,7 +67,7 @@ for i = 1:length(archivos)
     % nombreLimpio = strrep(archivos(i).name, '.mat', '');
     % nombreLimpio = strrep(nombreLimpio, 'Sim_Angulo_', 'Init: ');
     % nombreLimpio = erase(archivos(i).name, ["Sim_Angulo_", ".mat"]); % Extrae el número
-    legendaTexto = sprintf('G_{x}=%d', i);
+    legendaTexto = sprintf('G_{\\omega}=%d', i);
     
     plot(vTime{i}, vX{i}, 'LineWidth', 1.5, 'DisplayName', legendaTexto);
 end
@@ -111,7 +111,7 @@ for i = 1:length(archivos)
     % nombreLimpio = strrep(archivos(i).name, '.mat', '');
     % nombreLimpio = strrep(nombreLimpio, 'Sim_Angulo_', 'Init: ');
     % nombreLimpio = erase(archivos(i).name, ["Sim_Angulo_", ".mat"]); % Extrae el número
-    legendaTexto = sprintf('G_{x}=%d', i);
+    legendaTexto = sprintf('G_{\\omega}=%d', i);
     
     plot(vTime{i}, vF{i}, 'LineWidth', 1.5, 'DisplayName', legendaTexto);
 end

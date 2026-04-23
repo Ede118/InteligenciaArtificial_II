@@ -5,8 +5,8 @@ load_system(model);
 
 % Definición del vector de prueba (ejemplo: barrido de ángulos iniciales)
 
-Delta = 20;
-v = linspace(Delta, Delta+20, 21);
+Delta = 1;
+v = linspace(Delta, Delta+29, 30);
 numSims = length(v);
 
 % Preparamos un array de objetos de simulación
@@ -19,7 +19,7 @@ for i = 1:numSims
     simIn(i) = simIn(i).setVariable('x_0', 0);
     simIn(i) = simIn(i).setVariable('dx_0', 0);
 
-    simIn(i) = simIn(i).setVariable('G_v', v(i));
+    simIn(i) = simIn(i).setVariable('G_omega', v(i));
 
     % simIn(i) = simIn(i).setModelParameter('InitMsgLevel', 'none');
     % simIn(i) = simIn(i).setPreSimFcn(@(x) warning('off', 'all'));
@@ -27,7 +27,7 @@ end
 
 % Ejecución masiva
 % Si tenés Parallel Computing Toolbox, usá 'parsim', si no 'sim'
-out = parsim(simIn);
+out = sim(simIn);
 
 if ~exist('Curvas/sim_results', 'dir')
     mkdir('Curvas/sim_results');
@@ -44,7 +44,7 @@ for i = 1:numSims
     data.F     = out(i).logsout.getElement('F').Values.Data;
     
     % Guardamos en un .mat único por corrida
-    filename = sprintf('Curvas/sim_results/2Theta80_G_v%02d.mat', i);
+    filename = sprintf('Curvas/sim_results/Theta80_G_omega%02d.mat', i);
     save(filename, '-struct', 'data');
 end
 
