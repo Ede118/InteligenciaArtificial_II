@@ -37,25 +37,44 @@ class AdaptadorControladorPlanta:
         self.controlador = controlador
         self.fuerza_max = fuerza_max
         self.control_desactivado = False
+        self.desactivacion_armada = True
         self.desactivar_desde = 80.0
         self.desactivar_hasta = 160.0
         self.reactivar_desde = 170.0
+        self.rearmar_hasta = 70.0
 
     def configurar_modo_inicial(self, estado):
         _, _, theta, _ = estado
         abs_theta = abs(normalizar_angulo(theta))
         self.control_desactivado = self.desactivar_desde <= abs_theta <= self.desactivar_hasta
+        self.desactivacion_armada = abs_theta < self.desactivar_desde
+        if self.control_desactivado:
+            self.desactivacion_armada = False
 
     def debe_reactivar(self, theta):
         return abs(normalizar_angulo(theta)) >= self.reactivar_desde
 
     def calcular_fuerza(self, estado):
         _, _, theta, theta_p = estado
+        abs_theta = abs(normalizar_angulo(theta))
+
         if self.control_desactivado:
             if self.debe_reactivar(theta):
                 self.control_desactivado = False
+                self.desactivacion_armada = False
             else:
                 return 0.0
+
+        if abs_theta <= self.rearmar_hasta:
+            self.desactivacion_armada = True
+
+        if (
+            self.desactivacion_armada
+            and self.desactivar_desde <= abs_theta <= self.desactivar_hasta
+        ):
+            self.control_desactivado = True
+            self.desactivacion_armada = False
+            return 0.0
 
         fuerza = self.controlador.compute_control(theta, theta_p)
         return float(self.fuerza_max * np.tanh(fuerza / self.fuerza_max)) # Limita la fuerza de control a un rango máximo para evitar acciones excesivas en la planta
