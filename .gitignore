@@ -11,3 +11,7 @@ __pycache__/
 
 # Archivos temporales de MATLAB
 TP2/MATLAB/slprj
+TP2/MATLAB/Curvas/sim_results
+TP2/MATLAB/Curvas/slprj
+
+*.avi
