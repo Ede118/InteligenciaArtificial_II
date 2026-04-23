@@ -2,7 +2,7 @@
 close all; clear; clc;
 
 folder = 'sim_results'; % La carpeta que creamos antes
-archivos = dir(fullfile(folder, 'Theta80_G_v*.mat')); % Buscamos todos los .mat
+archivos = dir(fullfile(folder, '2Theta80_G_v*.mat')); % Buscamos todos los .mat
 
 if isempty(archivos)
     error('No se encontraron archivos en la carpeta %s', folder);

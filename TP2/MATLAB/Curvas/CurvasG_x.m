@@ -2,7 +2,7 @@
 close all; clear; clc;
 
 folder = 'sim_results'; % La carpeta que creamos antes
-archivos = dir(fullfile(folder, 'Theta80_G_xx*.mat')); % Buscamos todos los .mat
+archivos = dir(fullfile(folder, 'Theta80_G_x*.mat')); % Buscamos todos los .mat
 
 if isempty(archivos)
     error('No se encontraron archivos en la carpeta %s', folder);
@@ -28,7 +28,7 @@ for i = 1:length(archivos)
     % nombreLimpio = strrep(archivos(i).name, '.mat', '');
     % nombreLimpio = strrep(nombreLimpio, 'Sim_Angulo_', 'Init: ');
     % nombreLimpio = erase(archivos(i).name, ["Sim_Angulo_", ".mat"]); % Extrae el número
-    legendaTexto = sprintf('G_{x}=%d', i+59);
+    legendaTexto = sprintf('G_{x}=%d', i);
     
     plot(vTime{i}, vTheta{i}, 'LineWidth', 1.5, 'DisplayName', legendaTexto);
 end
@@ -67,7 +67,7 @@ for i = 1:length(archivos)
     % nombreLimpio = strrep(archivos(i).name, '.mat', '');
     % nombreLimpio = strrep(nombreLimpio, 'Sim_Angulo_', 'Init: ');
     % nombreLimpio = erase(archivos(i).name, ["Sim_Angulo_", ".mat"]); % Extrae el número
-    legendaTexto = sprintf('G_{x}=%d', i+59);
+    legendaTexto = sprintf('G_{x}=%d', i);
     
     plot(vTime{i}, vX{i}, 'LineWidth', 1.5, 'DisplayName', legendaTexto);
 end
@@ -110,7 +110,7 @@ for i = 1:length(archivos)
     % nombreLimpio = strrep(archivos(i).name, '.mat', '');
     % nombreLimpio = strrep(nombreLimpio, 'Sim_Angulo_', 'Init: ');
     % nombreLimpio = erase(archivos(i).name, ["Sim_Angulo_", ".mat"]); % Extrae el número
-    legendaTexto = sprintf('G_{x}=%d', i+59);
+    legendaTexto = sprintf('G_{x}=%d', i);
     
     plot(vTime{i}, vF{i}, 'LineWidth', 1.5, 'DisplayName', legendaTexto);
 end
