@@ -4,7 +4,6 @@ from matplotlib.widgets import Slider, Button
 from matplotlib.animation import FuncAnimation
 import matplotlib.gridspec as gridspec
 
-# --- CLASE PLANTA ---
 class PenduloPlanta:
     def __init__(self, M=1.0, m=0.3, l=0.5, g=9.81, dt=0.015, b=0.05, d=0.05):
         self.M, self.m, self.l, self.g, self.dt = M, m, l, g, dt
@@ -43,17 +42,15 @@ class PenduloPlanta:
         self.estado[2] = (self.estado[2] + np.pi) % (2 * np.pi) - np.pi
         return F, theta_pp
 
-# --- CLASE SIMULADOR INTEGRADO ---
 class Simulador:
     def __init__(self, planta):
         self.planta = planta
         self.agarrado = False
-        self.max_pts = 200 # Más puntos para mejor resolución temporal
+        self.max_pts = 200 
         
         self.fig = plt.figure(figsize=(14, 9))
         gs = gridspec.GridSpec(4, 2, figure=self.fig, width_ratios=[1.3, 1], hspace=0.5, wspace=0.3)
 
-        # 1. Ventana del Péndulo
         self.ax_sim = self.fig.add_subplot(gs[:, 0])
         self.ax_sim.set_xlim(-5, 5); self.ax_sim.set_ylim(-1.5, 2.0)
         self.ax_sim.set_aspect('equal')
@@ -62,7 +59,6 @@ class Simulador:
         self.carro = plt.Rectangle((-0.4, -0.2), 0.8, 0.4, fc="#9eabac", ec='black', lw=2, zorder=2)
         self.ax_sim.add_patch(self.carro)
 
-        # 2. Telemetría
         self.axs_tele = [self.fig.add_subplot(gs[i, 1]) for i in range(4)]
         titulos = ['Pos. Angular (deg)', 'Vel. Angular (rad/s)', 'Acc. Angular (rad/s²)', 'Fuerza (N)']
         colores = ['#3498db', '#e67e22', '#e74c3c', '#2ecc71']
@@ -82,12 +78,10 @@ class Simulador:
 
         plt.subplots_adjust(bottom=0.2, left=0.05, right=0.95, top=0.93)
 
-        # --- WIDGETS ---
         ax_ang = plt.axes([0.1, 0.1, 0.35, 0.03])
         self.s_ang = Slider(ax_ang, 'θ ', -180.0, 180.0, valinit=0.0, color='#3498db')
         self.s_ang.on_changed(self.agarrar_pendulo)
-        
-        # Botón FREE
+
         ax_sol = plt.axes([0.47, 0.1, 0.05, 0.03])
         self.btn_soltar = Button(ax_sol, 'FREE', color='#ecf0f1', hovercolor='#bdc3c7')
         self.btn_soltar.on_clicked(self.soltar_pendulo)
@@ -119,8 +113,7 @@ class Simulador:
             self.s_ang.eventson = False
             self.s_ang.set_val(np.rad2deg(-self.planta.estado[2]))
             self.s_ang.eventson = True
-        
-        # Telemetría
+
         datos = [self.planta.estado[2], self.planta.estado[3], acc_ang, fuerza]
         for i in range(4):
             val = np.rad2deg(datos[i]) if i == 0 else datos[i]
@@ -131,7 +124,6 @@ class Simulador:
                 self.axs_tele[i].relim()
                 self.axs_tele[i].autoscale_view()
 
-        # Visual Péndulo
         x, _, theta, _ = self.planta.estado
         px = x + (self.planta.l*2)*np.sin(theta)
         py = (self.planta.l*2)*np.cos(theta)
@@ -141,7 +133,7 @@ class Simulador:
         return self.linea, self.carro
 
 if __name__ == "__main__":
-    p = PenduloPlanta(M=2, m=0.2, dt=0.015)
+    p = PenduloPlanta(M=2, m=0.1, l=0.5, g=9.81, dt=0.01, b=0.05, d=0.05)
     sim = Simulador(p)
     ani = FuncAnimation(sim.fig, sim.loop, interval=15, blit=False)
     plt.show()
