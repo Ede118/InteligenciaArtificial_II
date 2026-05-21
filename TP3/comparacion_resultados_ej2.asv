@@ -1,0 +1,25 @@
+clear; clc; close all;
+
+entrenamiento       = [ 1000 , 5000 , 10000, 15000, 20000, 25000, 30000, 35000, 40000]; 
+regresion_logistica = [ 82.53, 87.20, 87.33, 88.13, 89.27, 89.93, 90.67, ];
+random_forest       = [ 83.13, 91.47, 92.80, 93.67, 93.27, 94.13, 94.40, ];
+KNN                 = [ 80.93, 90.27, 91.93, 93.40, 94.13, 94.53, 94.93]; 
+
+
+
+figure('Name', 'Comparativa de Parámetros', 'NumberTitle', 'off');
+
+plot(entrenamiento, regresion_logistica, '-o', 'LineWidth', 2, 'Color', [0.2 0.6 0.8]); hold on;
+plot(entrenamiento, random_forest, '-s', 'LineWidth', 2, 'Color', [0.9 0.4 0.2]);
+plot(entrenamiento, KNN, '-^', 'LineWidth', 2, 'Color', [0.5 0.2 0.7]);
+
+grid on;
+grid minor;
+xlabel('Imagenes para el entrenamiento', 'FontSize', 12, 'FontWeight', 'bold');
+ylabel('Probabilidad de exito', 'FontSize', 12, 'FontWeight', 'bold');
+title('Comparacion de modelos', 'FontSize', 14, 'FontWeight', 'bold');
+
+legend('Regresion logistica', 'Random forest', 'KNN', 'Location', 'best', 'FontSize', 10);
+
+axis tight;
+hold off;
