@@ -35,7 +35,7 @@ if __name__ == "__main__":
     X = datos[["x"]].values
     T = datos[["y"]].values
     
-    G = 5
+    G = 10
     
     X_expanded = ExpandirCaracteristicasPolinomicas(X_original=X, grado=G)
     
@@ -49,18 +49,18 @@ if __name__ == "__main__":
     X_train, X_test, T_train, T_test = DividirEntrenamientoTest(X_expanded, T, test_size=0.90)
     
     
-    ModeloLineal = Perceptron(
+    ModeloSigmoide = Perceptron(
         InputDim=X_expanded.shape[1], 
         OutputDim=1, 
         Neurons=np.array([1]), 
-        ActivationFunction="Identity")
+        ActivationFunction="Sigmoid")
     
-    Y_untrained = ModeloLineal.Predict(InputVector=X_test)
-    W1_untrained = ModeloLineal.WeightMatrix[0, 0]
-    b_untrained = ModeloLineal.Bias[0, 0]
+    Y_untrained = ModeloSigmoide.Predict(InputVector=X_test)
+    W1_untrained = ModeloSigmoide.WeightMatrix[0, 0]
+    b_untrained = ModeloSigmoide.Bias[0, 0]
     
     
-    ModeloLineal.Fit(
+    ModeloSigmoide.Fit(
         TrainingData=X_train, 
         TargetData=T_train,
         TestData=X_test,
@@ -68,8 +68,8 @@ if __name__ == "__main__":
         LearningRate=0.01, 
         Epochs=1000
     )
-    W = np.array(ModeloLineal.WeightMatrix).reshape(-1, 1)
-    b = np.array(ModeloLineal.Bias).reshape(-1, 1)
+    W = np.array(ModeloSigmoide.WeightMatrix).reshape(-1, 1)
+    b = np.array(ModeloSigmoide.Bias).reshape(-1, 1)
     
     
     for i in range(W.shape[1]):
@@ -86,7 +86,7 @@ if __name__ == "__main__":
             desviacion=np.std(b)
         )
     
-    Y_trained = ModeloLineal.Predict(InputVector=X_test)
+    Y_trained = ModeloSigmoide.Predict(InputVector=X_test)
     
     
     # print("Grafico de evolución de W1 y b durante el entrenamiento...")
@@ -97,13 +97,13 @@ if __name__ == "__main__":
     #               Gráficos de evolución de la norma de los gradientes     
     # =============================================================================== #
     
-    GraficarNormaGradientes(ModeloLineal, False)
+    GraficarNormaGradientes(ModeloSigmoide, False)
 
     # =============================================================================== #
     #               Gráficos de evolución de la norma de los gradientes     
     # =============================================================================== #
 
-    GraficarCurvaPerdida(ModeloLineal)
+    GraficarCurvaPerdida(ModeloSigmoide)
     
     # =============================================================================== #
     #                       Graficos de ajuste final vs inicial     
@@ -128,7 +128,7 @@ if __name__ == "__main__":
             label=r"Ajuste Inicial: $y = g \left( \sum_{i=1}^{" + str(G) + r"} w_{k,untrained} A_{k,untrained} + b_{untrained} \right)$")
     
     
-    ax.set_title('Función de activación: $g(z) = z$ (Identidad)', fontsize=11, fontweight='bold', pad=10)
+    ax.set_title('Función de activación: $g(z) = \\frac{1}{1 + e^{-z}}$ (Sigmoide)', fontsize=11, fontweight='bold', pad=10)
     ax.set_xlabel('Variable Independiente (x)', fontsize=10)
     ax.set_ylabel('Variable Dependiente (y)', fontsize=10)
     ax.tick_params(direction='in', top=True, right=True, labelsize=9)
