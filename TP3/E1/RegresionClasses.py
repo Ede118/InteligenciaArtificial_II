@@ -1,7 +1,9 @@
 
 import numpy as np
+import matplotlib.pyplot as plt
 
-def Expand(
+
+def expand(
     VectorDatos: np.ndarray, 
     GradoExpansion: int) -> np.ndarray:
     """
@@ -22,19 +24,21 @@ class Perceptron:
         *,
         InputDim: int,                         # Input Dimension
         OutputDim: int,                         # Output Dimension
-        Neurons: np.ndarray,
-        ActivationFunction: str = ["Identity", "Sigmoid", "Tanh", "ReLU"]):
+        ActivationFunction: str = ["Identity", "Sigmoid", "Tanh", "ReLU"]
+        ):
         
         self.n = InputDim
         self.q = OutputDim
-        self.Neurons = Neurons
         
-        self.WeightMatrix = np.ones((self.n, self.q)) * np.random.rand(self.n, self.q) * 0.5
-        self.Bias = np.zeros((self.q, 1)) * 0.5
+        # Inicialización adaptativa (según Xavier/He)
+        self.WeightMatrix = np.random.rand(self.n, self.q) * np.sqrt(2 / self.n)
+        self.Bias = np.zeros((self.q, 1))
         
-        self.ActivationFunction = ActivationFunction
+        self.AFunction = ActivationFunction
+        
+        
 
-    def Predict(self, *,
+    def predict(self, *,
         InputVector: np.ndarray,
         ) -> np.ndarray:
         
@@ -49,37 +53,26 @@ class Perceptron:
         
         WeightedVector = np.dot(InputVector, self.WeightMatrix) + self.Bias
         
-        OutputVector = self.Activate(WeightedVector)
+        OutputVector = self._activate(WeightedVector)
         
         return OutputVector
 
-    def Activate(self, WeightedVector: np.ndarray) -> np.ndarray:
+    def _activate(self, WeightedVector: np.ndarray) -> np.ndarray:
         """Asignación de la función de activación."""
-        switcher = {
-            "Identity": self._f_identity,
-            "Sigmoid": self._f_sigmoid,
-            "Tanh": self._f_tanh,
-            "ReLU": self._f_relu
-        }
-        func = switcher.get(self.ActivationFunction, None)
-        if func is None:
-            raise ValueError(f"La función de activación '{self.ActivationFunction}' no es válida.")
-        return func(WeightedVector)
-    
-    # Funciones de activación vectorizadas (soportan matrices de NumPy directamente)
-    def _f_identity(self, x: np.ndarray) -> np.ndarray:
-        return x
-
-    def _f_tanh(self, x: np.ndarray) -> np.ndarray:
-        return np.tanh(x)
-
-    def _f_sigmoid(self, x: np.ndarray) -> np.ndarray:
-        return 1 / (1 + np.exp(-x))
-
-    def _f_relu(self, x: np.ndarray) -> np.ndarray:
-        return np.maximum(0, x)
-    
-    def Fit(self, *, 
+        match self.AFunction:
+            case "Identity": 
+                return WeightedVector
+            case "Sigmoid": 
+                return 1 / (1 + np.exp(-WeightedVector))
+            case "Tanh": 
+                return np.tanh(WeightedVector)
+            case "ReLU": 
+                return np.maximum(0, WeightedVector)
+            case _: 
+                # Si no coincide con ninguno, lanzamos el error inmediatamente
+                raise ValueError(f"La función de activación '{self.AFunction}' no es válida.")
+            
+    def fit(self, *, 
             TrainingData: np.ndarray, 
             TargetData: np.ndarray, 
             TestData: np.ndarray = None,
@@ -92,43 +85,134 @@ class Perceptron:
         T = TargetData.reshape(m, self.q)       # Aseguramos que T tenga la forma (m, q)
         X = TrainingData.reshape(m, self.n)     # Aseguramos que X tenga la forma (m, n)
         
-        self.history_loss = []
-        self.history_norm_dW = []
-        self.history_norm_dB = []
-        self.history_loss_test = []
+        self.Loss = np.zeros(Epochs)
+        self.Loss_test =  np.zeros(Epochs) if TestData is not None and TargetTest is not None else None
+        self.W_gradient = np.zeros((Epochs, 1))
+        self.B_gradient = np.zeros((Epochs, 1))
         
         
         for epoch in range(Epochs):
             # 1. Forward Propagation
-            Y = self.Predict(InputVector=X)
+            Y = self.predict(InputVector=X)
                         
             # 2. Cálculo del error
             Error = T - Y
             
             # Guardar el costo (MSE) actual
             mse_actual = np.mean(Error ** 2)
-            self.history_loss.append(mse_actual)
+            self.Loss[epoch] = mse_actual
             
             # 3. Cálculo de gradientes
             dW = -np.dot(X.T, Error) / m
             dB = -np.sum(Error, axis=0, keepdims=True) / m
             
             # Se calcula la norma para dW y dB
-            norma_dW = np.linalg.norm(dW)
-            norma_dB = np.linalg.norm(dB)
             
-            self.history_norm_dW.append(norma_dW)
-            self.history_norm_dB.append(norma_dB)
+            self.W_gradient[epoch] = np.linalg.norm(dW)
+            self.B_gradient[epoch] = np.linalg.norm(dB)
             if TestData is not None and TargetTest is not None:
-                Y_test = self.Predict(InputVector=TestData)
+                Y_test = self.predict(InputVector=TestData)
                 mse_test = np.mean((TargetTest - Y_test) ** 2)
-                self.history_loss_test.append(mse_test)
+                self.Loss_test[epoch] = mse_test
             # ----------------------------------------------------
             
             # 4. Actualización de parámetros
             self.WeightMatrix -= LearningRate * dW
             self.Bias -= LearningRate * dB
-    
+            
+    def graficarGradientes(self, 
+        escala_logaritmica: bool = True, 
+        saveFig: bool = False, 
+        label: str = "gradientes.png"):
+        """
+        Grafica la evolución temporal de la norma de los gradientes de W y B.
+        """
+        
+        epocas = range(len(self.Loss))
+        
+        # Inicializar lienzo estilizado
+        fig, ax = plt.subplots(figsize=(8, 4.5), dpi=120)
+        
+        # Graficar la norma del gradiente de los pesos
+        ax.plot(epocas, self.W_gradient,
+                color='#0072BD', linewidth=1.5, label=r'Norma del Gradiente $\nabla W$')
+        
+        # Graficar la norma del gradiente del sesgo
+        ax.plot(epocas, self.B_gradient, 
+                color='#D95319', linewidth=1.5, linestyle='--', label=r'Norma del Gradiente $\nabla b$')
+        
+        # Configurar escala logarítmica para observar variaciones de órdenes de magnitud
+        if escala_logaritmica:
+            ax.set_yscale('log')
+            ax.set_ylabel('Norma Euclídea (Escala Log)', fontsize=10)    
+        else:
+            ax.set_yscale('linear')
+            ax.set_ylabel('Norma Euclídea (Escala Linear)', fontsize=10)
+            
+        
+        # Formato y etiquetas técnicas
+        ax.set_title('Evolución de la Magnitud del Gradiente', fontsize=11, fontweight='bold', pad=10)
+        ax.set_xlabel('Época de Entrenamiento', fontsize=10)
+        
+        ax.grid(True, which='both', linestyle=':', linewidth=0.5, color='#B0B0B0')
+        ax.tick_params(direction='in', top=True, right=True, labelsize=9)
+        ax.legend(loc='upper right', frameon=True, fontsize=9)
+        
+        plt.tight_layout()
+        
+        if saveFig:
+            if label is None:
+                label = f"E1 SISO {self.AFunction} Gradientes.pdf"
+            else:
+                nombre_archivo = label
+            
+            plt.savefig(f"./TP3/Imagen/{nombre_archivo}", dpi=300, bbox_inches='tight')
+            
+        plt.show()
+        
+    def graficarLoss(self, 
+                     saveFig: bool = False,
+                     label: str = None):
+        """
+        Grafica la evolución de la función de pérdida (MSE) en función de las épocas.
+        """
+        if not hasattr(self, 'Loss'):
+            raise ValueError("El modelo no contiene el historial de pérdida. Ejecute Fit primero.")
+            
+        epocas = range(len(self.Loss))
+        
+        fig, ax = plt.subplots(figsize=(8, 4.5), dpi=120)
+        
+        # Curva de pérdida en entrenamiento
+        ax.plot(epocas, self.Loss, 
+                color='#0072BD', linewidth=1.5, label='Loss Entrenamiento (Train)')
+        
+        # Curva de pérdida en prueba (si existe registro)
+        if len(self.Loss_test) > 0:
+            ax.plot(epocas, self.Loss_test, 
+                    color='#D95319', linewidth=1.5, linestyle='--', label='Loss Prueba (Test)')
+        
+        # Formato e instrumentación del gráfico
+        ax.set_title('Evolución de la Función de Pérdida (Curva de Aprendizaje)', fontsize=11, fontweight='bold', pad=10)
+        ax.set_xlabel('Época de Entrenamiento', fontsize=10)
+        ax.set_ylabel('Error Cuadrático Medio (MSE)', fontsize=10)
+        
+        # En regresión, el error puede caer órdenes de magnitud, la escala logarítmica es opcional pero útil
+        # ax.set_yscale('log') 
+        
+        ax.grid(True, which='both', linestyle=':', linewidth=0.5, color='#B0B0B0')
+        ax.tick_params(direction='in', top=True, right=True, labelsize=9)
+        ax.legend(loc='upper right', frameon=True, fontsize=9)
+        
+        plt.tight_layout()
+        if saveFig:
+            if label is None:
+                label = f"E1 SISO {self.AFunction} Loss {self._q} Neurons.pdf"
+            else:
+                nombre_archivo = label
+            
+            plt.savefig(f"./TP3/Imagen/{nombre_archivo}", dpi=300, bbox_inches='tight')
+        plt.show()
 
 
 class HiddenLayerPerceptron:
@@ -136,74 +220,86 @@ class HiddenLayerPerceptron:
                  InputDim: int = 1,
                  HiddenDim: int,
                  OutputDim: int = 1,
-                 ActivationHidden: str = "ReLU"):
+                 ActivationHidden: str = "ReLU",
+                 AFunction: str = "ReLU"):
         """
         Inicialización del MLP SISO con una única capa oculta.
         """
-        self.n = InputDim          
-        self.p = HiddenDim         
-        self.q = OutputDim         
-        self.ActivationHidden = ActivationHidden
+        self._n = InputDim          
+        self._p = HiddenDim         
+        self._q = OutputDim         
+        self.HFunction = ActivationHidden
+        self.AFunction = AFunction
         
         # Inicialización adaptativa (raiz de la cantidad de neuronas en la capa anterior)
-        self.W1 = np.random.randn(self.n, self.p) / np.sqrt(self.n)
-        self.B1 = np.zeros((1, self.p))
+        self._W1 = np.random.randn(self._n, self._p) * np.sqrt(2/self._n)
+        self._B1 = np.zeros((1, self._p))
         
-        self.W2 = np.random.randn(self.p, self.q) / np.sqrt(self.p)
-        self.B2 = np.zeros((1, self.q))
+        self._W2 = np.random.randn(self._p, self._q) * np.sqrt(2/self._p)
+        self._B2 = np.zeros((1, self._q))
         
     def _get_params(self):
-        return self.W1, self.B1, self.W2, self.B2
+        return self._W1, self._B1, self._W2, self._B2
 
-    def _activate(self, x: np.ndarray, name: str) -> np.ndarray:
+    def _activate(self, WeightedVector: np.ndarray, function: str) -> np.ndarray:
         """Asignación de la función de activación."""
-        if name == "Identity":
-            return x
-        elif name == "Sigmoid":
-            return 1 / (1 + np.exp(-x))
-        elif name == "Tanh":
-            return np.tanh(x)
-        elif name == "ReLU":
-            return np.maximum(0, x)
-        else:
-            raise ValueError(f"Función de activación '{name}' no válida.")
+        match function:
+            case "Identity": 
+                return WeightedVector
+            case "Sigmoid": 
+                return 1 / (1 + np.exp(-WeightedVector))
+            case "Tanh": 
+                return np.tanh(WeightedVector)
+            case "ReLU": 
+                return np.maximum(0, WeightedVector)
+            case "LeakyReLU":
+                return np.where(WeightedVector > 0, WeightedVector, 0.001 * WeightedVector)
+            case _: 
+                # Si no coincide con ninguno, lanzamos el error inmediatamente
+                raise ValueError(f"La función de activación '{self.AFunction}' no es válida.")
+            
 
-    def _derived_activate(self, activated_h: np.ndarray, name: str) -> np.ndarray:
+    def _derived_activate(self, activated_h: np.ndarray, func: str) -> np.ndarray:
         """
         Derivadas de las funciones de activación expresadas 
         en términos de la salida ya activada.
         """
-        if name == "Identity":
-            return np.ones_like(activated_h)
-        elif name == "Sigmoid":
-            return activated_h * (1 - activated_h)
-        elif name == "Tanh":
-            return 1 - activated_h ** 2
-        elif name == "ReLU":
-            return np.where(activated_h > 0, 1.0, 0.0)
-        else:
-            raise ValueError(f"Derivada no definida para '{name}'.")
+        match func:
+            case "Identity": 
+                return np.ones_like(activated_h)
+            case "Sigmoid": 
+                return activated_h * (1 - activated_h)
+            case "Tanh": 
+                return 1 - activated_h ** 2
+            case "ReLU": 
+                return np.where(activated_h > 0, 1.0, 0.0)
+            case "LeakyReLU":
+                return np.where(activated_h > 0, 1.0, 0.001)
+            case _: 
+                # Si no coincide con ninguno, lanzamos el error inmediatamente
+                raise ValueError(f"La función de activación '{self.HFunction}' no es válida.")
+            
 
-    def Predict(self, *, InputVector: np.ndarray) -> tuple:
+    def predict(self, *, InputVector: np.ndarray) -> tuple:
         """
         Forward Propagation. 
         Devuelve la salida final y los estados intermedios necesarios para Backpropagation.
         """
         m, n = InputVector.shape
-        if n != self.n:
-            raise ValueError(f"Dimensión de entrada incorrecta. Se esperaba {self.n}, se recibió {n}.")
+        if n != self._n:
+            raise ValueError(f"Dimensión de entrada incorrecta. Se esperaba {self._n}, se recibió {n}.")
             
         # 1. Capa Oculta
-        Z1 = np.dot(InputVector, self.W1) + self.B1
-        H = self._activate(Z1, self.ActivationHidden)
+        Z1 = np.dot(InputVector, self._W1) + self._B1
+        H = self._activate(Z1, self.HFunction)
         
         # 2. Capa de Salida 
-        Z2 = np.dot(H, self.W2) + self.B2
-        Y = self._activate(Z2, "Identity")
+        Z2 = np.dot(H, self._W2) + self._B2
+        Y = self._activate(Z2, self.AFunction)
         
         return Y, H
 
-    def Fit(self, *, 
+    def fit(self, *, 
             TrainingData: np.ndarray, 
             TargetData: np.ndarray,
             TestData: np.ndarray = None,
@@ -211,62 +307,152 @@ class HiddenLayerPerceptron:
             LearningRate: float = 0.01, 
             Epochs: int = 1000):
         """
-        Entrenamiento mediante Descenso por el Gradiente y Backpropagation.
+        Entrenamiento mediante Descenso por el Gradiente y Backpropagation optimizado.
         """
         m = TrainingData.shape[0]
-        X = TrainingData.reshape(m, self.n)
-        T = TargetData.reshape(m, self.q)
+        X = TrainingData.reshape(m, self._n)
+        T = TargetData.reshape(m, self._q)
         
-        self.history_loss = []
-        self.history_norm_dW1 = []
-        self.history_norm_dW2 = []
-        self.history_norm_dB1 = []
-        self.history_norm_dB2 = []
-        self.history_loss_test = []
+        if TestData is not None and TargetTest is not None:
+            m_test = TestData.shape[0]
+            X_test = TestData.reshape(m_test, self._n)
+            T_test = TargetTest.reshape(m_test, self._q)
+        
+        # Estructuras para el registro del costo (MSE)
+        self.Loss = np.zeros(Epochs)
+        self.Loss_test =  np.zeros(Epochs) if TestData is not None and TargetTest is not None else None
+        self.W_gradients = np.zeros((Epochs, 2))
+        self.B_gradients = np.zeros((Epochs, 2))
+        
         
         for epoch in range(Epochs):
             # 1. Forward Propagation
-            Y, H = self.Predict(InputVector=X)
+            Y, H = self.predict(InputVector=X)
             
+            # 2. Cálculo del costo (MSE) de entrenamiento de la época actual
+            Error = Y - T
+            
+            
+            # Validación cruzada ciega (se descarta H_test con _)
+            if TestData is not None and TargetTest is not None:
+                Y_test, _ = self.predict(InputVector=X_test)
+                mse_test = np.mean((T_test - Y_test) ** 2)
+                self.Loss_test[epoch] = mse_test
             
             # 3. Backpropagation (Cálculo de Gradientes)
-            # Capa de Salida (Derivada de Identidad es 1)
+            # Capa de Salida
             dY = (2.0 / m) * Error
             dW2 = np.dot(H.T, dY)
             dB2 = np.sum(dY, axis=0, keepdims=True)
             
             # Retropropagación hacia la Capa Oculta
-            dH = np.dot(dY, self.W2.T)
-            dZ1 = dH * self._derived_activate(H, self.ActivationHidden)
-            
+            dH = np.dot(dY, self._W2.T)
+            dZ1 = dH * self._derived_activate(H, self.HFunction)
             dW1 = np.dot(X.T, dZ1)
             dB1 = np.sum(dZ1, axis=0, keepdims=True)
             
-            # 2. Cálculo del Error Cuadrático Medio
-            Error = Y - T
-            mse = np.mean(Error ** 2)
-            self.history_loss.append(mse)
+            # 4. Consolidación de gradientes en el ndarray unificado
+            self.Loss[epoch] = np.mean(Error ** 2)
+            self.W_gradients[epoch, 0] = np.linalg.norm(dW1)
+            self.W_gradients[epoch, 1] = np.linalg.norm(dW2)
+            self.B_gradients[epoch, 0] = np.linalg.norm(dB1)
+            self.B_gradients[epoch, 1] = np.linalg.norm(dB2)
             
             
-            norma_dW1 = np.linalg.norm(dW1)
-            norma_dB1 = np.linalg.norm(dB1)
-            norma_dW2 = np.linalg.norm(dW2)
-            norma_dB2 = np.linalg.norm(dB2)
+            # 5. Actualización de Parámetros
+            self._W2 -= LearningRate * dW2
+            self._B2 -= LearningRate * dB2
+            self._W1 -= LearningRate * dW1
+            self._B1 -= LearningRate * dB1
             
-            self.history_norm_dW1.append(norma_dW1)
-            self.history_norm_dB1.append(norma_dB1)
+    def graficarGradientes(self, escala_logaritmica: bool = True, saveFig: bool = False):
+        """
+        Grafica la evolución temporal de la norma de los gradientes de W y B.
+        """
+        
+        epocas = range(len(self.Loss))
+        
+        # Inicializar lienzo estilizado
+        fig, ax = plt.subplots(figsize=(8, 4.5), dpi=120)
+        
+        # Graficar la norma del gradiente de los pesos
+        ax.plot(epocas, self.W_gradients[:, 0],
+                color='#0072BD', linewidth=1.5, label=r'$\nabla W_1$')
+        
+        ax.plot(epocas, self.W_gradients[:, 1],
+                color='#0072BD', linewidth=1.5, linestyle='--', label=r'$\nabla W_2$')
+        
+        
+        # Graficar la norma del gradiente del sesgo
+        ax.plot(epocas, self.B_gradients[:, 0], 
+                color='#D95319', linewidth=1.5, linestyle='--', label=r'$\nabla b_1$')
+        
+        ax.plot(epocas, self.B_gradients[:, 1], 
+                color='#D95319', linewidth=1.5, label=r'$\nabla b_2$')
+        
+        # Configurar escala logarítmica para observar variaciones de órdenes de magnitud
+        if escala_logaritmica:
+            ax.set_yscale('log')
+            ax.set_ylabel('Norma Euclídea (Escala Log)', fontsize=10)    
+        else:
+            ax.set_yscale('linear')
+            ax.set_ylabel('Norma Euclídea (Escala Linear)', fontsize=10)
             
-            self.history_norm_dW2.append(norma_dW2)
-            self.history_norm_dB2.append(norma_dB2)
+        
+        # Formato y etiquetas técnicas
+        ax.set_title('Evolución de la Magnitud del Gradiente (Salud del Aprendizaje)', fontsize=11, fontweight='bold', pad=10)
+        ax.set_xlabel('Época de Entrenamiento', fontsize=10)
+        
+        ax.grid(True, which='both', linestyle=':', linewidth=0.5, color='#B0B0B0')
+        ax.tick_params(direction='in', top=True, right=True, labelsize=9)
+        ax.legend(loc='upper right', frameon=True, fontsize=9)
+        
+        plt.tight_layout()
+        if saveFig:
+            nombre_archivo = f"E1 MISO {self.AFunction} Gradientes {self._q} Neurons.pdf" 
+            plt.savefig(f"./TP3/Imagen/{nombre_archivo}", dpi=300, bbox_inches='tight')
+        plt.show()
+        
+    def graficarLoss(self, 
+                     saveFig: bool = False,
+                     label: str = None):
+        """
+        Grafica la evolución de la función de pérdida (MSE) en función de las épocas.
+        """
+        if not hasattr(self, 'Loss'):
+            raise ValueError("El modelo no contiene el historial de pérdida. Ejecute Fit primero.")
             
-            if TestData is not None and TargetTest is not None:
-                Y_test = self.Predict(InputVector=TestData)
-                mse_test = np.mean((TargetTest - Y_test) ** 2)
-                self.history_loss_test.append(mse_test)
-            # -----------------------------------------
+        epocas = range(len(self.Loss))
+        
+        fig, ax = plt.subplots(figsize=(8, 4.5), dpi=120)
+        
+        # Curva de pérdida en entrenamiento
+        ax.plot(epocas, self.Loss, 
+                color='#0072BD', linewidth=1.5, label='Loss Entrenamiento (Train)')
+        
+        # Curva de pérdida en prueba (si existe registro)
+        if len(self.Loss_test) > 0:
+            ax.plot(epocas, self.Loss_test, 
+                    color='#D95319', linewidth=1.5, linestyle='--', label='Loss Prueba (Test)')
+        
+        # Formato e instrumentación del gráfico
+        ax.set_title('Evolución de la Función de Pérdida (Curva de Aprendizaje)', fontsize=11, fontweight='bold', pad=10)
+        ax.set_xlabel('Época de Entrenamiento', fontsize=10)
+        ax.set_ylabel('Error Cuadrático Medio (MSE)', fontsize=10)
+        
+        # En regresión, el error puede caer órdenes de magnitud, la escala logarítmica es opcional pero útil
+        # ax.set_yscale('log') 
+        
+        ax.grid(True, which='both', linestyle=':', linewidth=0.5, color='#B0B0B0')
+        ax.tick_params(direction='in', top=True, right=True, labelsize=9)
+        ax.legend(loc='upper right', frameon=True, fontsize=9)
+        
+        plt.tight_layout()
+        if saveFig:
+            if label is None:
+                label = f"E1 SISO {self.AFunction} Loss {self._q} Neurons.pdf"
+            else:
+                nombre_archivo = label
             
-            # 4. Actualización de Parámetros
-            self.W2 -= LearningRate * dW2
-            self.B2 -= LearningRate * dB2
-            self.W1 -= LearningRate * dW1
-            self.B1 -= LearningRate * dB1
+            plt.savefig(f"./TP3/Imagen/{nombre_archivo}", dpi=300, bbox_inches='tight')
+        plt.show()
