@@ -6,7 +6,7 @@ class NeuralNetwork:
 
     def initialize(self):
         # ======================== INITIALIZE NETWORK WEIGTHS AND BIASES =============================
-        self.input_layer_size: int = 8
+        self.input_layer_size: int = 5
         self.output_layer_size: int = 3
 
         self.hidden_layers: list[int] = [16]
@@ -30,18 +30,15 @@ class NeuralNetwork:
             self.biases.append(b)
         # ============================================================================================
 
-    def think(self, y_dino, x_obstacle, is_bird, is_large, is_small, t_collision, y_obstacle, obstacle_width):
+    def think(self, y_dino, x_obstacle, is_bird, t_collision, y_obstacle):
         # ======================== PROCESS INFORMATION SENSED TO ACT =============================
-        print(f"y_dino: {y_dino}, x_obstacle: {x_obstacle}, is_bird: {is_bird}, is_large: {is_large}, is_small: {is_small}, t_collision: {t_collision}, y_obstacle: {y_obstacle}, obstacle_width: {obstacle_width}")
+        print(f"y_dino: {y_dino}, x_obstacle: {x_obstacle}, is_bird: {is_bird}, t_collision: {t_collision}, y_obstacle: {y_obstacle}")
         input = np.array(
             [[y_dino], 
             [x_obstacle], 
-            [is_bird], 
-            [is_large], 
-            [is_small],
+            [is_bird],
             [t_collision],
-            [y_obstacle],
-            [obstacle_width]]
+            [y_obstacle]]
         )
 
         a = input

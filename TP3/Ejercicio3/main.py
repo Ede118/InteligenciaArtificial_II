@@ -156,23 +156,24 @@ def gameScreen():
                     obstacle_params = obstacle.rect
                     dino_params = dino.dino_rect
                     # ========================== ACTUALIZAR LA FUNCIÓN 'think' CON LOS PARÁMETROS DE ENTRADA DE LA RED ===================
-                    y_dino = (340 - dino_params.y) / 340 # normalizamos respecto a la altura de duck, que es el movimiento vertical más bajo que hace el dinosaurio
+                    Y_REF = 250
+                    
+                    y_dino = (Y_REF - dino_params.y) / Y_REF # normalizamos respecto a la altura de duck, que es el movimiento vertical más bajo que hace el dinosaurio
                     x_obstacle = obstacle_params.x / SCREEN_WIDTH # normalizamos respecto al ancho de la pantalla, que es la distancia máxima a la que puede estar el obstáculo
                     t_collision = (obstacle_params.x - dino_params.x) / game_speed # tiempo estimado hasta la colisión, normalizado respecto a la velocidad del juego
-                    y_obstacle = (obstacle_params.y - SCREEN_HEIGHT) / SCREEN_HEIGHT # normalizamos respecto a la altura de la pantalla, que es la distancia máxima a la que puede estar el obstáculo en el eje vertical
-                    obstacle_width = obstacle_params.width / 150 # normalizamos respecto a un ancho máximo de obstáculo, que podría ser el ancho de un cactus grande o un pájaro, dependiendo de cuál sea mayor
+                    
+
+                    y_obstacle = (obstacle_params.y - Y_REF) / Y_REF # normalizamos respecto a una referencia vertical, que podría ser la altura de un cactus pequeño, para que la red pueda aprender a diferenciar entre obstáculos altos y bajos
+                    #obstacle_width = obstacle_params.width / 150 # normalizamos respecto a un ancho máximo de obstáculo, que podría ser el ancho de un cactus grande o un pájaro, dependiendo de cuál sea mayor
                     #cos_x_obs = np.cos(obstacle_params.x - dino_params.x)
                     #sin_x_obs = np.sin(obstacle_params.x - dino_params.x)
 
-                    #cos_t_collision = np.cos(t_collision) # función coseno del tiempo hasta la colisión, para introducir una no linealidad que permita a la red aprender a anticipar los obstáculos
-                    #sin_t_collision = np.sin(t_collision) # función seno del tiempo hasta la colisión, para introducir una no linealidad que permita a la red aprender a anticipar los obstáculos
+                    cos_t_collision = np.cos(t_collision) # función coseno del tiempo hasta la colisión, para introducir una no linealidad que permita a la red aprender a anticipar los obstáculos
+                    sin_t_collision = np.sin(t_collision) # función seno del tiempo hasta la colisión, para introducir una no linealidad que permita a la red aprender a anticipar los obstáculos
 
-                    is_bird, is_large, is_small = obstacle_types.get(
-                        type(obstacle),
-                        [0, 0, 0]
-                    )
+                    is_bird = 1.0 if isinstance(obstacle, Bird) else -1.0
 
-                    dino.update(dino.think(y_dino, x_obstacle, is_bird, is_large, is_small, t_collision, y_obstacle, obstacle_width))
+                    dino.update(dino.think(y_dino, x_obstacle, is_bird, t_collision, y_obstacle)) 
                     # ====================================================================================================================
 
         if len(obstacles) == 0:

@@ -22,30 +22,12 @@ def updateNetwork(population):
 
     new_population = []
 
-    # ================= ELITISMO =================
-    best = Dinosaur(
-        parents[0].id,
-        parents[0].color,
-        True
-    )
-
-    best.weights = [
-        np.copy(w)
-        for w in parents[0].weights
-    ]
-
-    best.biases = [
-        np.copy(b)
-        for b in parents[0].biases
-    ]
-
-    new_population.append(best)
+    
 
     # ================= GENERAR HIJOS =================
     while len(new_population) < len(population):
 
-        parent1 = random.choice(parents)
-        parent2 = random.choice(parents)
+        parent1, parent2 = random.sample(parents, 2)
 
         child = evolve(parent1, parent2)
 
@@ -174,8 +156,8 @@ def evolve(element1, element2):
         True
     )
 
-    mutation_rate = 0.07
-    mutation_strength = 0.07
+    mutation_rate = 0.2
+    mutation_strength = 0.1
 
     child.weights = []
     child.biases = []
@@ -186,10 +168,11 @@ def evolve(element1, element2):
     for W1, W2 in zip(element1.weights, element2.weights):
 
         # crossover 
-        W_child = np.where(
-            np.random.rand(*W1.shape) < 0.5,
-            W1,
-            W2
+        alpha = np.random.rand(*W1.shape)
+
+        W_child = (
+            alpha * W1
+            + (1 - alpha) * W2
         )
 
         # mutación
@@ -211,10 +194,11 @@ def evolve(element1, element2):
     for b1, b2 in zip(element1.biases, element2.biases):
 
         # crossover
-        b_child = np.where(
-            np.random.rand(*b1.shape) < 0.5,
-            b1,
-            b2
+        alpha = np.random.rand(*b1.shape)
+
+        b_child = (
+            alpha * b1
+            + (1 - alpha) * b2
         )
 
         # mutación
