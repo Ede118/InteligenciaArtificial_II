@@ -123,7 +123,7 @@ class Perceptron:
     def graficarGradientes(self, 
         escala_logaritmica: bool = True, 
         saveFig: bool = False, 
-        label: str = "gradientes.png"):
+        label: str = None):
         """
         Grafica la evolución temporal de la norma de los gradientes de W y B.
         """
@@ -162,7 +162,7 @@ class Perceptron:
         
         if saveFig:
             if label is None:
-                label = f"E1 SISO {self.AFunction} Gradientes.pdf"
+                nombre_archivo = f"E1 SISO {self.AFunction} Gradientes.png"
             else:
                 nombre_archivo = label
             
@@ -207,7 +207,7 @@ class Perceptron:
         plt.tight_layout()
         if saveFig:
             if label is None:
-                label = f"E1 SISO {self.AFunction} Loss {self._q} Neurons.pdf"
+                nombre_archivo = f"E1 SISO {self.AFunction} Loss {self.q} Neurons.png"
             else:
                 nombre_archivo = label
             
@@ -409,7 +409,7 @@ class HiddenLayerPerceptron:
         
         plt.tight_layout()
         if saveFig:
-            nombre_archivo = f"E1 MISO {self.AFunction} Gradientes {self._q} Neurons.pdf" 
+            nombre_archivo = f"E1 MISO {self.AFunction} Gradientes {self._q} Neurons.png" 
             plt.savefig(f"./TP3/Imagen/{nombre_archivo}", dpi=300, bbox_inches='tight')
         plt.show()
         
@@ -450,7 +450,7 @@ class HiddenLayerPerceptron:
         plt.tight_layout()
         if saveFig:
             if label is None:
-                label = f"E1 SISO {self.AFunction} Loss {self._q} Neurons.pdf"
+                label = f"E1 SISO {self.AFunction} Loss {self._q} Neurons.png"
             else:
                 nombre_archivo = label
             

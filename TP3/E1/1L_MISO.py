@@ -100,7 +100,7 @@ def SL_MISO(*,
         ModeloLineal.graficarGradientes(
             escala_logaritmica=False, 
             saveFig=True,
-            label = f"E1 MISO {AFunction} Gradientes - Expancion Poly {G}.pdf"
+            label = f"E1 MISO {AFunction} Gradientes - Expancion Poly {G}.png"
             )
 
         # =============================================================================== #
@@ -109,7 +109,7 @@ def SL_MISO(*,
 
         ModeloLineal.graficarLoss(
             saveFig=True,
-            label = f"E1 MISO {AFunction} Loss - Expancion Poly {G}.pdf"
+            label = f"E1 MISO {AFunction} Loss - Expancion Poly {G}.png"
         )
         
         # =============================================================================== #
@@ -149,7 +149,7 @@ def SL_MISO(*,
         ax.legend(loc='upper left', frameon=True, fontsize=9)
         
         plt.tight_layout()
-        nombre_archivo = f"E1 MISO {AFunction} Expansion Poly {G} Grafico.pdf" 
+        nombre_archivo = f"E1 MISO {AFunction} Expansion Poly {G} Grafico.png" 
         plt.savefig(f"./TP3/Imagen/{nombre_archivo}", dpi=300, bbox_inches='tight')
         
         plt.show()
@@ -187,7 +187,7 @@ if __name__ == "__main__":
                     label='Datos del dataset')
             dataset_graficado = True
         
-        if i <= 5: # Para evitar saturar el gráfico con curvas de alto grado, solo graficamos hasta grado 5
+        if i > 5: # Para evitar saturar el gráfico con curvas de alto grado, solo graficamos hasta grado 5
             ax_curvas.plot(x_test, y_trained, linewidth=1.5, label=f"Ajuste G={i}")
         
         indice += 1
@@ -202,7 +202,7 @@ if __name__ == "__main__":
     ax_curvas.set_ylim([min(t_test) - 1, max(t_test) + 1])
     
     fig_curvas.tight_layout()
-    fig_curvas.savefig(f"./TP3/Imagen/E1 MISO Ajustes Polinomicos De Bajo Grado.pdf", dpi=300, bbox_inches='tight')
+    fig_curvas.savefig(f"./TP3/Imagen/E1 MISO Ajustes Polinomicos De Alto Grado.png", dpi=300, bbox_inches='tight')
     
     print("Error Promedio por Grado del Polinomio:")
     for i in range(len(e_prom)):
@@ -217,5 +217,5 @@ if __name__ == "__main__":
     plt.xticks(grados_a_probar, labels=[str(g) for g in grados_a_probar])
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(f"./TP3/Imagen/E1 MISO Error Promedio vs Grado Aumentado.pdf", dpi=300, bbox_inches='tight')
+    plt.savefig(f"./TP3/Imagen/E1 MISO Error Promedio vs Grado Aumentado.png", dpi=300, bbox_inches='tight')
     plt.show() 

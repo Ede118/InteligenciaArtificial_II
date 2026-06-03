@@ -226,7 +226,7 @@ if __name__ == "__main__":
     ax.legend(loc='upper left', frameon=True, fontsize=9)
     
     plt.tight_layout()
-    nombre_archivo = f"E1 SISO 1 Wide Layer vs Multiple Narrow Layers.pdf" 
+    nombre_archivo = f"E1 SISO 1 Wide Layer vs Multiple Narrow Layers.png" 
     plt.savefig(f"./TP3/Imagen/{nombre_archivo}", dpi=300, bbox_inches='tight')
     plt.show()
     

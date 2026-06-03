@@ -129,7 +129,7 @@ def SL_SISO(*,
         ax.legend(loc='upper left', frameon=True, fontsize=9)
         
         plt.tight_layout()
-        nombre_archivo = f"E1 SISO {AFunction} Grafico.pdf" 
+        nombre_archivo = f"E1 SISO {AFunction} Grafico.png" 
         plt.savefig(f"./TP3/Imagen/{nombre_archivo}", dpi=300, bbox_inches='tight')
         plt.show()
         
