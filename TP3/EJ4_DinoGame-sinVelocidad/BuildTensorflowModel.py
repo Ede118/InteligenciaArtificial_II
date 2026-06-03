@@ -22,7 +22,7 @@ test_dir = source_dir + "/test/"
 # El orden debe coincidir con Dinosaur.CLASSES: JUMP, DUCK, RIGHT.
 classes = CLASS_FOLDER_NAMES
 
-def reset_split_directories():
+def reset_split_directories(): # Eliminar y recrear las carpetas de entrenamiento y prueba
     for split_dir in [train_dir, test_dir]:
         if os.path.isdir(split_dir):
             shutil.rmtree(split_dir)
@@ -37,8 +37,8 @@ reset_split_directories()
 train_ratio = 0.8
 
 # Parámetros para el modelo
-batch_size = 32
-image_size = IMAGE_SIZE
+batch_size = 32 # Tamaño del lote para el entrenamiento
+image_size = IMAGE_SIZE # Tamaño al que se redimensionarán las imágenes (ancho, alto)
 input_shape = image_size + (1,)  # Tamaño de la imagen con un solo canal para escala de grises
 
 # Iterar sobre las subcarpetas
@@ -76,7 +76,7 @@ for class_name in classes:
         save_img(dest_test_path, img_array)
 
 # Crear generadores de datos
-train_datagen = ImageDataGenerator(rescale=1./255)
+train_datagen = ImageDataGenerator(rescale=1./255) # Normalizar las imágenes dividiendo por 255 para que los valores estén entre 0 y 1
 train_generator = train_datagen.flow_from_directory(
     train_dir,
     classes=classes,
