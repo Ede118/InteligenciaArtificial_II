@@ -2,20 +2,42 @@ import random
 import numpy as np
 
 from Dinosaur import Dinosaur
+from persistir_red import save_network
+from statistics import save_statistics
 
-
-def updateNetwork(population):
+def updateNetwork(population, generation):
 
     # ================= ORDENAR POR FITNESS =================
-    population.sort(key=lambda d: d.score, reverse=True)
-
-    print("===================================")
-    print("Mejor score:", population[0].score)
-    print(
-        "Promedio:",
-        np.mean([d.score for d in population])
+    population.sort(
+        key=lambda d: d.score,
+        reverse=True
     )
-    print("===================================")
+
+    best_fitness = population[0].score
+
+    mean_fitness = np.mean(
+        [d.score for d in population]
+    )
+
+    convergence_ratio = (
+        mean_fitness / best_fitness
+        if best_fitness > 0
+        else 0
+    )
+
+    save_statistics(
+        generation,
+        best_fitness,
+        mean_fitness,
+        convergence_ratio
+    )
+
+    save_network(
+        population[0].weights,
+        population[0].biases
+    )
+
+    print("Mejor score:", population[0].score)
 
     # ================= SELECCIONAR MEJORES =================
     parents = select_fittest(population)
@@ -157,7 +179,7 @@ def evolve(element1, element2):
     )
 
     mutation_rate = 0.2
-    mutation_strength = 0.1
+    mutation_strength = 1.0
 
     child.weights = []
     child.biases = []

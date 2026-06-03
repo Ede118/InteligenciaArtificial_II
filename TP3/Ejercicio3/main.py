@@ -49,7 +49,7 @@ def populate(population_size):
     return population
 
 # ======================== SELECT THE POPULATION NUMBER PLAYING AT THE SAME TIME ======================
-population_number = 50
+population_number = 200
 # =====================================================================================================
 population = populate(population_number)
 player = Dinosaur(0)
@@ -157,10 +157,11 @@ def gameScreen():
                     dino_params = dino.dino_rect
                     # ========================== ACTUALIZAR LA FUNCIÓN 'think' CON LOS PARÁMETROS DE ENTRADA DE LA RED ===================
                     Y_REF = 250
-                    
+                    T_COLLISION_NORM = 10 # constante de normalización para el tiempo hasta la colisión, ajustada empíricamente para que los valores estén en un rango adecuado para la red
+
                     y_dino = (Y_REF - dino_params.y) / Y_REF # normalizamos respecto a la altura de duck, que es el movimiento vertical más bajo que hace el dinosaurio
                     x_obstacle = obstacle_params.x / SCREEN_WIDTH # normalizamos respecto al ancho de la pantalla, que es la distancia máxima a la que puede estar el obstáculo
-                    t_collision = (obstacle_params.x - dino_params.x) / game_speed # tiempo estimado hasta la colisión, normalizado respecto a la velocidad del juego
+                    t_collision = (obstacle_params.x - dino_params.x) / (game_speed * T_COLLISION_NORM) # tiempo estimado hasta la colisión, normalizado respecto a la velocidad del juego
                     
 
                     y_obstacle = (obstacle_params.y - Y_REF) / Y_REF # normalizamos respecto a una referencia vertical, que podría ser la altura de un cactus pequeño, para que la red pueda aprender a diferenciar entre obstáculos altos y bajos
@@ -235,7 +236,7 @@ def menu():
     if playMode == 'm' or playMode == 'c' or playMode == 'a':
         player.resetStatus()
     elif playMode != 'm' and playMode != 'c' and playMode != 'a' and callUpdateNetwork:
-        updateNetwork(population)
+        updateNetwork(population, generation)
         callUpdateNetwork = False
         for dino in population:
             dino.resetStatus()
