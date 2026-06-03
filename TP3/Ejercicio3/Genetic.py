@@ -2,50 +2,54 @@ import random
 import numpy as np
 
 from Dinosaur import Dinosaur
+from persistir_red import save_network
+from statistics import save_statistics
 
-
-def updateNetwork(population):
+def updateNetwork(population, generation):
 
     # ================= ORDENAR POR FITNESS =================
-    population.sort(key=lambda d: d.score, reverse=True)
-
-    print("===================================")
-    print("Mejor score:", population[0].score)
-    print(
-        "Promedio:",
-        np.mean([d.score for d in population])
+    population.sort(
+        key=lambda d: d.score,
+        reverse=True
     )
-    print("===================================")
+
+    best_fitness = population[0].score
+
+    mean_fitness = np.mean(
+        [d.score for d in population]
+    )
+
+    convergence_ratio = (
+        mean_fitness / best_fitness
+        if best_fitness > 0
+        else 0
+    )
+
+    save_statistics(
+        generation,
+        best_fitness,
+        mean_fitness,
+        convergence_ratio
+    )
+
+    save_network(
+        population[0].weights,
+        population[0].biases
+    )
+
+    print("Mejor score:", population[0].score)
 
     # ================= SELECCIONAR MEJORES =================
     parents = select_fittest(population)
 
     new_population = []
 
-    # ================= ELITISMO =================
-    best = Dinosaur(
-        parents[0].id,
-        parents[0].color,
-        True
-    )
-
-    best.weights = [
-        np.copy(w)
-        for w in parents[0].weights
-    ]
-
-    best.biases = [
-        np.copy(b)
-        for b in parents[0].biases
-    ]
-
-    new_population.append(best)
+    
 
     # ================= GENERAR HIJOS =================
     while len(new_population) < len(population):
 
-        parent1 = random.choice(parents)
-        parent2 = random.choice(parents)
+        parent1, parent2 = random.sample(parents, 2)
 
         child = evolve(parent1, parent2)
 
@@ -174,8 +178,8 @@ def evolve(element1, element2):
         True
     )
 
-    mutation_rate = 0.07
-    mutation_strength = 0.07
+    mutation_rate = 0.2
+    mutation_strength = 1.0
 
     child.weights = []
     child.biases = []
@@ -186,10 +190,11 @@ def evolve(element1, element2):
     for W1, W2 in zip(element1.weights, element2.weights):
 
         # crossover 
-        W_child = np.where(
-            np.random.rand(*W1.shape) < 0.5,
-            W1,
-            W2
+        alpha = np.random.rand(*W1.shape)
+
+        W_child = (
+            alpha * W1
+            + (1 - alpha) * W2
         )
 
         # mutación
@@ -211,10 +216,11 @@ def evolve(element1, element2):
     for b1, b2 in zip(element1.biases, element2.biases):
 
         # crossover
-        b_child = np.where(
-            np.random.rand(*b1.shape) < 0.5,
-            b1,
-            b2
+        alpha = np.random.rand(*b1.shape)
+
+        b_child = (
+            alpha * b1
+            + (1 - alpha) * b2
         )
 
         # mutación

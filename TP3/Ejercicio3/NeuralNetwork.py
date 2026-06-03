@@ -1,47 +1,61 @@
 import numpy as np
+from persistir_red import load_network
+
 
 class NeuralNetwork:
     def __init__(self):
         self.initialize()
 
     def initialize(self):
-        # ======================== INITIALIZE NETWORK WEIGTHS AND BIASES =============================
-        self.input_layer_size: int = 8
-        self.output_layer_size: int = 3
 
-        self.hidden_layers: list[int] = [16]
-        self.layers: list[int] = (
-            [self.input_layer_size] 
-            + self.hidden_layers 
+        self.input_layer_size = 5
+        self.output_layer_size = 3
+
+        self.hidden_layers = [16]
+
+        self.layers = (
+            [self.input_layer_size]
+            + self.hidden_layers
             + [self.output_layer_size]
         )
 
-        self.weights: list[np.ndarray] = []
-        self.biases: list[np.ndarray] = []
+        self.weights = []
+        self.biases = []
 
-        for i in range(len(self.layers) - 1):
-            rows = self.layers[i+1]
-            cols = self.layers[i]
+        saved = load_network()
 
-            W = np.random.uniform(-1, 1, (rows, cols))
-            b = np.random.uniform(-0.9, 0.9, (rows, 1))
+        if saved is not None:
 
-            self.weights.append(W)
-            self.biases.append(b)
+            print("Red cargada desde archivo")
+
+            self.weights = saved["weights"]
+            self.biases = saved["biases"]
+
+        else:
+
+            print("Inicialización aleatoria")
+
+            for i in range(len(self.layers) - 1):
+
+                rows = self.layers[i+1]
+                cols = self.layers[i]
+
+                W = np.random.uniform(-1, 1, (rows, cols))
+                b = np.random.uniform(-0.9, 0.9, (rows, 1))
+
+                self.weights.append(W)
+                self.biases.append(b)
         # ============================================================================================
 
-    def think(self, y_dino, x_obstacle, is_bird, is_large, is_small, t_collision, y_obstacle, obstacle_width):
+    def think(self, y_dino, x_obstacle, is_bird, t_collision, y_obstacle):
         # ======================== PROCESS INFORMATION SENSED TO ACT =============================
-        print(f"y_dino: {y_dino}, x_obstacle: {x_obstacle}, is_bird: {is_bird}, is_large: {is_large}, is_small: {is_small}, t_collision: {t_collision}, y_obstacle: {y_obstacle}, obstacle_width: {obstacle_width}")
+        print(f"y_dino: {y_dino}, x_obstacle: {x_obstacle}, is_bird: {is_bird}, t_collision: {t_collision}, y_obstacle: {y_obstacle}")
         input = np.array(
             [[y_dino], 
             [x_obstacle], 
-            [is_bird], 
-            [is_large], 
-            [is_small],
+            [is_bird],
             [t_collision],
-            [y_obstacle],
-            [obstacle_width]]
+            [y_obstacle]]
         )
 
         a = input
