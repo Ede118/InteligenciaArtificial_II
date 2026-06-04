@@ -1,0 +1,18 @@
+{
+  "original_counts": {
+    "up": 1208,
+    "down": 1438,
+    "right": 927
+  },
+  "balanced_total_per_class": 927,
+  "train_counts": {
+    "right": 741,
+    "up": 741,
+    "down": 741
+  },
+  "test_counts": {
+    "right": 186,
+    "up": 186,
+    "down": 186
+  }
+}

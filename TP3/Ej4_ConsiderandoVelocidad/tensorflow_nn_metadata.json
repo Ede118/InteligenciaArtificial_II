@@ -1,0 +1,19 @@
+{
+  "class_folder_names": [
+    "up",
+    "down",
+    "right"
+  ],
+  "model_output_classes": [
+    "JUMP",
+    "DUCK",
+    "RIGHT"
+  ],
+  "image_size": [
+    80,
+    120
+  ],
+  "speed_min": 20.0,
+  "speed_max": 66.0,
+  "labels_filename": "labels.csv"
+}

@@ -1,0 +1,19 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+    "python.analysis.extraPaths": [
+        "C:\\Users\\Julya\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages"
+    ],
+    "python.analysis.packageIndexDepths": [
+        {
+            "name": "tensorflow",
+            "depth": 6,
+            "includeAllSymbols": true
+        },
+        {
+            "name": "keras",
+            "depth": 4,
+            "includeAllSymbols": true
+        }
+    ]
+}
