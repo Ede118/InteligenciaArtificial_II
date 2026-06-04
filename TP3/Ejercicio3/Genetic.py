@@ -44,14 +44,46 @@ def updateNetwork(population, generation):
 
     new_population = []
 
-    
+    # ================= ELITISMO CONDICIONAL =================
+    elite_count = 0
+
+    if best_fitness >= 3000:
+        elite_count = 1
+
+    for elite in population[:elite_count]:
+
+        elite_copy = Dinosaur(
+            elite.id,
+            elite.color,
+            True
+        )
+
+        elite_copy.weights = [
+            np.copy(w)
+            for w in elite.weights
+        ]
+
+        elite_copy.biases = [
+            np.copy(b)
+            for b in elite.biases
+        ]
+
+        elite_copy.score = 0
+
+        new_population.append(elite_copy)
 
     # ================= GENERAR HIJOS =================
     while len(new_population) < len(population):
 
-        parent1, parent2 = random.sample(parents, 2)
+        parent1, parent2 = random.sample(
+            parents,
+            2
+        )
 
-        child = evolve(parent1, parent2)
+        child = evolve(
+            parent1,
+            parent2
+        )
 
         new_population.append(child)
 
