@@ -31,8 +31,8 @@ def SL_SISO(*,
         OutputDim=1, 
         ActivationFunction=AFunction)
     
-    W_untrained = Model.WeightMatrix[0,0]
-    b_untrained = Model.Bias[0,0]
+    W_untrained = Model.W[0,0]
+    b_untrained = Model.B[0,0]
     
     Y_untrained = Model.predict(InputVector=X_test)
     e_untrained = T_test - Y_untrained
@@ -47,8 +47,8 @@ def SL_SISO(*,
         Epochs=1000
     )
     
-    W_trained = Model.WeightMatrix[0,0]
-    b_trained = Model.Bias[0,0]
+    W_trained = Model.W[0,0]
+    b_trained = Model.B[0,0]
     
     Y_trained = Model.predict(InputVector=X_test)
     e_trained = T_test - Y_trained

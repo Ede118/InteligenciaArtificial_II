@@ -12,7 +12,7 @@ from rich.text import Text
 
 
 from Utils import DividirEntrenamientoTest, MostrarEstadisticos
-from RegresionClasses import HiddenLayerPerceptron  
+from RegresionClasses import HiddenLayerPerceptron, DeepMultiLayerPerceptron  
 
 plt.style.use('seaborn-v0_8-whitegrid')
 
@@ -68,7 +68,7 @@ def DL_SISO(*,
     graficar: bool = False
     ):        
         
-    Modelo = HiddenLayerPerceptron(
+    HLModel = HiddenLayerPerceptron(
         InputDim=1, 
         HiddenDim=h_dim,
         OutputDim=1,
@@ -77,10 +77,10 @@ def DL_SISO(*,
     )
         
         
-    Untrained_Prediction, H = Modelo.predict(InputVector=Test_Input)
+    Untrained_Prediction, H = HLModel.predict(InputVector=Test_Input)
     
 
-    Modelo.fit(
+    HLModel.fit(
         TrainingData=Train_Input, 
         TargetData=Train_Output,
         TestData=Test_Input,
@@ -89,7 +89,7 @@ def DL_SISO(*,
         Epochs=1000
     )
         
-    Trained_Prediction, H = Modelo.predict(InputVector=Test_Input)
+    Trained_Prediction, H = HLModel.predict(InputVector=Test_Input)
     
     
     if graficar:
@@ -98,13 +98,13 @@ def DL_SISO(*,
         #               Gráficos de evolución de la norma de los gradientes     
         # =============================================================================== #
         
-        Modelo.graficarGradientes(escala_logaritmica=False)
+        HLModel.graficarGradientes(escala_logaritmica=False)
 
         # =============================================================================== #
         #               Gráficos de evolución de la norma de los gradientes     
         # =============================================================================== #
 
-        Modelo.graficarLoss()
+        HLModel.graficarLoss()
         
         # =============================================================================== #
         #                       Graficos de ajuste final vs inicial     
@@ -145,8 +145,97 @@ def DL_SISO(*,
         plt.tight_layout()
         plt.show()
         
-    return Modelo
+    return HLModel
 
+def ML_SISO(*,
+    Train_Input: np.ndarray,
+    Train_Output: np.ndarray,
+    Test_Input: np.ndarray,
+    Test_Output: np.ndarray,
+    AFunction: str = "ReLU",
+    HFunction: str = "ReLU",
+    h_dim: tuple = (10,),
+    graficar: bool = False
+    ):        
+        
+    MLPModel = DeepMultiLayerPerceptron(
+        InputDim=1,
+        HiddenLayers=h_dim,
+        OutputDim=1,
+        ActivationFunction=AFunction
+    )
+    
+    Untrained_Prediction, _, _ = MLPModel.predict(InputVector=Test_Input)
+    
+
+    MLPModel.fit(
+        TrainingData=Train_Input, 
+        TargetData=Train_Output,
+        TestData=Test_Input,
+        TargetTest=Test_Output, 
+        LearningRate=0.01, 
+        Epochs=1000
+    )
+        
+    Trained_Prediction, _, _ = MLPModel.predict(InputVector=Test_Input)
+    
+    
+    if graficar:
+        
+        # =============================================================================== #
+        #               Gráficos de evolución de la norma de los gradientes     
+        # =============================================================================== #
+        
+        MLPModel.graficarGradientes(escala_logaritmica=False)
+
+        # =============================================================================== #
+        #               Gráficos de evolución de la norma de los gradientes     
+        # =============================================================================== #
+
+        MLPModel.graficarLoss()
+        
+        # =============================================================================== #
+        #                       Graficos de ajuste final vs inicial     
+        # =============================================================================== #
+        
+        fig, ax = plt.subplots(figsize=(8, 5.5), dpi=120)
+        
+        ax.scatter(Test_Input, Test_Output, 
+                facecolors='none', 
+                edgecolors='#0072BD', 
+                linewidths=0.7, 
+                label='Datos del dataset')
+        
+        ax.plot(Test_Input, Trained_Prediction, 
+                color='#D95319', 
+                linewidth=1.5, 
+                label=r"Ajuste Final")
+        
+        ax.plot(Test_Input, Untrained_Prediction, 
+                color='#77AC30', 
+                linewidth=1.5, 
+                label=r"Ajuste Inicial")
+        
+        
+        match HFunction:
+            case "Identity": label_activation = "Función capa oculta: $g(z) = z$ (Identidad)"
+            case "ReLU": label_activation = "Función capa oculta: $g(z) = max(0, z)$ (ReLU)"
+            case "Sigmoid": label_activation = "Función capa oculta: $g(z) = \\frac{1}{1 + e^{-z}}$ (Sigmoide)"
+            case "Tanh": label_activation = "Función capa oculta: $g(z) = \\frac{e^z - e^{-z}}{e^z + e^{-z}}$ (Tangente Hiperbólica)"
+            case _: label_activation = f"Función capa oculta: {HFunction}"
+                
+        ax.set_title(label_activation, fontsize=11, fontweight='bold', pad=10)
+        ax.set_xlabel('Variable Independiente (x)', fontsize=10)
+        ax.set_ylabel('Variable Dependiente (y)', fontsize=10)
+        ax.tick_params(direction='in', top=True, right=True, labelsize=9)
+        ax.legend(loc='upper left', frameon=True, fontsize=9)
+        
+        plt.tight_layout()
+        plt.show()
+        
+    return MLPModel
+    
+    
 if __name__ == "__main__":
     
     os.system("cls" if os.name == "nt" else "clear")
@@ -169,13 +258,13 @@ if __name__ == "__main__":
     T = datos[["y"]].values
     
     p_test = 0.75
-    h = 24
+    h = 20
     ht = (4,4)
     
     Train_Input, Test_Input, Train_Output, Test_Output = DividirEntrenamientoTest(X, T, test_size=p_test)
     
     
-    modeloPropio = DL_SISO(
+    HLPCasero = DL_SISO(
         Train_Input=Train_Input,
         Train_Output=Train_Output,
         Test_Input=Test_Input,
@@ -186,7 +275,28 @@ if __name__ == "__main__":
         graficar=False
     )
     
-    modeloSKL = Sklearn_Model(
+    modeloSKL1 = Sklearn_Model(
+        Train_Input=Train_Input,
+        Train_Output=Train_Output,
+        Test_Input=Test_Input,
+        Test_Output=Test_Output,
+        HFunction="relu",
+        h=(h,)
+    )
+    
+    MLPCasero = ML_SISO(
+        Train_Input=Train_Input,
+        Train_Output=Train_Output,
+        Test_Input=Test_Input,
+        Test_Output=Test_Output,
+        AFunction="ReLU",
+        HFunction="ReLU",
+        h_dim=ht,
+        graficar=False
+    )
+    
+    
+    modeloSKL2 = Sklearn_Model(
         Train_Input=Train_Input,
         Train_Output=Train_Output,
         Test_Input=Test_Input,
@@ -195,8 +305,14 @@ if __name__ == "__main__":
         h=ht
     )
     
-    Trained_Prediction, _ = modeloPropio.predict(InputVector=Test_Input)
-    SKLearn_Prediction = modeloSKL.predict(Test_Input)
+    # 1 Hidden Layer
+    Trained_Prediction1, _ = HLPCasero.predict(InputVector=Test_Input)
+    SKLearn_Prediction1 = modeloSKL1.predict(Test_Input)
+    
+    # Multiple Hidden Layers
+    Trained_Prediction2, _, _ = MLPCasero.predict(InputVector=Test_Input)
+    SKLearn_Prediction2 = modeloSKL2.predict(Test_Input)
+    
     
     fig, ax = plt.subplots(figsize=(8, 5.5), dpi=120)
     
@@ -206,18 +322,31 @@ if __name__ == "__main__":
             linewidths=0.7, 
             label='Datos del dataset')
     
-    ax.plot(Test_Input, Trained_Prediction, 
+    ax.plot(Test_Input, Trained_Prediction1, 
+            color="#E64709",
+            linestyle='--',
+            linewidth=1.5, 
+            label=f"1 Hidden Layer - {h} Neurons"
+    )
+    
+    ax.plot(Test_Input, SKLearn_Prediction1, 
+            color="#169B3A",
+            linestyle='--', 
+            linewidth=1.5, 
+            label=f"SKL 1 Hidden Layer - {h} Neurons")
+    
+    ax.plot(Test_Input, Trained_Prediction2, 
             color="#E64709", 
             linewidth=1.5, 
-            label=r"MLP Casero (1 Wide Layer)")
+            label=f"Multiple Layer - {ht} Neurons"
+    )
     
-    ax.plot(Test_Input, SKLearn_Prediction, 
+    ax.plot(Test_Input, SKLearn_Prediction2, 
             color="#169B3A", 
             linewidth=1.5, 
-            label=r"SKL MLPRegressor (Multiple Narrow Layers)")
+            label=f"SKL Multiple Layers - {ht} Neurons")
     
-    
-    label_activation = f"Comparacion: Wide Layer vs Multiple Narrow Layers"
+    label_activation = "Comparacion: Casero vs SKLearn"
             
     ax.set_title(label_activation, fontsize=11, fontweight='bold', pad=10)
     ax.set_xlabel('Variable Independiente (x)', fontsize=10)
@@ -226,48 +355,52 @@ if __name__ == "__main__":
     ax.legend(loc='upper left', frameon=True, fontsize=9)
     
     plt.tight_layout()
-    nombre_archivo = f"E1 SISO 1 Wide Layer vs Multiple Narrow Layers.png" 
+    nombre_archivo = f"E1 SISO Casero vs SKL.png" 
     plt.savefig(f"./TP3/Imagen/{nombre_archivo}", dpi=300, bbox_inches='tight')
     plt.show()
     
-    error_prop = np.ndarray([2, 1])
-    error_prop[0, 0] = np.mean((Test_Output - Trained_Prediction) ** 2)
-    error_prop[1, 0] = np.std((Test_Output - Trained_Prediction) ** 2)
+    # === Estadísticas y Coeficientes ===
+    # 1. HLPCasero (1 Capa Oculta)
+    err_1HL_prop_mean = np.mean((Test_Output - Trained_Prediction1) ** 2)
+    err_1HL_prop_std = np.std((Test_Output - Trained_Prediction1) ** 2)
+    coef_1HL_prop = sum(W.size + B.size for W, B in zip(HLPCasero.W, HLPCasero.B))
     
+    # 2. SKLearn (1 Capa Oculta)
+    err_1HL_SKL_mean = np.mean((Test_Output - SKLearn_Prediction1.reshape(-1, 1)) ** 2)
+    err_1HL_SKL_std = np.std((Test_Output - SKLearn_Prediction1.reshape(-1, 1)) ** 2)
+    coef_1HL_SKL = sum(modeloSKL1.coefs_[i].size + modeloSKL1.intercepts_[i].size for i in range(len(modeloSKL1.coefs_)))
     
-    cantidad_coef_p = modeloPropio._W1.size + modeloPropio._B1.size + modeloPropio._W2.size + modeloPropio._B2.size
+    # 3. MLPCasero (Múltiples Capas Ocultas)
+    err_ML_prop_mean = np.mean((Test_Output - Trained_Prediction2) ** 2)
+    err_ML_prop_std = np.std((Test_Output - Trained_Prediction2) ** 2)
+    coef_ML_prop = sum(W.size + B.size for W, B in zip(MLPCasero.WeightMatrices, MLPCasero.Biases))
     
+    # 4. SKLearn (Múltiples Capas Ocultas)
+    err_ML_SKL_mean = np.mean((Test_Output - SKLearn_Prediction2.reshape(-1, 1)) ** 2)
+    err_ML_SKL_std = np.std((Test_Output - SKLearn_Prediction2.reshape(-1, 1)) ** 2)
+    coef_ML_SKL = sum(modeloSKL2.coefs_[i].size + modeloSKL2.intercepts_[i].size for i in range(len(modeloSKL2.coefs_)))
     
-    
-    error_SKL = np.ndarray([2, 1])
-    error_SKL[0, 0] = np.mean((Test_Output - SKLearn_Prediction.reshape(-1, 1)) ** 2)
-    error_SKL[1, 0] = np.std((Test_Output - SKLearn_Prediction.reshape(-1, 1)) ** 2)
-    cantidad_coef_skl = sum(modeloSKL.coefs_[i].size + modeloSKL.intercepts_[i].size for i in range(len(modeloSKL.coefs_)))
-    
-    texto1 = Text()
-    texto1.append(f"Error Promedio: {error_prop[0,0]:.4f}", style="bold")
-    texto1.append(f"\nDesviación Estándar: {error_prop[1,0]:.4f}", style="bold")
-    texto1.append(f"\nCantidad de Coeficientes: {cantidad_coef_p}", style="bold")
-    console = Console()
-    console.print(Panel(
-        texto1, 
-        title=f"[blue]Estadísticos de MLP Casero[/blue]", 
-        border_style="green",
-        padding=(1, 2) # Padding vertical=1, horizontal=2
-    ))
-    
-    texto2 = Text()
-    texto2.append(f"Error Promedio: {error_SKL[0,0]:.4f}", style="bold")
-    texto2.append(f"\nDesviación Estándar: {error_SKL[1,0]:.4f}", style="bold")
-    texto2.append(f"\nCantidad de Coeficientes: {cantidad_coef_skl}", style="bold")
+    # === Paneles de Consola ===
+    resultados = [
+        (f"MLP Casero (1 Capa de {h})", err_1HL_prop_mean, err_1HL_prop_std, coef_1HL_prop),
+        (f"SKLearn MLPRegressor (1 Capa de {h})", err_1HL_SKL_mean, err_1HL_SKL_std, coef_1HL_SKL),
+        (f"Deep MLP Casero (Capas de {ht})", err_ML_prop_mean, err_ML_prop_std, coef_ML_prop),
+        (f"SKLearn MLPRegressor (Capas de {ht})", err_ML_SKL_mean, err_ML_SKL_std, coef_ML_SKL)
+    ]
     
     console = Console()
-    console.print(Panel(
-        texto2, 
-        title=f"[blue]Estadísticos de SKLearn MLPRegressor[/blue]", 
-        border_style="green",
-        padding=(1, 2) # Padding vertical=1, horizontal=2
-    ))
+    for titulo, err_mean, err_std, coefs in resultados:
+        texto = Text()
+        texto.append(f"Error Promedio: {err_mean:.4f}", style="bold")
+        texto.append(f"\nDesviación Estándar: {err_std:.4f}", style="bold")
+        texto.append(f"\nCantidad de Coeficientes: {coefs}", style="bold")
+        
+        console.print(Panel(
+            texto, 
+            title=f"[blue]{titulo}[/blue]", 
+            border_style="green",
+            padding=(1, 2)
+        ))
 
     # minNuerons = 2
     # maxNuerons = 50
