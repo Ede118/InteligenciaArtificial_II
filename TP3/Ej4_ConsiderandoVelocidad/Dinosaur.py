@@ -10,7 +10,7 @@ except ImportError as err:
 import json
 import pygame
 import os
-import glob
+from pathlib import Path
 from NeuralNetwork import NeuralNetwork
 import numpy as np
 from TensorflowImageUtils import (
@@ -22,12 +22,29 @@ from TensorflowImageUtils import (
 )
 
 # Bring images from assets
-RUNNING = [os.path.join("Assets/Dino", "DinoRun1.png"),
-           os.path.join("Assets/Dino", "DinoRun2.png")]
-JUMPING = [os.path.join("Assets/Dino", "DinoJump.png")]
-DUCKING = [os.path.join("Assets/Dino", "DinoDuck1.png"),
-           os.path.join("Assets/Dino", "DinoDuck2.png")]
 CLASSES = MODEL_OUTPUT_CLASSES
+BASE_DIR = Path(__file__).resolve().parent
+LIVE_CAPTURE_PATH = BASE_DIR / "images" / "live" / "temp.png"
+RUNNING = [
+    str(BASE_DIR / "Assets" / "Dino" / "DinoRun1.png"),
+    str(BASE_DIR / "Assets" / "Dino" / "DinoRun2.png"),
+]
+JUMPING = [str(BASE_DIR / "Assets" / "Dino" / "DinoJump.png")]
+DUCKING = [
+    str(BASE_DIR / "Assets" / "Dino" / "DinoDuck1.png"),
+    str(BASE_DIR / "Assets" / "Dino" / "DinoDuck2.png"),
+]
+MODEL_CONFIGS = {
+    "lightweight_relu": (
+        BASE_DIR / "tensorflow_nn_lightweight_relu.h5",
+        BASE_DIR / "tensorflow_nn_lightweight_relu_metadata.json",
+    ),
+    "default": (
+        BASE_DIR / "tensorflow_nn.h5",
+        BASE_DIR / MODEL_METADATA_FILENAME,
+    ),
+}
+DEFAULT_MODEL_PRIORITY = ["lightweight_relu", "default"]
 
 class Dinosaur(NeuralNetwork):
     # Define as global the starting position for the dinosaur
@@ -41,7 +58,7 @@ class Dinosaur(NeuralNetwork):
     ACTION_MARGIN = 0.05
     SIGNAL_FRAMES_REQUIRED = 1
 
-    def __init__(self, id, mask_color = None, autoplay = False):
+    def __init__(self, id, mask_color = None, autoplay = False, model_preference=None):
         # As 'NeuralNetwork' serves as base class for the dinosaur, start its 'brain'
         super().__init__()
         
@@ -51,27 +68,67 @@ class Dinosaur(NeuralNetwork):
         self.duck_img = self.load_images(DUCKING)
         self.run_img = self.load_images(RUNNING)
         self.jump_img = self.load_images(JUMPING)
+        self.model_preference = model_preference
+        self.loaded_model_name = None
+        self.loaded_model_path = None
 
         self.resetStatus()
         self.model_metadata = None
         self.uses_speed_input = False
         
-        # If a tensorflow model is provided, load it
-        model_file = glob.glob('*.h5')
-        if model_file:
-            # Cargar el modelo si el archivo existe
-            self.model = tf.keras.models.load_model(model_file[0])
-            self.model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
-            self.uses_speed_input = isinstance(self.model.input_shape, list)
-            self.load_model_metadata()
+        self.load_preferred_model()
 
-    def load_model_metadata(self):
-        if not os.path.isfile(MODEL_METADATA_FILENAME):
+    def load_preferred_model(self):
+        selected_model_path = None
+        selected_metadata_path = None
+        selected_model_name = None
+
+        model_priority = []
+        if self.model_preference is not None:
+            model_priority.append(self.model_preference)
+        model_priority.extend(
+            model_name for model_name in DEFAULT_MODEL_PRIORITY if model_name not in model_priority
+        )
+
+        for model_name in model_priority:
+            config = MODEL_CONFIGS.get(model_name)
+            if config is None:
+                continue
+            model_path, metadata_path = config
+            if model_path.is_file():
+                selected_model_name = model_name
+                selected_model_path = model_path
+                selected_metadata_path = metadata_path
+                break
+
+        if selected_model_path is None:
+            fallback_models = sorted(BASE_DIR.glob("*.h5"))
+            if not fallback_models:
+                return
+            selected_model_name = "fallback"
+            selected_model_path = fallback_models[0]
+            selected_metadata_path = BASE_DIR / MODEL_METADATA_FILENAME
+
+        self.model = tf.keras.models.load_model(selected_model_path, compile=False)
+        self.uses_speed_input = isinstance(self.model.input_shape, list)
+        self.loaded_model_name = selected_model_name
+        self.loaded_model_path = selected_model_path
+        self.load_model_metadata(selected_metadata_path)
+
+    def set_model_preference(self, model_preference):
+        self.model_preference = model_preference
+        self.model_metadata = None
+        self.uses_speed_input = False
+        self.loaded_model_name = None
+        self.loaded_model_path = None
+        self.load_preferred_model()
+
+    def load_model_metadata(self, metadata_path):
+        metadata_path = Path(metadata_path)
+        if not metadata_path.is_file():
             return
 
-        with open(MODEL_METADATA_FILENAME, "r", encoding="utf-8") as metadata_file:
+        with metadata_path.open("r", encoding="utf-8") as metadata_file:
             self.model_metadata = json.load(metadata_file)
 
     # Basic state the dinosaur is in when spawning
@@ -238,7 +295,7 @@ class Dinosaur(NeuralNetwork):
         self.autoPlay = True
         
         # Usa exactamente el mismo preprocesado que el entrenamiento.
-        img_array = load_and_preprocess_image("./images/live/temp.png", IMAGE_SIZE, normalize=True)
+        img_array = load_and_preprocess_image(str(LIVE_CAPTURE_PATH), IMAGE_SIZE, normalize=True)
         img_array = np.expand_dims(img_array, axis=0)  # Agrega una dimensión extra para el batch
 
         # Use the model to make a decision based on the screenshot

@@ -1,0 +1,14 @@
+Resumen de evaluacion del modelo
+Accuracy:           0.4022
+Error de test:      0.5978
+Balanced accuracy:  0.3333
+Macro precision:    0.1341
+Macro recall:       0.3333
+Macro F1:           0.1912
+Weighted F1:        0.2308
+Log loss:           1.0841
+
+Metricas por clase:
+- up: precision=0.0000, recall=0.0000, f1=0.0000, error=1.0000, support=242
+- down: precision=0.4022, recall=1.0000, f1=0.5737, error=0.0000, support=288
+- right: precision=0.0000, recall=0.0000, f1=0.0000, error=1.0000, support=186

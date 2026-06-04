@@ -1,0 +1,33 @@
+{
+  "variant_name": "binary_sigmoid_up_down",
+  "classes": [
+    "up",
+    "down"
+  ],
+  "hidden_activation": "sigmoid",
+  "output_activation": "sigmoid",
+  "filters": [
+    16,
+    32,
+    64
+  ],
+  "parameter_count": 877601,
+  "epochs_ran": 11,
+  "training_seconds": 21.191721400013193,
+  "evaluation_seconds": 0.3169384000066202,
+  "balanced_total_per_class": 1208,
+  "original_counts": {
+    "up": 1208,
+    "down": 1438
+  },
+  "train_counts": {
+    "up": 966,
+    "down": 966
+  },
+  "test_counts": {
+    "up": 242,
+    "down": 242
+  },
+  "best_val_accuracy": 0.5,
+  "best_val_loss": 0.6931003332138062
+}

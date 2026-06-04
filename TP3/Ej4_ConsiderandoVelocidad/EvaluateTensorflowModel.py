@@ -5,6 +5,7 @@ import math
 import os
 import subprocess
 import sys
+from pathlib import Path
 from PIL import Image
 
 try:
@@ -38,11 +39,12 @@ from TensorflowImageUtils import (
 )
 
 
-DEFAULT_MODEL_PATH = "tensorflow_nn.h5"
-DEFAULT_MODEL_METADATA_PATH = MODEL_METADATA_FILENAME
-DEFAULT_TEST_DIR = os.path.join("images", "test")
-DEFAULT_TEST_LABELS_PATH = os.path.join(DEFAULT_TEST_DIR, LABELS_FILENAME)
-DEFAULT_OUTPUT_DIR = "evaluation_results"
+BASE_DIR = Path(__file__).resolve().parent
+DEFAULT_MODEL_PATH = BASE_DIR / "tensorflow_nn.h5"
+DEFAULT_MODEL_METADATA_PATH = BASE_DIR / MODEL_METADATA_FILENAME
+DEFAULT_TEST_DIR = BASE_DIR / "images" / "test"
+DEFAULT_TEST_LABELS_PATH = DEFAULT_TEST_DIR / LABELS_FILENAME
+DEFAULT_OUTPUT_DIR = BASE_DIR / "evaluation_results"
 DEFAULT_CLASS_NAMES = CLASS_FOLDER_NAMES
 
 

@@ -11,6 +11,9 @@ from pathlib import Path
 import pygame
 from TensorflowImageUtils import LABELS_FILENAME, get_capture_bbox
 
+BASE_DIR = Path(__file__).resolve().parent
+IMAGES_DIR = BASE_DIR / "images"
+
 class ImageCapture():
     RIGHT_SAVE_EVERY_N_FRAMES = 5
 
@@ -22,12 +25,12 @@ class ImageCapture():
         self.right_capture_counter = 0
 
         # Prepare the directories in which the images are stored
-        Path("./images/").mkdir(parents=True, exist_ok=True)
-        Path("./images/up/").mkdir(parents=True, exist_ok=True)
-        Path("./images/down/").mkdir(parents=True, exist_ok=True)
-        Path("./images/right/").mkdir(parents=True, exist_ok=True)
-        Path("./images/live/").mkdir(parents=True, exist_ok=True)
-        self.labels_path = Path("./images/") / LABELS_FILENAME
+        IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+        (IMAGES_DIR / "up").mkdir(parents=True, exist_ok=True)
+        (IMAGES_DIR / "down").mkdir(parents=True, exist_ok=True)
+        (IMAGES_DIR / "right").mkdir(parents=True, exist_ok=True)
+        (IMAGES_DIR / "live").mkdir(parents=True, exist_ok=True)
+        self.labels_path = IMAGES_DIR / LABELS_FILENAME
         self.ensure_labels_file()
         self.sync_count_with_existing_images()
 
@@ -46,7 +49,7 @@ class ImageCapture():
         max_count = 0
 
         for class_name in ["up", "down", "right"]:
-            class_dir = Path("./images/") / class_name
+            class_dir = IMAGES_DIR / class_name
             for image_path in class_dir.glob("*.png"):
                 try:
                     max_count = max(max_count, int(image_path.stem))
@@ -62,7 +65,7 @@ class ImageCapture():
     def save_screenshot(self, screenshot, key, game_speed=None, points=None):
         self.count += 1
         relative_path = "{}/{}.png".format(key, self.count)
-        screenshot.save("./images/{}".format(relative_path))
+        screenshot.save(str(IMAGES_DIR / relative_path))
 
         if game_speed is not None:
             with self.labels_path.open("a", newline="", encoding="utf-8") as labels_file:
@@ -98,4 +101,4 @@ class ImageCapture():
     def capture_live(self):
         # Automatically take a screenshot for the Tensorflow model to work
         screenshot = pyscreenshot.grab(bbox=get_capture_bbox(self.window_left, self.window_top))
-        screenshot.save("./images/live/temp.png")
+        screenshot.save(str(IMAGES_DIR / "live" / "temp.png"))
