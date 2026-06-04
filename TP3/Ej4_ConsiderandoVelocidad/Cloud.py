@@ -1,9 +1,11 @@
 import pygame
 import os
 import random
+from pathlib import Path
 
 # Bring images from assets
-CLOUD = pygame.image.load(os.path.join("Assets/Other", "Cloud.png"))
+BASE_DIR = Path(__file__).resolve().parent
+CLOUD = pygame.image.load(str(BASE_DIR / "Assets" / "Other" / "Cloud.png"))
 
 class Cloud:
     def __init__(self, screen_width, game_speed):

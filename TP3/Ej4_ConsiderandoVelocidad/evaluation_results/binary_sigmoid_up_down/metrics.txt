@@ -1,0 +1,9 @@
+Experimento binario up vs down con sigmoid
+Accuracy:           0.5000
+Error de test:      0.5000
+Precision down:     0.5000
+Recall down:        1.0000
+F1 down:            0.6667
+Log loss:           0.6931
+Tasa predicha down: 1.0000
+Matriz confusion:   [[0, 242], [0, 242]]

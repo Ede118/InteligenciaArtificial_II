@@ -1,0 +1,15 @@
+{
+  "classes": [
+    "up",
+    "down"
+  ],
+  "image_size": [
+    80,
+    120
+  ],
+  "speed_min": 20.0,
+  "speed_max": 66.0,
+  "output_activation": "sigmoid",
+  "hidden_activation": "sigmoid",
+  "task": "binary_up_down"
+}

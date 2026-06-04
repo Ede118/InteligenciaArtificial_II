@@ -1,10 +1,14 @@
 import pygame
 import os
+from pathlib import Path
 from Obstacle import Obstacle
 
 # Bring images from assets
-BIRD = [pygame.image.load(os.path.join("Assets/Bird", "Bird1.png")),
-        pygame.image.load(os.path.join("Assets/Bird", "Bird2.png"))]
+BASE_DIR = Path(__file__).resolve().parent
+BIRD = [
+    pygame.image.load(str(BASE_DIR / "Assets" / "Bird" / "Bird1.png")),
+    pygame.image.load(str(BASE_DIR / "Assets" / "Bird" / "Bird2.png")),
+]
 
 class Bird(Obstacle):
     def __init__(self, screen_width, game_speed, obstacles):

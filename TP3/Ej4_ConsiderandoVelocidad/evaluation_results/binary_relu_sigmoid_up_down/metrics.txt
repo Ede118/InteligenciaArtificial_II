@@ -1,0 +1,9 @@
+Experimento binario up vs down con ocultas ReLU y salida sigmoid
+Accuracy:           0.9628
+Error de test:      0.0372
+Precision down:     0.9828
+Recall down:        0.9421
+F1 down:            0.9620
+Log loss:           0.0880
+Tasa predicha down: 0.4793
+Matriz confusion:   [[238, 4], [14, 228]]
