@@ -39,12 +39,20 @@ MODEL_CONFIGS = {
         BASE_DIR / "tensorflow_nn_lightweight_relu.h5",
         BASE_DIR / "tensorflow_nn_lightweight_relu_metadata.json",
     ),
+    "two_layer_relu": (
+        BASE_DIR / "tensorflow_nn_two_layer_relu.h5",
+        BASE_DIR / "tensorflow_nn_two_layer_relu_metadata.json",
+    ),
+    "binary_relu_sigmoid_up_down": (
+        BASE_DIR / "tensorflow_nn_binary_relu_sigmoid_up_down.h5",
+        BASE_DIR / "tensorflow_nn_binary_relu_sigmoid_up_down_metadata.json",
+    ),
     "default": (
         BASE_DIR / "tensorflow_nn.h5",
         BASE_DIR / MODEL_METADATA_FILENAME,
     ),
 }
-DEFAULT_MODEL_PRIORITY = ["lightweight_relu", "default"]
+DEFAULT_MODEL_PRIORITY = ["lightweight_relu", "two_layer_relu", "default"]
 
 class Dinosaur(NeuralNetwork):
     # Define as global the starting position for the dinosaur
@@ -57,6 +65,14 @@ class Dinosaur(NeuralNetwork):
     DUCK_CONFIDENCE_THRESHOLD = 0.35
     ACTION_MARGIN = 0.05
     SIGNAL_FRAMES_REQUIRED = 1
+    BINARY_PREDICTION_SMOOTHING = 0.65
+    BINARY_UP_THRESHOLD = 0.97
+    BINARY_DOWN_THRESHOLD = 0.85
+    BINARY_NEUTRAL_BAND = 0.08
+    BINARY_REACTION_FRAMES = 7
+    BINARY_EMERGENCY_FRAMES = 3
+    BINARY_DISTANCE_BUFFER = 35
+    AIR_OBSTACLE_BOTTOM_THRESHOLD = 300
 
     def __init__(self, id, mask_color = None, autoplay = False, model_preference=None):
         # As 'NeuralNetwork' serves as base class for the dinosaur, start its 'brain'
@@ -77,6 +93,16 @@ class Dinosaur(NeuralNetwork):
         self.uses_speed_input = False
         
         self.load_preferred_model()
+
+    def is_binary_up_down_model(self):
+        if self.model_metadata is None:
+            return False
+
+        if self.model_metadata.get("task") == "binary_up_down":
+            return True
+
+        classes = self.model_metadata.get("classes")
+        return classes == ["up", "down"]
 
     def load_preferred_model(self):
         selected_model_path = None
@@ -147,6 +173,7 @@ class Dinosaur(NeuralNetwork):
         self.alive = True
         self.score = 0
         self.smoothed_probabilities = np.array([0.0, 0.0, 1.0], dtype=np.float32)
+        self.binary_down_probability = 0.5
         self.jump_signal_frames = 0
         self.duck_signal_frames = 0
 
@@ -290,12 +317,119 @@ class Dinosaur(NeuralNetwork):
 
         return "RIGHT"
 
+    def choose_binary_action(self, down_probability):
+        return self.choose_binary_action_with_obstacle(down_probability, None, None)
+
+    def get_binary_obstacle_context(self, obstacle, game_speed):
+        if obstacle is None or game_speed is None:
+            return None
+
+        distance_x = obstacle.rect.x - self.dino_rect.right
+        reaction_distance = (
+            game_speed * self.BINARY_REACTION_FRAMES
+            + obstacle.rect.width
+            + self.BINARY_DISTANCE_BUFFER
+        )
+        emergency_distance = (
+            game_speed * self.BINARY_EMERGENCY_FRAMES
+            + obstacle.rect.width // 2
+        )
+        is_air_obstacle = obstacle.rect.bottom <= self.AIR_OBSTACLE_BOTTOM_THRESHOLD
+
+        return {
+            "distance_x": distance_x,
+            "reaction_distance": reaction_distance,
+            "emergency_distance": emergency_distance,
+            "is_air_obstacle": is_air_obstacle,
+        }
+
+    def choose_binary_fallback_action(self, obstacle_context):
+        if obstacle_context is None:
+            return "RIGHT"
+        if obstacle_context["is_air_obstacle"]:
+            return "DUCK"
+        return "JUMP"
+
+    def should_hold_duck_for_obstacle(self, obstacle_context, obstacle):
+        if not self.dino_duck or obstacle_context is None or obstacle is None:
+            return False
+        if not obstacle_context["is_air_obstacle"]:
+            return False
+
+        return obstacle.rect.x <= self.dino_rect.right + obstacle.rect.width
+
+    def commit_binary_action(self, action):
+        if action == "JUMP":
+            self.jump_signal_frames += 1
+            self.duck_signal_frames = 0
+        elif action == "DUCK":
+            self.duck_signal_frames += 1
+            self.jump_signal_frames = 0
+        else:
+            self.jump_signal_frames = 0
+            self.duck_signal_frames = 0
+
+        if self.jump_signal_frames >= self.SIGNAL_FRAMES_REQUIRED:
+            self.jump_signal_frames = 0
+            self.duck_signal_frames = 0
+            return "JUMP"
+
+        if self.duck_signal_frames >= self.SIGNAL_FRAMES_REQUIRED:
+            self.duck_signal_frames = 0
+            return "DUCK"
+
+        return "RIGHT"
+
+    def choose_binary_action_with_obstacle(self, down_probability, obstacle, game_speed):
+        if self.dino_jump:
+            self.jump_signal_frames = 0
+            self.duck_signal_frames = 0
+            return "RIGHT"
+
+        obstacle_context = self.get_binary_obstacle_context(obstacle, game_speed)
+        if obstacle_context is None:
+            self.jump_signal_frames = 0
+            self.duck_signal_frames = 0
+            return "RIGHT"
+
+        if self.should_hold_duck_for_obstacle(obstacle_context, obstacle):
+            return self.commit_binary_action("DUCK")
+
+        if obstacle_context["distance_x"] > obstacle_context["reaction_distance"]:
+            self.jump_signal_frames = 0
+            self.duck_signal_frames = 0
+            return "RIGHT"
+
+        fallback_action = self.choose_binary_fallback_action(obstacle_context)
+        distance_to_center = abs(down_probability - 0.5)
+
+        if down_probability >= self.BINARY_DOWN_THRESHOLD:
+            proposed_action = "DUCK"
+        elif down_probability <= self.BINARY_UP_THRESHOLD:
+            proposed_action = "JUMP"
+        elif (
+            distance_to_center <= self.BINARY_NEUTRAL_BAND
+            and obstacle_context["distance_x"] > obstacle_context["emergency_distance"]
+        ):
+            proposed_action = "RIGHT"
+        else:
+            proposed_action = fallback_action
+
+        if (
+            obstacle_context["distance_x"] <= obstacle_context["emergency_distance"]
+            and proposed_action != fallback_action
+        ):
+            proposed_action = fallback_action
+
+        return self.commit_binary_action(proposed_action)
+
     # When playing in automatic mode using the tensorflow model, takes a frame and sends it to the model to define the next action
-    def predict(self, game_speed=None):
+    def predict(self, game_speed=None, obstacle=None, img_array=None):
         self.autoPlay = True
         
         # Usa exactamente el mismo preprocesado que el entrenamiento.
-        img_array = load_and_preprocess_image(str(LIVE_CAPTURE_PATH), IMAGE_SIZE, normalize=True)
+        if img_array is None:
+            img_array = load_and_preprocess_image(str(LIVE_CAPTURE_PATH), IMAGE_SIZE, normalize=True)
         img_array = np.expand_dims(img_array, axis=0)  # Agrega una dimensión extra para el batch
 
         # Use the model to make a decision based on the screenshot
@@ -318,11 +452,24 @@ class Dinosaur(NeuralNetwork):
             predictions = self.model.predict([img_array, speed_array], verbose=0)[0]
         else:
             predictions = self.model.predict(img_array, verbose=0)[0]
-        self.smoothed_probabilities = (
-            self.PREDICTION_SMOOTHING * self.smoothed_probabilities
-            + (1.0 - self.PREDICTION_SMOOTHING) * predictions
-        )
-        action = self.choose_action(self.smoothed_probabilities)
+
+        if self.is_binary_up_down_model():
+            down_probability = float(np.asarray(predictions).reshape(-1)[0])
+            self.binary_down_probability = (
+                self.BINARY_PREDICTION_SMOOTHING * self.binary_down_probability
+                + (1.0 - self.BINARY_PREDICTION_SMOOTHING) * down_probability
+            )
+            action = self.choose_binary_action_with_obstacle(
+                self.binary_down_probability,
+                obstacle,
+                game_speed,
+            )
+        else:
+            self.smoothed_probabilities = (
+                self.PREDICTION_SMOOTHING * self.smoothed_probabilities
+                + (1.0 - self.PREDICTION_SMOOTHING) * predictions
+            )
+            action = self.choose_action(self.smoothed_probabilities)
 
         # Call the update method with the result
         self.update(action)

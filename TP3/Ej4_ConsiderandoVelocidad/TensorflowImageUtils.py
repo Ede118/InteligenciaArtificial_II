@@ -35,14 +35,18 @@ def preprocess_pil_image(image, target_size=IMAGE_SIZE):
     return canvas
 
 
-def load_and_preprocess_image(file_path, target_size=IMAGE_SIZE, normalize=False):
-    with Image.open(file_path) as image:
-        prepared_image = preprocess_pil_image(image, target_size)
+def preprocess_image_for_model(image, target_size=IMAGE_SIZE, normalize=False):
+    prepared_image = preprocess_pil_image(image, target_size)
 
     image_array = img_to_array(prepared_image)
     if normalize:
         image_array = image_array / 255.0
     return image_array
+
+
+def load_and_preprocess_image(file_path, target_size=IMAGE_SIZE, normalize=False):
+    with Image.open(file_path) as image:
+        return preprocess_image_for_model(image, target_size, normalize)
 
 
 def normalize_speed(speed, speed_min, speed_max):

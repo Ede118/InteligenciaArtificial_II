@@ -9,7 +9,7 @@ except ImportError as err:
 import csv
 from pathlib import Path
 import pygame
-from TensorflowImageUtils import LABELS_FILENAME, get_capture_bbox
+from TensorflowImageUtils import LABELS_FILENAME, IMAGE_SIZE, get_capture_bbox, preprocess_image_for_model
 
 BASE_DIR = Path(__file__).resolve().parent
 IMAGES_DIR = BASE_DIR / "images"
@@ -102,3 +102,7 @@ class ImageCapture():
         # Automatically take a screenshot for the Tensorflow model to work
         screenshot = pyscreenshot.grab(bbox=get_capture_bbox(self.window_left, self.window_top))
         screenshot.save(str(IMAGES_DIR / "live" / "temp.png"))
+
+    def capture_live_for_model(self):
+        screenshot = pyscreenshot.grab(bbox=get_capture_bbox(self.window_left, self.window_top))
+        return preprocess_image_for_model(screenshot, IMAGE_SIZE, normalize=True)

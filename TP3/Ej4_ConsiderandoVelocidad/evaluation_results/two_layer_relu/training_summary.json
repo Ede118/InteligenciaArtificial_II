@@ -1,0 +1,16 @@
+{
+  "variant_name": "two_layer_relu",
+  "filters": [
+    16,
+    32
+  ],
+  "hidden_activation": "relu",
+  "parameter_count": 2071779,
+  "epochs_ran": 11,
+  "training_seconds": 28.706840500002727,
+  "evaluation_seconds": 0.6808001000026707,
+  "keras_test_loss": 0.41810154914855957,
+  "keras_test_accuracy": 0.8198323845863342,
+  "best_val_accuracy": 0.8240223526954651,
+  "best_val_loss": 0.41810154914855957
+}
