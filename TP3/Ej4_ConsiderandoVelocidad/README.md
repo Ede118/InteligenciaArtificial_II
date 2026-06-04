@@ -21,6 +21,22 @@ Existen 4 modos de ejecución que se pueden seleccionar desde el menú principal
 $ python3 ./BuildTensorflowModel.py
 ```
 
+Para entrenar y evaluar automáticamente dos variantes adicionales del modelo con velocidad, una más liviana (`16-32-64` con `relu`) y otra con la misma arquitectura pero activación `sigmoid`, se puede ejecutar:
+
+```
+$ python3 ./BuildTensorflowModelVariants.py
+```
+
+Las métricas y gráficos de estas variantes se guardan en subcarpetas dentro de ```./evaluation_results```.
+
+Si se quiere volver a probar la variante `sigmoid` usando un dataset balanceado con la misma cantidad de capturas por clase, se puede ejecutar:
+
+```
+$ python3 ./BuildTensorflowModelBalancedSigmoid.py
+```
+
+Esa corrida vuelve a generar el split `train/test` de manera balanceada y guarda sus resultados en ```./evaluation_results/lightweight_sigmoid_balanced```.
+
 * Pulsando cualquier otra tecla el juego funcionará en modo automático de acuerdo a la red neuronal que debe completar en el archivo ```NeuralNetwork.py```. Los parámetros de la red deben ser actualizados usando un algoritmo genético que a su vez se completa en el archivo ```Genetic.py```.
 
 Se recomienda alterar únicamente las regiones del código marcadas entre los siguientes símbolos:
