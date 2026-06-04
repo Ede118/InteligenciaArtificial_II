@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 try:
     import numpy as np
@@ -41,13 +42,14 @@ from TensorflowImageUtils import (
 )
 
 
-SOURCE_DIR = "images"
-TRAIN_DIR = os.path.join(SOURCE_DIR, "train")
-TEST_DIR = os.path.join(SOURCE_DIR, "test")
-SOURCE_LABELS_PATH = os.path.join(SOURCE_DIR, LABELS_FILENAME)
-TRAIN_LABELS_PATH = os.path.join(TRAIN_DIR, LABELS_FILENAME)
-TEST_LABELS_PATH = os.path.join(TEST_DIR, LABELS_FILENAME)
-OUTPUT_ROOT_DIR = "evaluation_results"
+BASE_DIR = Path(__file__).resolve().parent
+SOURCE_DIR = BASE_DIR / "images"
+TRAIN_DIR = SOURCE_DIR / "train"
+TEST_DIR = SOURCE_DIR / "test"
+SOURCE_LABELS_PATH = SOURCE_DIR / LABELS_FILENAME
+TRAIN_LABELS_PATH = TRAIN_DIR / LABELS_FILENAME
+TEST_LABELS_PATH = TEST_DIR / LABELS_FILENAME
+OUTPUT_ROOT_DIR = BASE_DIR / "evaluation_results"
 
 CLASSES = CLASS_FOLDER_NAMES
 TRAIN_RATIO = 0.8
@@ -61,17 +63,17 @@ MODEL_VARIANTS = [
         "name": "lightweight_relu",
         "filters": [16, 32, 64],
         "activation": "relu",
-        "model_path": "tensorflow_nn_lightweight_relu.h5",
-        "metadata_path": "tensorflow_nn_lightweight_relu_metadata.json",
-        "output_dir": os.path.join(OUTPUT_ROOT_DIR, "lightweight_relu"),
+        "model_path": BASE_DIR / "tensorflow_nn_lightweight_relu.h5",
+        "metadata_path": BASE_DIR / "tensorflow_nn_lightweight_relu_metadata.json",
+        "output_dir": OUTPUT_ROOT_DIR / "lightweight_relu",
     },
     {
         "name": "lightweight_sigmoid",
         "filters": [16, 32, 64],
         "activation": "sigmoid",
-        "model_path": "tensorflow_nn_lightweight_sigmoid.h5",
-        "metadata_path": "tensorflow_nn_lightweight_sigmoid_metadata.json",
-        "output_dir": os.path.join(OUTPUT_ROOT_DIR, "lightweight_sigmoid"),
+        "model_path": BASE_DIR / "tensorflow_nn_lightweight_sigmoid.h5",
+        "metadata_path": BASE_DIR / "tensorflow_nn_lightweight_sigmoid_metadata.json",
+        "output_dir": OUTPUT_ROOT_DIR / "lightweight_sigmoid",
     },
 ]
 
@@ -97,23 +99,24 @@ def balance_rows(rows):
 
 def reset_split_directories():
     for split_dir in [TRAIN_DIR, TEST_DIR]:
-        if os.path.isdir(split_dir):
+        if split_dir.is_dir():
             shutil.rmtree(split_dir)
-        os.makedirs(split_dir, exist_ok=True)
+        split_dir.mkdir(parents=True, exist_ok=True)
 
         for class_name in CLASSES:
-            os.makedirs(os.path.join(split_dir, class_name), exist_ok=True)
+            (split_dir / class_name).mkdir(parents=True, exist_ok=True)
 
 
 def load_capture_metadata(metadata_path):
-    if not os.path.isfile(metadata_path):
+    metadata_path = Path(metadata_path)
+    if not metadata_path.is_file():
         raise FileNotFoundError(
             f"No se encontro {metadata_path}. "
             "Para esta version del modelo hace falta capturar imagenes junto con su game_speed."
         )
 
     rows = []
-    with open(metadata_path, "r", newline="", encoding="utf-8") as metadata_file:
+    with metadata_path.open("r", newline="", encoding="utf-8") as metadata_file:
         reader = csv.DictReader(metadata_file)
         required_columns = {"relative_path", "class_name", "game_speed"}
         missing_columns = required_columns.difference(reader.fieldnames or [])
@@ -129,13 +132,13 @@ def load_capture_metadata(metadata_path):
                 continue
 
             relative_path = row["relative_path"].replace("/", os.sep).replace("\\", os.sep)
-            image_path = os.path.join(SOURCE_DIR, relative_path)
-            if not os.path.isfile(image_path):
+            image_path = SOURCE_DIR / relative_path
+            if not image_path.is_file():
                 continue
 
             rows.append(
                 {
-                    "source_image_path": image_path,
+                    "source_image_path": str(image_path),
                     "class_name": class_name,
                     "game_speed": float(row["game_speed"]),
                     "points": row.get("points", "").strip(),
@@ -188,10 +191,10 @@ def save_split_rows(rows, split_dir, labels_path):
             original_name = os.path.basename(row["source_image_path"])
             destination_name = f"{index:05d}_{original_name}"
             destination_relative_path = os.path.join(row["class_name"], destination_name)
-            destination_path = os.path.join(split_dir, destination_relative_path)
+            destination_path = Path(split_dir) / destination_relative_path
 
             image_array = load_and_preprocess_image(row["source_image_path"], IMAGE_SIZE)
-            save_img(destination_path, image_array)
+            save_img(str(destination_path), image_array)
 
             saved_row = {
                 "relative_path": destination_relative_path.replace("\\", "/"),
@@ -203,7 +206,7 @@ def save_split_rows(rows, split_dir, labels_path):
 
             saved_rows.append(
                 {
-                    "image_path": destination_path,
+                    "image_path": str(destination_path),
                     "class_name": row["class_name"],
                     "game_speed": row["game_speed"],
                     "points": row["points"],
@@ -281,7 +284,7 @@ def save_model_metadata(metadata_path, speed_min, speed_max, variant):
     if "class_target_count" in variant:
         metadata["class_target_count"] = int(variant["class_target_count"])
 
-    with open(metadata_path, "w", encoding="utf-8") as metadata_file:
+    with Path(metadata_path).open("w", encoding="utf-8") as metadata_file:
         json.dump(metadata, metadata_file, indent=2, ensure_ascii=False)
 
 
@@ -293,10 +296,11 @@ def serialize_history(history):
 
 
 def save_training_summary(output_dir, variant, model, history, training_seconds, evaluation_seconds, test_loss, test_accuracy):
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
     history_data = serialize_history(history)
-    history_path = os.path.join(output_dir, "training_history.json")
-    with open(history_path, "w", encoding="utf-8") as history_file:
+    history_path = output_dir / "training_history.json"
+    with history_path.open("w", encoding="utf-8") as history_file:
         json.dump(history_data, history_file, indent=2, ensure_ascii=False)
 
     val_accuracy_history = history_data.get("val_accuracy", [])
@@ -320,8 +324,8 @@ def save_training_summary(output_dir, variant, model, history, training_seconds,
     if "class_target_count" in variant:
         summary["class_target_count"] = int(variant["class_target_count"])
 
-    summary_path = os.path.join(output_dir, "training_summary.json")
-    with open(summary_path, "w", encoding="utf-8") as summary_file:
+    summary_path = output_dir / "training_summary.json"
+    with summary_path.open("w", encoding="utf-8") as summary_file:
         json.dump(summary, summary_file, indent=2, ensure_ascii=False)
 
 
@@ -333,7 +337,8 @@ def evaluate_and_save_results(
     test_file_paths,
     output_dir,
 ):
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     evaluation_start = time.perf_counter()
     test_loss, test_accuracy = model.evaluate(
@@ -428,7 +433,7 @@ def train_variant(
 
     print(f"Modelo guardado en {variant['model_path']}")
     print(f"Metadata guardada en {variant['metadata_path']}")
-    print(f"Resultados guardados en {os.path.abspath(variant['output_dir'])}")
+    print(f"Resultados guardados en {Path(variant['output_dir']).resolve()}")
 
 
 def main():

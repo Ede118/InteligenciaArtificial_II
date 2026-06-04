@@ -1,0 +1,17 @@
+{
+  "variant_name": "lightweight_relu",
+  "filters": [
+    16,
+    32,
+    64
+  ],
+  "hidden_activation": "relu",
+  "parameter_count": 877859,
+  "epochs_ran": 15,
+  "training_seconds": 30.524339299998246,
+  "evaluation_seconds": 0.5504115999792702,
+  "keras_test_loss": 0.41210511326789856,
+  "keras_test_accuracy": 0.826815664768219,
+  "best_val_accuracy": 0.8282122611999512,
+  "best_val_loss": 0.41210511326789856
+}
