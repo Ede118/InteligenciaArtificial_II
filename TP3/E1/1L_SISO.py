@@ -17,14 +17,14 @@ plt.style.use('seaborn-v0_8-whitegrid')
 
 
 def SL_SISO(*,
-    X_train: np.ndarray,
-    T_train: np.ndarray,
-    X_test: np.ndarray,
-    T_test: np.ndarray,
+    X = [None],
+    T = [None],
     AFunction: str = "Identity",
     graficar: bool = False
     ):        
     
+    X_train, X_test, X_validation = X
+    T_train, T_test, T_validation = T
         
     Model = Perceptron(
         InputDim=1, 
@@ -34,8 +34,8 @@ def SL_SISO(*,
     W_untrained = Model.W[0,0]
     b_untrained = Model.B[0,0]
     
-    Y_untrained = Model.predict(InputVector=X_test)
-    e_untrained = T_test - Y_untrained
+    Y_untrained = Model.predict(InputVector=X_validation)
+    e_untrained = T_validation - Y_untrained
     
 
     Model.fit(
@@ -50,8 +50,8 @@ def SL_SISO(*,
     W_trained = Model.W[0,0]
     b_trained = Model.B[0,0]
     
-    Y_trained = Model.predict(InputVector=X_test)
-    e_trained = T_test - Y_trained
+    Y_trained = Model.predict(InputVector=X_validation)
+    e_trained = T_validation - Y_trained
     
 
     
@@ -85,13 +85,13 @@ def SL_SISO(*,
         #               Gráficos de evolución de la norma de los gradientes     
         # =============================================================================== #
     
-        Model.graficarGradientes(escala_logaritmica=False, saveFig=True)
+        Model.graficarGradientes(escala_logaritmica=False, saveFig=False)
 
         # =============================================================================== #
         #               Gráficos de evolución de la norma de los gradientes     
         # =============================================================================== #
 
-        Model.graficarLoss(saveFig=True)
+        Model.graficarLoss(saveFig=False)
     
         # =============================================================================== #
         #                       Graficos de ajuste final vs inicial     
@@ -99,18 +99,18 @@ def SL_SISO(*,
             
         fig, ax = plt.subplots(figsize=(8, 5.5), dpi=120)
         
-        ax.scatter(X_test, T_test, 
+        ax.scatter(X_validation, T_validation, 
                 facecolors='none', 
                 edgecolors='#0072BD', 
                 linewidths=0.7, 
                 label='Datos del dataset')
         
-        ax.plot(X_test, Y_trained, 
+        ax.plot(X_validation, Y_trained, 
                 color='#D95319', 
                 linewidth=1.5, 
                 label=r"Ajuste Final: $y = g \left(" + f"{W_trained:.4f}x + {b_trained:.4f}" + r"\right)$")
         
-        ax.plot(X_test, Y_untrained, 
+        ax.plot(X_validation, Y_untrained, 
                 color='#77AC30', 
                 linewidth=1.5, 
                 label=r"Ajuste Inicial: $y = g \left(" + f"{W_untrained :.4f}x + {b_untrained:.4f}" + r"\right)$")
@@ -129,8 +129,8 @@ def SL_SISO(*,
         ax.legend(loc='upper left', frameon=True, fontsize=9)
         
         plt.tight_layout()
-        nombre_archivo = f"E1 SISO {AFunction} Grafico.png" 
-        plt.savefig(f"./TP3/Imagen/{nombre_archivo}", dpi=300, bbox_inches='tight')
+        # nombre_archivo = f"E1 SISO {AFunction} Grafico.png" 
+        # plt.savefig(f"./TP3/Imagen/{nombre_archivo}", dpi=300, bbox_inches='tight')
         plt.show()
         
 
@@ -153,16 +153,18 @@ if __name__ == "__main__":
     X = datos[["x"]].values
     T = datos[["y"]].values
     
-    X_train, X_test, T_train, T_test = DividirEntrenamientoTest(X, T, test_size=0.90)
+    X_train, X_test, T_train, T_test = DividirEntrenamientoTest(X, T, test_size=0.40)
+    X_test, X_validation, T_test, T_validation = DividirEntrenamientoTest(X_test, T_test, test_size=0.50)
+    
+    X = [X_train, X_test, X_validation]
+    T = [T_train, T_test, T_validation]
     
     functions = ["Identity", "ReLU", "Sigmoid", "Tanh"]
     
     for AFunction in functions:
         SL_SISO(
-            X_train=X_train,
-            T_train=T_train,
-            X_test=X_test,
-            T_test=T_test,
+            X=X,
+            T=T,
             AFunction=AFunction,
             graficar=True
         )
