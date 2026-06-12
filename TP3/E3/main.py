@@ -49,7 +49,7 @@ def populate(population_size):
     return population
 
 # ======================== SELECT THE POPULATION NUMBER PLAYING AT THE SAME TIME ======================
-population_number = 50
+population_number = 200
 # =====================================================================================================
 population = populate(population_number)
 player = Dinosaur(0)

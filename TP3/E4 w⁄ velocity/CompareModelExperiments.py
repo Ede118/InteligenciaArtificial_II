@@ -31,6 +31,17 @@ EXPERIMENTS = [
         "summary_path": EVALUATION_DIR / "lightweight_sigmoid" / "training_summary.json",
     },
     {
+        "id": "two_layer_relu",
+        "label": "Multiclase 2 capas ReLU",
+        "task": "Multiclase",
+        "classes": "up/down/right",
+        "hidden_activation": "relu",
+        "output_activation": "softmax",
+        "dataset": "3 clases, split original",
+        "metrics_path": EVALUATION_DIR / "two_layer_relu" / "metrics.json",
+        "summary_path": EVALUATION_DIR / "two_layer_relu" / "training_summary.json",
+    },
+    {
         "id": "binary_sigmoid_up_down",
         "label": "Binario Sigmoid/Sigmoid",
         "task": "Binario",

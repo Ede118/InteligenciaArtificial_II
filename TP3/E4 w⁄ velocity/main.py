@@ -31,6 +31,8 @@ generation = 1
 bestScore = 0
 playMode = "X"
 AUTO_TF_MODEL_NAME = "lightweight_relu"
+AUTO_TF_TWO_LAYER_MODEL_NAME = "two_layer_relu"
+AUTO_TF_BINARY_MODEL_NAME = "binary_relu_sigmoid_up_down"
 AUTO_TF_ORIGINAL_MODEL_NAME = "default"
 
 imageCapture = ImageCapture(screen_spawn_position)
@@ -148,6 +150,14 @@ def gameScreen():
 
         SCREEN.fill((255, 255, 255))
 
+        if len(obstacles) == 0:
+            if random.randint(0, 2) == 0:
+                obstacles.append(SmallCactus(SCREEN_WIDTH, game_speed, obstacles))
+            elif random.randint(0, 2) == 1:
+                obstacles.append(LargeCactus(SCREEN_WIDTH, game_speed, obstacles))
+            elif random.randint(0, 2) == 2:
+                obstacles.append(Bird(SCREEN_WIDTH, game_speed, obstacles))
+
         if playMode == 'm' or playMode == 'c' or playMode == 'p' or playMode == '2':
             userInput = pygame.key.get_pressed()
             player.draw(SCREEN)
@@ -155,11 +165,12 @@ def gameScreen():
             if playMode == 'c' or playMode == 'p' or playMode == '2':
                 imageCapture.capture(userInput, game_speed, points)
 
-        elif playMode == 'a' or playMode == 's':
+        elif playMode == 'a' or playMode == 'b' or playMode == 'd' or playMode == 's':
             if player.alive:
                 player.draw(SCREEN)
-                imageCapture.capture_live()
-                player.predict(game_speed)
+                live_image = imageCapture.capture_live_for_model()
+                current_obstacle = min(obstacles, key=lambda obstacle: obstacle.rect.x) if obstacles else None
+                player.predict(game_speed, current_obstacle, live_image)
 
         else:
             for dino in population:
@@ -173,21 +184,12 @@ def gameScreen():
                     dino.update(dino.think())
                     # ====================================================================================================================
 
-        if len(obstacles) == 0:
-            if random.randint(0, 2) == 0:
-                obstacles.append(SmallCactus(SCREEN_WIDTH, game_speed, obstacles))
-            elif random.randint(0, 2) == 1:
-                obstacles.append(LargeCactus(SCREEN_WIDTH, game_speed, obstacles))
-            elif random.randint(0, 2) == 2:
-                obstacles.append(Bird(SCREEN_WIDTH, game_speed, obstacles))
-        
-
         for obstacle in obstacles:
             obstacle.draw(SCREEN)
             obstacle.update()
             obstacle_params = obstacle.rect
 
-            if playMode == 'm' or playMode == 'c' or playMode == 'a' or playMode == 's' or playMode == 'p' or playMode == '2':
+            if playMode == 'm' or playMode == 'c' or playMode == 'a' or playMode == 'b' or playMode == 'd' or playMode == 's' or playMode == 'p' or playMode == '2':
                 if player.dino_rect.colliderect(obstacle_params):
                     player.alive = False
                     
@@ -201,9 +203,9 @@ def gameScreen():
                         if (count_alive(population) == 0):
                             last_dino = dino
 
-        if ((playMode == 'm' or playMode == 'c' or playMode == 'a' or playMode == 's' or playMode == 'p' or playMode == '2') and player.alive == False):
+        if ((playMode == 'm' or playMode == 'c' or playMode == 'a' or playMode == 'b' or playMode == 'd' or playMode == 's' or playMode == 'p' or playMode == '2') and player.alive == False):
             deathUpdates(player, obstacle)
-        elif (playMode != 'm' and playMode != 'c' and playMode != 'a' and playMode != 's' and playMode != 'p' and playMode != '2' and count_alive(population) == 0):
+        elif (playMode != 'm' and playMode != 'c' and playMode != 'a' and playMode != 'b' and playMode != 'd' and playMode != 's' and playMode != 'p' and playMode != '2' and count_alive(population) == 0):
             countSurviving()
             currentGeneration()
             deathUpdates(last_dino, obstacle)
@@ -215,7 +217,7 @@ def gameScreen():
 
         score()
 
-        if (playMode != 'm' and playMode != 'c' and playMode != 'a' and playMode != 's' and playMode != 'p' and playMode != '2'):
+        if (playMode != 'm' and playMode != 'c' and playMode != 'a' and playMode != 'b' and playMode != 'd' and playMode != 's' and playMode != 'p' and playMode != '2'):
             countSurviving()
             currentGeneration()
 
@@ -226,9 +228,9 @@ def menu():
     global callUpdateNetwork, generation, bestScore, playMode, population, population_number
     run = True
 
-    if playMode == 'm' or playMode == 'c' or playMode == 'a' or playMode == 's' or playMode == 'p' or playMode == '2':
+    if playMode == 'm' or playMode == 'c' or playMode == 'a' or playMode == 'b' or playMode == 'd' or playMode == 's' or playMode == 'p' or playMode == '2':
         player.resetStatus()
-    elif playMode != 'm' and playMode != 'c' and playMode != 'a' and playMode != 's' and playMode != 'p' and playMode != '2' and callUpdateNetwork:
+    elif playMode != 'm' and playMode != 'c' and playMode != 'a' and playMode != 'b' and playMode != 'd' and playMode != 's' and playMode != 'p' and playMode != '2' and callUpdateNetwork:
         updateNetwork(population)
         callUpdateNetwork = False
         for dino in population:
@@ -251,24 +253,34 @@ def menu():
             auxTextRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)
             SCREEN.blit(auxText, auxTextRect)
 
-            auxText = font.render("'s' para usar el modelo Tensorflow original", True, (0, 0, 0))
+            auxText = font.render("'b' para usar el modelo Tensorflow binario up/down", True, (0, 0, 0))
             auxTextRect = auxText.get_rect()
             auxTextRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 150)
             SCREEN.blit(auxText, auxTextRect)
 
-            auxText = font.render("'p' para capturar desde 1000 puntos", True, (0, 0, 0))
+            auxText = font.render("'d' para usar el modelo Tensorflow de 2 capas ReLU", True, (0, 0, 0))
             auxTextRect = auxText.get_rect()
             auxTextRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 200)
             SCREEN.blit(auxText, auxTextRect)
 
-            auxText = font.render("'2' para capturar desde 2000 puntos", True, (0, 0, 0))
+            auxText = font.render("'s' para usar el modelo Tensorflow original", True, (0, 0, 0))
             auxTextRect = auxText.get_rect()
             auxTextRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 250)
             SCREEN.blit(auxText, auxTextRect)
 
-            auxText = font.render("o cualquier otra letra para jugar automáticamente", True, (0, 0, 0))
+            auxText = font.render("'p' para capturar desde 1000 puntos", True, (0, 0, 0))
             auxTextRect = auxText.get_rect()
             auxTextRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 300)
+            SCREEN.blit(auxText, auxTextRect)
+
+            auxText = font.render("'2' para capturar desde 2000 puntos", True, (0, 0, 0))
+            auxTextRect = auxText.get_rect()
+            auxTextRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 350)
+            SCREEN.blit(auxText, auxTextRect)
+
+            auxText = font.render("o cualquier otra letra para jugar automáticamente", True, (0, 0, 0))
+            auxTextRect = auxText.get_rect()
+            auxTextRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 400)
             SCREEN.blit(auxText, auxTextRect)
         elif generation > 1:
             text = font.render("Pulse cualquier tecla para reiniciar", True, (0, 0, 0))
@@ -293,11 +305,17 @@ def menu():
                     if playMode == 'a':
                         player.set_model_preference(AUTO_TF_MODEL_NAME)
                         print(f"Modo automatico 'a' usando modelo: {player.loaded_model_name}")
+                    elif playMode == 'b':
+                        player.set_model_preference(AUTO_TF_BINARY_MODEL_NAME)
+                        print(f"Modo automatico 'b' usando modelo: {player.loaded_model_name}")
+                    elif playMode == 'd':
+                        player.set_model_preference(AUTO_TF_TWO_LAYER_MODEL_NAME)
+                        print(f"Modo automatico 'd' usando modelo: {player.loaded_model_name}")
                     elif playMode == 's':
                         player.set_model_preference(AUTO_TF_ORIGINAL_MODEL_NAME)
                         print(f"Modo automatico 's' usando modelo: {player.loaded_model_name}")
 
-                    if playMode == 'm' or playMode == 'c' or playMode == 'a' or playMode == 's' or playMode == 'p' or playMode == '2':
+                    if playMode == 'm' or playMode == 'c' or playMode == 'a' or playMode == 'b' or playMode == 'd' or playMode == 's' or playMode == 'p' or playMode == '2':
                         population = []
                 gameScreen()
 
